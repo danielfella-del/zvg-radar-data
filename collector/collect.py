@@ -363,33 +363,30 @@ def load_existing(path: Path) -> list[dict[str, Any]]:
         return []
 
 def load_postcode_centroids(session: requests.Session) -> dict[str, tuple[float, float]]:
-    url = "https://download.geonames.org/export/zip/DE.zip"
+    # Stable public German PLZ centroid dataset by WZB Berlin.
+    # Source PLZ: German Federal Statistical Office municipal directory;
+    # centroid coordinates published under Apache License 2.0.
+    url = "https://raw.githubusercontent.com/WZBSocialScienceCenter/plz_geocoord/master/plz_geocoord.csv"
     r = session.get(url, timeout=60)
     r.raise_for_status()
-    points: dict[str, list[tuple[float, float]]] = {}
-    with zipfile.ZipFile(io.BytesIO(r.content)) as zf:
-        name = next((n for n in zf.namelist() if n.lower().endswith(".txt")), None)
-        if not name:
-            raise RuntimeError("GeoNames DE.zip enthält keine TXT-Datei")
-        with zf.open(name) as fh:
-            for raw in fh:
-                parts = raw.decode("utf-8", errors="replace").rstrip("\n").split("\t")
-                if len(parts) < 11:
-                    continue
-                postal = parts[1].strip()
-                try:
-                    lat = float(parts[9])
-                    lng = float(parts[10])
-                except ValueError:
-                    continue
-                if re.fullmatch(r"\d{5}", postal):
-                    points.setdefault(postal, []).append((lat, lng))
-    out = {}
-    for postal, vals in points.items():
-        out[postal] = (
-            sum(v[0] for v in vals) / len(vals),
-            sum(v[1] for v in vals) / len(vals),
-        )
+    out: dict[str, tuple[float, float]] = {}
+    for i, line in enumerate(r.text.splitlines()):
+        if i == 0 or not line.strip():
+            continue
+        parts = [p.strip() for p in line.split(",")]
+        if len(parts) < 3:
+            continue
+        postal = parts[0]
+        if not re.fullmatch(r"\d{5}", postal):
+            continue
+        try:
+            lat = float(parts[1])
+            lng = float(parts[2])
+        except ValueError:
+            continue
+        out[postal] = (lat, lng)
+    if len(out) < 7000:
+        raise RuntimeError(f"PLZ-Datensatz unvollständig: nur {len(out)} Einträge")
     return out
 
 def apply_postcode_positions(records: list[dict[str, Any]], centroids: dict[str, tuple[float, float]]) -> int:
@@ -434,7 +431,7 @@ def main() -> int:
 
     session = requests.Session()
     session.headers.update({
-        "User-Agent": "ZVGRadarDataCollector/1.2 (+public court-auction index; scheduled fetch)",
+        "User-Agent": "ZVGRadarDataCollector/1.3 (+public court-auction index; scheduled fetch)",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "de-DE,de;q=0.9,en;q=0.5",
         "Referer": "https://www.zvg-portal.de/index.php?button=Termine+suchen",
@@ -487,12 +484,12 @@ def main() -> int:
         "meta": {
             "source": "https://www.zvg-portal.de/",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "collector": "github-actions-v1.2-enriched",
+            "collector": "github-actions-v1.3-enriched",
             "count": len(all_records),
             "states": statuses,
             "quality": quality_stats(all_records),
             "postcode_positioned": postcode_positioned,
-            "geodata_source": "GeoNames postal codes (CC BY 3.0) - https://www.geonames.org/",
+            "geodata_source": "WZB Berlin PLZ-Geokoordinaten (Apache 2.0) - https://github.com/WZBSocialScienceCenter/plz_geocoord",
             "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
         },
         "results": all_records,

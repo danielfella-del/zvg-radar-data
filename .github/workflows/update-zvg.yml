@@ -51,19 +51,19 @@ jobs:
 
       - name: Baden-Württemberg aus amtlichen Gerichtsseiten ergänzen
         continue-on-error: true
-        run: python collector/collect_bw_official.py --output data/supplemental_bw.json
+        run: timeout 3m python collector/collect_bw_official.py --output data/supplemental_bw.json
 
       - name: Hamburg aus Amtlichem Anzeiger ergänzen
         continue-on-error: true
-        run: python collector/collect_hh_official.py --output data/supplemental_hh.json
+        run: timeout 3m python collector/collect_hh_official.py --output data/supplemental_hh.json
 
       - name: Mecklenburg-Vorpommern aus Amtlichem Anzeiger ergänzen
         continue-on-error: true
-        run: python collector/collect_mv_official.py --output data/supplemental_mv.json
+        run: timeout 3m python collector/collect_mv_official.py --output data/supplemental_mv.json
 
       - name: Schleswig-Holstein aus amtlichen Anzeigen ergänzen
         continue-on-error: true
-        run: python collector/collect_sh_official.py --output data/supplemental_sh.json
+        run: timeout 3m python collector/collect_sh_official.py --output data/supplemental_sh.json
 
       - name: Zusatzquellen dedupliziert zusammenführen
         run: |

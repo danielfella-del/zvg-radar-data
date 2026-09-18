@@ -33,7 +33,7 @@ jobs:
         run: pip install -r collector/requirements.txt
 
       - name: Parser testen
-        run: python tests/test_parser.py
+        run: |\n          python tests/test_parser.py\n          python tests/test_detail_parser.py
 
       - name: ZVG-Daten sammeln
         run: python collector/collect.py --output data/auctions.json

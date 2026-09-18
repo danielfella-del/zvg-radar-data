@@ -14,7 +14,7 @@ from typing import Any
 from urllib.parse import parse_qs, urljoin, urlparse
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 
 BASE = "https://www.zvg-portal.de/"
 SEARCH_URL = urljoin(BASE, "index.php?button=Suchen&all=1")
@@ -44,105 +44,234 @@ STATE_CENTERS = {
     "sh": (54.2, 9.85), "th": (50.9, 11.0),
 }
 
-DATE_RE = re.compile(r"\b(\d{1,2}\.\d{1,2}\.\d{4})(?:\s+(\d{1,2}:\d{2}))?\b")
-PLZ_RE = re.compile(r"\b(\d{5})\b")
-VALUE_RE = re.compile(r"(?<!\d)(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d{4,})(?:\s*)(?:€|EUR)\b", re.I)
+GERMAN_MONTHS = {
+    "januar": 1, "februar": 2, "märz": 3, "maerz": 3, "april": 4,
+    "mai": 5, "juni": 6, "juli": 7, "august": 8, "september": 9,
+    "oktober": 10, "november": 11, "dezember": 12,
+}
+
 FILE_RE = re.compile(r"\b(?:\d{1,4}\s*)?K\s*\d{1,5}\s*/\s*\d{2,4}\b", re.I)
-COURT_RE = re.compile(r"\bAmtsgericht\s+([A-ZÄÖÜ][A-Za-zÄÖÜäöüß\- .()]+?)(?=\s{2,}|\s\d{1,2}\.\d{1,2}\.\d{4}|\s\d{5}\b|$)")
+PLZ_RE = re.compile(r"^(\d{5})\s*(.*)$")
+MONEY_RE = re.compile(r"(\d{1,3}(?:\.\d{3})*|\d+)(?:,(\d{1,2}))?")
 
 def clean(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
+
+def text_of(node) -> str:
+    return clean(node.get_text(" ", strip=True) if node else "")
 
 def stable_jitter(key: str) -> tuple[float, float]:
     d = hashlib.sha256(key.encode("utf-8", "ignore")).digest()
     return ((d[0] / 255 - 0.5) * 0.7, (d[1] / 255 - 0.5) * 1.0)
 
-def parse_money(text: str) -> int | None:
-    vals = []
-    for m in VALUE_RE.finditer(text):
-        raw = m.group(1).replace(".", "").replace(",", ".")
-        try:
-            vals.append(int(round(float(raw))))
-        except ValueError:
-            pass
-    return max(vals) if vals else None
-
-def parse_date(text: str) -> str | None:
-    m = DATE_RE.search(text)
+def parse_money(raw: str) -> int | None:
+    if not raw:
+        return None
+    m = MONEY_RE.search(clean(raw))
     if not m:
         return None
-    day = m.group(1)
-    clock = m.group(2) or "00:00"
+    whole = m.group(1).replace(".", "")
+    frac = (m.group(2) or "").ljust(2, "0")[:2]
     try:
-        dt = datetime.strptime(day + " " + clock, "%d.%m.%Y %H:%M")
-        return dt.isoformat(timespec="minutes")
+        return round((int(whole) * 100 + int(frac or "0")) / 100)
     except ValueError:
         return None
 
-def property_type(text: str) -> str:
-    t = text.lower()
-    rules = [
-        ("Mehrfamilienhaus", ["mehrfamilienhaus", "mfh", "mietshaus"]),
-        ("Einfamilienhaus", ["einfamilienhaus", "efh", "wohnhaus", "reihenhaus", "doppelhaushälfte", "doppelhaushaelfte"]),
-        ("Eigentumswohnung", ["eigentumswohnung", "wohnungseigentum", "wohnung"]),
-        ("Grundstück", ["grundstück", "grundstueck", "bauplatz", "acker", "landwirtschaftsfläche", "landwirtschaftsflaeche"]),
-        ("Gewerbe", ["gewerbe", "laden", "halle", "büro", "buero", "hotel", "gaststätte", "gaststaette"]),
-    ]
-    for label, needles in rules:
-        if any(n in t for n in needles):
-            return label
+def parse_portal_date(raw: str) -> str | None:
+    raw = clean(raw)
+    if not raw:
+        return None
+    numeric = re.search(r"(\d{1,2})\.(\d{1,2})\.(\d{4})(?:\s*,?\s*(\d{1,2}):(\d{2}))?", raw)
+    if numeric:
+        dd, mm, yyyy, hh, minute = numeric.groups()
+        return f"{yyyy}-{int(mm):02d}-{int(dd):02d}T{int(hh or 0):02d}:{int(minute or 0):02d}"
+    named = re.search(r"(\d{1,2})\.\s*([A-Za-zÄÖÜäöü]+)\s+(\d{4})(?:,?\s*(\d{1,2}):(\d{2}))?", raw)
+    if named:
+        dd, month_name, yyyy, hh, minute = named.groups()
+        mm = GERMAN_MONTHS.get(month_name.lower())
+        if mm:
+            return f"{yyyy}-{mm:02d}-{int(dd):02d}T{int(hh or 0):02d}:{int(minute or 0):02d}"
+    return None
+
+def normalize_property_type(raw: str | None) -> str:
+    t = clean(raw or "").lower()
+    if any(x in t for x in ["mehrfamilienhaus", "mietshaus"]):
+        return "Mehrfamilienhaus"
+    if any(x in t for x in ["einfamilienhaus", "zweifamilienhaus", "reihenhaus", "doppelhaushälfte", "doppelhaushaelfte", "wohnhaus"]):
+        return "Einfamilienhaus"
+    if any(x in t for x in ["eigentumswohnung", "wohnungseigentum", "wohnung"]):
+        return "Eigentumswohnung"
+    if any(x in t for x in ["grundstück", "grundstueck", "bauplatz", "acker", "landwirtschaft"]):
+        return "Grundstück"
+    if any(x in t for x in ["gewerbe", "laden", "halle", "büro", "buero", "hotel", "gaststätte", "gaststaette"]):
+        return "Gewerbe"
     return "Sonstige"
 
-def city_from_text(text: str) -> tuple[str | None, str | None]:
-    m = PLZ_RE.search(text)
-    if not m:
-        return None, None
-    plz = m.group(1)
-    rest = text[m.end():]
-    cm = re.match(r"\s*([A-ZÄÖÜ][A-Za-zÄÖÜäöüß\-/. ]{1,45})", rest)
-    city = clean(cm.group(1)) if cm else None
-    if city:
-        city = re.split(r"\s(?:Amtsgericht|Verkehrswert|Termin|K\s*\d)", city, maxsplit=1, flags=re.I)[0].strip(" ,-;/")
-    return plz, city or None
+def parse_address(raw: str) -> dict[str, str | None]:
+    parts = [clean(p) for p in clean(raw).split(",") if clean(p)]
+    out = {"street": None, "postcode": None, "city": None, "district": None}
+    if not parts:
+        return out
+    out["street"] = parts[0]
+    for i, part in enumerate(parts[1:], start=1):
+        m = PLZ_RE.match(part)
+        if m:
+            out["postcode"] = m.group(1)
+            out["city"] = clean(m.group(2)) or None
+            if i + 1 < len(parts):
+                out["district"] = ", ".join(parts[i+1:])
+            return out
+    if len(parts) > 1:
+        out["city"] = ", ".join(parts[1:])
+    return out
 
-def court_from_text(text: str) -> str | None:
-    m = COURT_RE.search(text)
-    return clean("Amtsgericht " + m.group(1)) if m else None
-
-def detail_identity(href: str, state: str) -> tuple[str, str]:
+def detail_identity(href: str, state: str) -> tuple[str, str, str]:
     url = urljoin(BASE, href.replace("&amp;", "&"))
     qs = parse_qs(urlparse(url).query)
     zvg_id = (qs.get("zvg_id") or [""])[0]
     land = (qs.get("land_abk") or [state])[0]
-    return zvg_id, land
+    canonical = f"{BASE}index.php?button=showZvg&zvg_id={zvg_id}&land_abk={land}" if zvg_id else url
+    return zvg_id, land, canonical
 
-def record_from_anchor(anchor, state: str) -> dict[str, Any]:
-    href = anchor.get("href", "")
-    zvg_id, land = detail_identity(href, state)
-    tr = anchor.find_parent("tr")
-    row_text = clean(tr.get_text(" ", strip=True) if tr else anchor.parent.get_text(" ", strip=True))
-    plz, city = city_from_text(row_text)
-    court = court_from_text(row_text)
-    file_match = FILE_RE.search(row_text)
-    center = STATE_CENTERS[state]
-    jlat, jlng = stable_jitter(zvg_id or row_text)
+def attachment_type(label: str) -> str:
+    l = label.lower()
+    if "gutachten" in l:
+        return "gutachten"
+    if "expos" in l:
+        return "expose"
+    if "foto" in l:
+        return "foto"
+    return "bekanntmachung"
+
+def parse_attachment(anchor, land: str, zvg_id: str) -> dict[str, Any] | None:
+    href = (anchor.get("href") or "").replace("&amp;", "&")
+    qs = parse_qs(urlparse(href).query)
+    file_id = (qs.get("file_id") or [""])[0]
+    if not file_id:
+        return None
+    label = text_of(anchor)
+    url = f"{BASE}index.php?button=showAnhang&land_abk={land}&file_id={file_id}&zvg_id={zvg_id}"
+    return {"type": attachment_type(label), "file_id": file_id, "name": label or None, "url": url}
+
+def record_chunks(soup: BeautifulSoup):
+    comments = soup.find_all(string=lambda t: isinstance(t, Comment) and re.search(r"Aktenzeichen", str(t), re.I))
+    if not comments:
+        return []
+    chunks = []
+    for c in comments:
+        nodes = []
+        node = c.next_sibling
+        while node is not None:
+            if isinstance(node, Comment) and re.search(r"Aktenzeichen", str(node), re.I):
+                break
+            nodes.append(str(node))
+            node = node.next_sibling
+        if nodes:
+            chunks.append(BeautifulSoup("".join(nodes), "html.parser"))
+    return chunks
+
+def first_value_after_label(chunk: BeautifulSoup, label_pattern: str):
+    pat = re.compile(label_pattern, re.I)
+    for cell in chunk.find_all(["td", "th"]):
+        if pat.search(text_of(cell)):
+            nxt = cell.find_next_sibling(["td", "th"])
+            if nxt:
+                return nxt
+    return None
+
+def parse_chunk(chunk: BeautifulSoup, state: str) -> dict[str, Any] | None:
+    detail = chunk.find("a", href=re.compile(r"button=showZvg", re.I))
+    zvg_id = ""
+    land = state
+    source_url = None
+    if detail:
+        zvg_id, land, source_url = detail_identity(detail.get("href", ""), state)
+
+    chunk_text = text_of(chunk)
+    file_match = FILE_RE.search(chunk_text)
+    file_number = clean(file_match.group(0)).replace(" / ", "/") if file_match else None
+
+    court = None
+    court_cell = first_value_after_label(chunk, r"^Amtsgericht$")
+    if court_cell:
+        full = text_of(court_cell.find("b") or court_cell)
+        full = re.sub(r"\s+in\s+.+$", "", full, flags=re.I).strip()
+        court = full or None
+
+    cancelled_match = re.search(r"Der Termin\s+(.+?)\s+wurde aufgehoben\.", chunk_text, re.I)
+    cancelled = bool(cancelled_match)
+
+    object_type_raw = None
+    address = {"street": None, "postcode": None, "city": None, "district": None}
+    lage_cell = first_value_after_label(chunk, r"^Objekt/Lage$")
+    if lage_cell:
+        bold = lage_cell.find("b")
+        if bold:
+            object_type_raw = text_of(bold).rstrip(":") or None
+            full = text_of(lage_cell)
+            remainder = full[len(text_of(bold)):].lstrip(": ").strip()
+            address = parse_address(remainder)
+        else:
+            object_type_raw = text_of(lage_cell) or None
+
+    value = None
+    value_cell = first_value_after_label(chunk, r"^Verkehrswert in")
+    if value_cell:
+        value = parse_money(text_of(value_cell))
+
+    auction_date = None
+    if not cancelled:
+        date_cell = first_value_after_label(chunk, r"^Termin$")
+        if date_cell:
+            auction_date = parse_portal_date(text_of(date_cell))
+
+    last_updated = None
+    um = re.search(r"letzte Aktualisierung:?\s*(\d{2})-(\d{2})-(\d{4})\s+(\d{2}):(\d{2})", chunk_text, re.I)
+    if um:
+        dd, mm, yyyy, hh, minute = um.groups()
+        last_updated = f"{yyyy}-{mm}-{dd}T{hh}:{minute}"
+
+    attachments = []
+    for a in chunk.find_all("a", href=re.compile(r"button=showAnhang", re.I)):
+        att = parse_attachment(a, land, zvg_id)
+        if att:
+            attachments.append(att)
+
+    gutachten = next((a["url"] for a in attachments if a["type"] == "gutachten"), None)
+    expose = next((a["url"] for a in attachments if a["type"] == "expose"), None)
+
+    center = STATE_CENTERS.get(land, (51.1, 10.4))
+    key = zvg_id or file_number or chunk_text
+    jlat, jlng = stable_jitter(key)
+
+    identity = f"{land}-{zvg_id}" if zvg_id else f"{land}-{hashlib.sha1(chunk_text.encode()).hexdigest()[:12]}"
+    if not (zvg_id or file_number or cancelled):
+        return None
+
     return {
-        "id": f"{land}-{zvg_id or hashlib.sha1(row_text.encode()).hexdigest()[:12]}",
+        "id": identity,
         "zvg_id": zvg_id or None,
         "state_code": land,
         "state": STATES.get(land, land),
         "court": court,
-        "file_number": clean(file_match.group(0)) if file_match else None,
-        "auction_date": parse_date(row_text),
-        "property_type": property_type(row_text),
-        "postcode": plz,
-        "city": city,
-        "address": None,
-        "market_value": parse_money(row_text),
-        "description": row_text,
-        "source_url": urljoin(BASE, href.replace("&amp;", "&")),
-        "gutachten_url": None,
-        "has_report": False,
+        "file_number": file_number,
+        "auction_date": auction_date,
+        "cancelled": cancelled,
+        "cancelled_date_text": clean(cancelled_match.group(1)) if cancelled_match else None,
+        "last_updated": last_updated,
+        "property_type": normalize_property_type(object_type_raw),
+        "property_type_raw": object_type_raw,
+        "address": address["street"],
+        "postcode": address["postcode"],
+        "city": address["city"],
+        "district": address["district"],
+        "market_value": value,
+        "description": chunk_text[:1600],
+        "source_url": source_url,
+        "gutachten_url": gutachten,
+        "expose_url": expose,
+        "has_report": bool(gutachten),
+        "attachments": attachments,
         "score": None,
         "lat": round(center[0] + jlat, 5),
         "lng": round(center[1] + jlng, 5),
@@ -151,20 +280,41 @@ def record_from_anchor(anchor, state: str) -> dict[str, Any]:
 
 def parse_search_html(html: bytes | str, state: str) -> list[dict[str, Any]]:
     soup = BeautifulSoup(html, "html.parser")
-    anchors = soup.select('a[href*="button=showZvg"]')
+    chunks = record_chunks(soup)
     out: dict[str, dict[str, Any]] = {}
-    for a in anchors:
-        rec = record_from_anchor(a, state)
-        out[rec["id"]] = rec
+
+    for chunk in chunks:
+        rec = parse_chunk(chunk, state)
+        if rec:
+            out[rec["id"]] = rec
+
+    # Fallback for portal variants without the record comments.
+    if not out:
+        anchors = soup.find_all("a", href=re.compile(r"button=showZvg", re.I))
+        for a in anchors:
+            tr = a.find_parent("tr")
+            holder = BeautifulSoup(str(tr or a.parent), "html.parser")
+            rec = parse_chunk(holder, state)
+            if rec:
+                out[rec["id"]] = rec
+
     return list(out.values())
 
 def request_state(session: requests.Session, code: str, timeout: int = 60) -> list[dict[str, Any]]:
-    data = {"land_abk": code, "ger_id": "0", "order_by": "2", "art": "0"}
+    data = {
+        "ger_name": "-- Alle Amtsgerichte --",
+        "order_by": "2",
+        "land_abk": code,
+        "ger_id": "0",
+        "az1": "", "az2": "", "az3": "", "az4": "",
+        "art": "", "obj": "", "str": "", "hnr": "",
+        "plz": "", "ort": "", "ortsteil": "", "vtermin": "", "btermin": "",
+    }
     response = session.post(SEARCH_URL, data=data, timeout=timeout)
     response.raise_for_status()
     records = parse_search_html(response.content, code)
     if not records:
-        raise RuntimeError(f"0 Detail-Links erkannt (HTTP {response.status_code}, {len(response.content)} Bytes)")
+        raise RuntimeError(f"0 Datensätze erkannt (HTTP {response.status_code}, {len(response.content)} Bytes)")
     return records
 
 def load_existing(path: Path) -> list[dict[str, Any]]:
@@ -176,6 +326,16 @@ def load_existing(path: Path) -> list[dict[str, Any]]:
         return arr if isinstance(arr, list) else []
     except Exception:
         return []
+
+def quality_stats(records: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(records) or 1
+    fields = ["court", "auction_date", "property_type_raw", "postcode", "city", "market_value", "gutachten_url"]
+    stats = {}
+    for key in fields:
+        n = sum(1 for r in records if r.get(key))
+        stats[key] = {"count": n, "pct": round(n * 100 / total, 1)}
+    stats["cancelled"] = {"count": sum(1 for r in records if r.get("cancelled"))}
+    return stats
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -193,7 +353,7 @@ def main() -> int:
 
     session = requests.Session()
     session.headers.update({
-        "User-Agent": "ZVGRadarDataCollector/1.0 (+public court-auction index; respectful scheduled fetch)",
+        "User-Agent": "ZVGRadarDataCollector/1.1 (+public court-auction index; scheduled fetch)",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "de-DE,de;q=0.9,en;q=0.5",
         "Referer": "https://www.zvg-portal.de/index.php?button=Termine+suchen",
@@ -208,7 +368,7 @@ def main() -> int:
         try:
             records = request_state(session, code)
             all_records.extend(records)
-            statuses[code] = {"ok": True, "count": len(records)}
+            statuses[code] = {"ok": True, "count": len(records), "quality": quality_stats(records)}
             success_count += 1
             print(f"{code}: {len(records)} Treffer")
         except Exception as exc:
@@ -238,10 +398,11 @@ def main() -> int:
         "meta": {
             "source": "https://www.zvg-portal.de/",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "collector": "github-actions",
+            "collector": "github-actions-v1.1-list-enrichment",
             "count": len(all_records),
             "states": statuses,
-            "note": "Positionen sind ohne Geocoder nur auf Bundesland-Ebene angenähert. Amtliche Quelle bleibt maßgeblich.",
+            "quality": quality_stats(all_records),
+            "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind ohne Geocoder nur auf Bundesland-Ebene angenähert.",
         },
         "results": all_records,
     }
@@ -249,9 +410,8 @@ def main() -> int:
     tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp.replace(output)
     print(f"Gespeichert: {len(all_records)} Treffer -> {output}")
+    print(json.dumps(payload["meta"]["quality"], ensure_ascii=False))
     return 0
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-# Trigger: initial GitHub Actions collection

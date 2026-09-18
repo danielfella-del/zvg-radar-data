@@ -56,6 +56,14 @@ FILE_RE = re.compile(r"\b(?:\d{1,4}\s*)?K\s*\d{1,5}\s*/\s*\d{2,4}\b", re.I)
 PLZ_RE = re.compile(r"^(\d{5})\s*(.*)$")
 MONEY_RE = re.compile(r"(\d{1,3}(?:\.\d{3})*|\d+)(?:,(\d{1,2}))?")
 
+PERSIST_FIELDS = {
+    "auction_type", "land_registry", "auction_venue", "creditor_info",
+    "detail_description", "court_url", "geoserver_urls",
+    "portal_google_maps_urls", "detail_source_url", "detail_fetched_at",
+    "detail_source_last_updated", "detail_error", "dossier_completeness",
+}
+PERSIST_META_FIELDS = {"detail_enrichment", "media_cache"}
+
 def repair_mojibake(text: str) -> str:
     if not text:
         return text
@@ -352,15 +360,55 @@ def request_state(session: requests.Session, code: str, timeout: int = 60) -> li
         raise RuntimeError(f"0 Datensätze erkannt (HTTP {response.status_code}, {len(response.content)} Bytes)")
     return records
 
-def load_existing(path: Path) -> list[dict[str, Any]]:
+def load_existing_payload(path: Path) -> dict[str, Any]:
     if not path.exists():
-        return []
+        return {}
     try:
         obj = json.loads(path.read_text(encoding="utf-8"))
-        arr = obj.get("results", obj) if isinstance(obj, dict) else obj
-        return arr if isinstance(arr, list) else []
+        return obj if isinstance(obj, dict) else {"results": obj}
     except Exception:
-        return []
+        return {}
+
+def load_existing(path: Path) -> list[dict[str, Any]]:
+    obj = load_existing_payload(path)
+    arr = obj.get("results", [])
+    return arr if isinstance(arr, list) else []
+
+def merge_attachment_history(fresh: list[dict[str, Any]], old: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged: dict[tuple[str, str], dict[str, Any]] = {}
+    for item in old + fresh:
+        if not isinstance(item, dict):
+            continue
+        key = (str(item.get("file_id") or item.get("url") or ""), str(item.get("type") or ""))
+        if not key[0]:
+            continue
+        if key in merged:
+            prior = merged[key]
+            # New list metadata wins, but keep cache metadata from previous runs.
+            cache = {k: v for k, v in prior.items() if k.startswith("cached_") or k in {"content_type", "cache_status", "cache_error"}}
+            prior.update(item)
+            for k, v in cache.items():
+                prior.setdefault(k, v)
+        else:
+            merged[key] = dict(item)
+    return list(merged.values())
+
+def preserve_enrichment(fresh_records: list[dict[str, Any]], old_records: list[dict[str, Any]]) -> None:
+    old_by_id = {str(r.get("id")): r for r in old_records if r.get("id")}
+    for fresh in fresh_records:
+        old = old_by_id.get(str(fresh.get("id")))
+        if not old:
+            continue
+        for key in PERSIST_FIELDS:
+            if key in old:
+                fresh[key] = old[key]
+        fresh["attachments"] = merge_attachment_history(
+            list(fresh.get("attachments") or []),
+            list(old.get("attachments") or []),
+        )
+        fresh["has_report"] = any(a.get("type") == "gutachten" for a in fresh["attachments"])
+        fresh["gutachten_url"] = next((a.get("cached_url") or a.get("url") for a in fresh["attachments"] if a.get("type") == "gutachten"), None)
+        fresh["expose_url"] = next((a.get("cached_url") or a.get("url") for a in fresh["attachments"] if a.get("type") == "expose"), None)
 
 def load_postcode_centroids(session: requests.Session) -> dict[str, tuple[float, float]]:
     # Stable public German PLZ centroid dataset by WZB Berlin.
@@ -424,14 +472,15 @@ def main() -> int:
 
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    existing = load_existing(output)
+    existing_payload = load_existing_payload(output)
+    existing = existing_payload.get("results", []) if isinstance(existing_payload.get("results", []), list) else []
     previous_by_state: dict[str, list[dict[str, Any]]] = {}
     for r in existing:
         previous_by_state.setdefault(str(r.get("state_code", "")), []).append(r)
 
     session = requests.Session()
     session.headers.update({
-        "User-Agent": "ZVGRadarDataCollector/1.3 (+public court-auction index; scheduled fetch)",
+        "User-Agent": "ZVGRadarDataCollector/1.4 (+public court-auction index; scheduled fetch)",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "de-DE,de;q=0.9,en;q=0.5",
         "Referer": "https://www.zvg-portal.de/index.php?button=Termine+suchen",
@@ -463,6 +512,7 @@ def main() -> int:
 
     dedup = {str(r.get("id")): r for r in all_records if r.get("id")}
     all_records = list(dedup.values())
+    preserve_enrichment(all_records, existing)
 
     postcode_positioned = 0
     try:
@@ -484,7 +534,7 @@ def main() -> int:
         "meta": {
             "source": "https://www.zvg-portal.de/",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "collector": "github-actions-v1.3-enriched",
+            "collector": "github-actions-v1.4-persistent-enrichment",
             "count": len(all_records),
             "states": statuses,
             "quality": quality_stats(all_records),
@@ -494,6 +544,10 @@ def main() -> int:
         },
         "results": all_records,
     }
+    old_meta = existing_payload.get("meta", {}) if isinstance(existing_payload, dict) else {}
+    for key in PERSIST_META_FIELDS:
+        if key in old_meta:
+            payload["meta"][key] = old_meta[key]
     tmp = output.with_suffix(output.suffix + ".tmp")
     tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp.replace(output)

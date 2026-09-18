@@ -16,3 +16,7 @@ Der GitHub-Actions-Workflow läuft zweimal täglich sowie manuell über **Action
 - Hamburg und Mecklenburg-Vorpommern laufen nicht über dieselbe gemeinsame Portalstrecke und sind in diesem Collector derzeit nicht enthalten.
 - Ohne Geocoder sind Kartenpositionen nur auf Bundesland-Ebene angenähert.
 - Ein Investment-Score wird absichtlich nicht aus dem Verkehrswert allein erfunden.
+
+## Geodaten
+
+Für die Kartenpositionierung auf PLZ-Ebene wird der öffentliche GeoNames-Postleitzahlendatensatz verwendet. Quelle: https://www.geonames.org/ — Lizenz: CC BY 3.0. Die Koordinaten sind PLZ-Zentren bzw. Näherungen und keine exakten Hauskoordinaten.

@@ -17,7 +17,11 @@ STATE_CENTERS={'bw':(48.65,9.35),'hh':(53.55,9.99),'mv':(53.8,12.6),'sh':(54.2,9
 STATE_NAMES={'bw':'Baden-Württemberg','hh':'Hamburg','mv':'Mecklenburg-Vorpommern','sh':'Schleswig-Holstein'}
 
 def clean(s:str)->str:
-    return re.sub(r'\s+',' ',s or '').strip()
+    text=unicodedata.normalize('NFKC',s or '')
+    text=''.join(ch for ch in text if ch in '\n\r\t' or not unicodedata.category(ch).startswith('C'))
+    text=re.sub(r'(?<=[A-Za-zÄÖÜäöüß])-\s+(?=[a-zäöüß])','',text)
+    text=re.sub(r'(?<=[A-Za-zÄÖÜäöüß])-\s+(?=[A-ZÄÖÜ])','-',text)
+    return re.sub(r'\s+',' ',text).strip()
 
 def normalize_case(s:str)->str:
     s=clean(s).upper().replace('–','-')
@@ -49,11 +53,12 @@ def find_market_values(text:str):
     return vals[:8]
 
 def _parse_first_date(text:str):
-    m=re.search(r'(\d{1,2})\.\s*([A-Za-zÄÖÜäöü]+)\s+(\d{4})(?:\s*,?\s*(?:um\s*)?(\d{1,2})[.:](\d{2}))?',text,re.I)
+    time_part=r'(?:\s*,?\s*(?:um\s*)?(\d{1,2})(?:[.:](\d{2}))?\s*(?:Uhr)?)?'
+    m=re.search(r'(\d{1,2})\.\s*([A-Za-zÄÖÜäöü]+)\s+(\d{4})'+time_part,text,re.I)
     if m:
         d,mon,y,h,mi=m.groups(); mm=MONTHS.get(mon.lower())
         if mm: return f'{y}-{mm:02d}-{int(d):02d}T{int(h or 0):02d}:{int(mi or 0):02d}'
-    m=re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})(?:\s*,?\s*(?:um\s*)?(\d{1,2})[.:](\d{2}))?',text,re.I)
+    m=re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})'+time_part,text,re.I)
     if m:
         d,mo,y,h,mi=m.groups(); return f'{y}-{int(mo):02d}-{int(d):02d}T{int(h or 0):02d}:{int(mi or 0):02d}'
     return None
@@ -103,7 +108,7 @@ def pdf_text(content:bytes):
         try: parts.append(p.get_text('text') or '')
         except Exception: pass
     doc.close()
-    return '\n'.join(parts)
+    return clean('\n'.join(parts))
 
 def pdf_links_from_html(html:str,base_url:str,include_text_re:str|None=None):
     soup=BeautifulSoup(html,'html.parser'); out=[]
@@ -115,12 +120,16 @@ def pdf_links_from_html(html:str,base_url:str,include_text_re:str|None=None):
         if u not in out: out.append(u)
     return out
 
-def split_case_chunks(text:str,pre=350,post=3000):
+def split_case_chunks(text:str,pre=350,post=3000,case_at_end=False):
     flat=clean(text)
     ms=list(CASE_RE.finditer(flat)); out=[]
     for i,m in enumerate(ms):
-        start=max(0,m.start()-pre)
-        end=min(len(flat), ms[i+1].start()+pre if i+1<len(ms) else m.end()+post)
+        if case_at_end:
+            start=0 if i==0 else ms[i-1].end()
+            end=min(len(flat),m.end()+max(pre,500))
+        else:
+            start=max(0,m.start()-pre)
+            end=min(len(flat), ms[i+1].start()+pre if i+1<len(ms) else m.end()+post)
         out.append((normalize_case(m.group()),flat[start:end]))
     return out
 

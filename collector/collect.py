@@ -64,18 +64,24 @@ def stable_jitter(key: str) -> tuple[float, float]:
     d = hashlib.sha256(key.encode("utf-8", "ignore")).digest()
     return ((d[0] / 255 - 0.5) * 0.7, (d[1] / 255 - 0.5) * 1.0)
 
-def parse_money(raw: str) -> int | None:
+def parse_money_values(raw: str) -> list[int]:
     if not raw:
-        return None
-    m = MONEY_RE.search(clean(raw))
-    if not m:
-        return None
-    whole = m.group(1).replace(".", "")
-    frac = (m.group(2) or "").ljust(2, "0")[:2]
-    try:
-        return round((int(whole) * 100 + int(frac or "0")) / 100)
-    except ValueError:
-        return None
+        return []
+    text = clean(raw)
+    # Monetary values on the portal almost always carry German decimal cents.
+    # This avoids mistaking "Lfd. Nr. 1" or a Grundbuchblatt number for money.
+    found = re.findall(r"(?<!\\d)(\\d{1,3}(?:\\.\\d{3})+|\\d+),(\\d{2})(?!\\d)", text)
+    values = []
+    for whole, frac in found:
+        try:
+            values.append(int(whole.replace(".", "")) + (1 if int(frac) >= 50 else 0))
+        except ValueError:
+            pass
+    return values
+
+def parse_money(raw: str) -> int | None:
+    values = parse_money_values(raw)
+    return sum(values) if values else None
 
 def parse_portal_date(raw: str) -> str | None:
     raw = clean(raw)
@@ -205,19 +211,28 @@ def parse_chunk(chunk: BeautifulSoup, state: str) -> dict[str, Any] | None:
     address = {"street": None, "postcode": None, "city": None, "district": None}
     lage_cell = first_value_after_label(chunk, r"^Objekt/Lage$")
     if lage_cell:
-        bold = lage_cell.find("b")
-        if bold:
-            object_type_raw = text_of(bold).rstrip(":") or None
-            full = text_of(lage_cell)
-            remainder = full[len(text_of(bold)):].lstrip(": ").strip()
-            address = parse_address(remainder)
+        full = text_of(lage_cell)
+        # Portal variants often put object type + address into the same <b>.
+        # Example: "Einfamilienhaus : Dorfwiesenweg 3, 36124 Eichenzell, Büchenberg"
+        if ":" in full:
+            left, right = full.split(":", 1)
+            object_type_raw = clean(left) or None
+            address = parse_address(right)
         else:
-            object_type_raw = text_of(lage_cell) or None
+            bold = lage_cell.find("b")
+            if bold:
+                object_type_raw = text_of(bold).rstrip(":") or None
+                remainder = full[len(text_of(bold)):].lstrip(": ").strip()
+                address = parse_address(remainder)
+            else:
+                object_type_raw = full or None
 
     value = None
+    market_values = []
     value_cell = first_value_after_label(chunk, r"^Verkehrswert in")
     if value_cell:
-        value = parse_money(text_of(value_cell))
+        market_values = parse_money_values(text_of(value_cell))
+        value = sum(market_values) if market_values else None
 
     auction_date = None
     if not cancelled:
@@ -266,6 +281,7 @@ def parse_chunk(chunk: BeautifulSoup, state: str) -> dict[str, Any] | None:
         "city": address["city"],
         "district": address["district"],
         "market_value": value,
+        "market_values": market_values,
         "description": chunk_text[:1600],
         "source_url": source_url,
         "gutachten_url": gutachten,

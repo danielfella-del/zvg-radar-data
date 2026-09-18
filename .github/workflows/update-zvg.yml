@@ -76,25 +76,17 @@ jobs:
         run: python collector/coverage_audit.py --data data/auctions.json
 
       - name: Detailseiten schrittweise anreichern
-        run: python collector/enrich_details.py --data data/auctions.json --limit 40
-
-      - name: Amtliche PDFs und Fotos begrenzt cachen
-        continue-on-error: true
-        run: timeout 8m python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 30 --max-run-mb 25
-
-      - name: Gutachten automatisch analysieren
-        continue-on-error: true
-        run: python collector/analyze_documents.py --data data/auctions.json --repo-root . --limit 20
+        run: python collector/enrich_details.py --data data/auctions.json --limit 20
 
       - name: Änderungen speichern
         shell: bash
         run: |
-          if git diff --quiet -- data/auctions.json media; then
+          if git diff --quiet -- data/auctions.json; then
             echo "Keine Änderungen."
           else
             git config user.name "zvg-radar-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/auctions.json media
+            git add data/auctions.json
             git commit -m "ZVG-Daten, Historie und Dossiers stündlich aktualisiert"
             git pull --rebase
             git push

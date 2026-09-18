@@ -1,5 +1,5 @@
 from __future__ import annotations
-import hashlib, io, json, re
+import hashlib, io, json, re, unicodedata
 from datetime import datetime, timezone
 from urllib.parse import urljoin
 import fitz

@@ -17,7 +17,7 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Repository laden
         uses: actions/checkout@v4
@@ -33,7 +33,9 @@ jobs:
         run: pip install -r collector/requirements.txt
 
       - name: Parser testen
-        run: |\n          python tests/test_parser.py\n          python tests/test_detail_parser.py
+        run: |
+          python tests/test_parser.py
+          python tests/test_detail_parser.py
 
       - name: ZVG-Daten sammeln
         run: python collector/collect.py --output data/auctions.json
@@ -51,5 +53,5 @@ jobs:
           git config user.name "zvg-radar-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/auctions.json
-          git commit -m "ZVG-Daten automatisch aktualisiert"
+          git commit -m "ZVG-Daten und Dossiers automatisch aktualisiert"
           git push

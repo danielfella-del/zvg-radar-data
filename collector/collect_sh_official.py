@@ -37,7 +37,7 @@ def main():
             scanned+=1
             text=pdf_text(q.content)
             if 'Zwangsversteiger' not in text: continue
-            for case,chunk in split_case_chunks(text):
+            for case,chunk in split_case_chunks(text,case_at_end=True):
                 if 'versteiger' not in chunk.lower(): continue
                 rec=make_record('sh','sh-schlha-teil-b',u,case,chunk,publication='Schleswig-Holsteinische Anzeigen Teil B')
                 if rec:

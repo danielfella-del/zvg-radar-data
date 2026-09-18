@@ -26,7 +26,10 @@ def safe_part(s: str) -> str:
 
 def parse_date(v):
     try:
-        return datetime.fromisoformat(str(v).replace("Z","+00:00"))
+        d = datetime.fromisoformat(str(v).replace("Z","+00:00"))
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=timezone.utc)
+        return d
     except Exception:
         return None
 

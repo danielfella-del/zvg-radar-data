@@ -14,6 +14,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
+import fitz
 
 RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
 BASE = "https://www.zvg-portal.de/"
@@ -199,6 +200,29 @@ def main():
                 a["content_type"]=ctype.split(";",1)[0] or None
                 a["cached_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
                 a["cache_status"]="ok"
+
+                # ZVG kennzeichnet Fotos teilweise als PDF-Anhang. Fuer die
+                # Web-Galerie erzeugen wir deshalb zusaetzlich eine echte
+                # Bildvorschau aus der ersten PDF-Seite.
+                if a.get("type") == "foto" and (a.get("content_type") == "application/pdf" or ext == ".pdf"):
+                    try:
+                        preview = folder / f"{fid}-preview.jpg"
+                        doc = fitz.open(target)
+                        if doc.page_count < 1:
+                            raise RuntimeError("Foto-PDF ohne Seiten")
+                        page = doc.load_page(0)
+                        pix = page.get_pixmap(matrix=fitz.Matrix(1.6, 1.6), alpha=False)
+                        pix.save(preview)
+                        doc.close()
+                        preview_rel = preview.as_posix()
+                        a["preview_path"] = preview_rel
+                        a["preview_url"] = RAW_BASE + preview_rel
+                        a["preview_content_type"] = "image/jpeg"
+                        a["preview_bytes"] = preview.stat().st_size
+                    except Exception as preview_exc:
+                        a["preview_error"] = str(preview_exc)
+                        print(f"{r.get('id')}: Foto-Vorschau fehlgeschlagen: {preview_exc}", file=sys.stderr)
+
                 print(f"{r.get('id')}: {a.get('type')} -> {rel} ({size} bytes)")
             except Exception as exc:
                 failed+=1
@@ -216,7 +240,11 @@ def main():
     with_gutachten=0
     for r in records:
         atts=r.get("attachments") or []
-        if any(a.get("cached_url") and str(a.get("content_type") or "").startswith("image/") for a in atts if isinstance(a,dict)):
+        if any(
+            (a.get("preview_url")) or
+            (a.get("cached_url") and str(a.get("content_type") or "").startswith("image/"))
+            for a in atts if isinstance(a,dict) and a.get("type") == "foto"
+        ):
             with_photos+=1
         if any(a.get("cached_url") and (a.get("content_type")=="application/pdf" or str(a.get("cached_path","")).endswith(".pdf")) for a in atts if isinstance(a,dict)):
             with_pdfs+=1

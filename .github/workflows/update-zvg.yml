@@ -38,6 +38,9 @@ jobs:
       - name: ZVG-Daten sammeln
         run: python collector/collect.py --output data/auctions.json
 
+      - name: Detailseiten schrittweise anreichern
+        run: python collector/enrich_details.py --data data/auctions.json --limit 250
+
       - name: Änderungen speichern
         shell: bash
         run: |

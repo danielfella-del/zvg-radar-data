@@ -1,0 +1,48 @@
+name: ZVG Medien Diagnose
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-media.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose-media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Abhängigkeiten
+        run: pip install -r collector/requirements.txt
+
+      - name: Medien-Einzeltest
+        continue-on-error: true
+        shell: bash
+        run: |
+          mkdir -p diagnostics media-test
+          python collector/cache_media.py             --data data/auctions.json             --media-dir media-test             --max-files 1             --max-run-mb 8             --max-file-mb 8             > diagnostics/media.log 2>&1
+          cp data/auctions.json diagnostics/auctions-after-media.json
+          find media-test -type f -maxdepth 3 -printf '%p %s bytes\n' > diagnostics/media-files.txt || true
+
+      - name: Diagnose speichern
+        if: always()
+        shell: bash
+        run: |
+          git config user.name "zvg-radar-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add diagnostics
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "ZVG Medien Diagnose"
+          git pull --rebase
+          git push

@@ -1,0 +1,186 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import mimetypes
+import os
+import re
+import shutil
+import sys
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+from urllib.parse import urlparse
+
+import requests
+
+RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
+PORTAL_REFERER = "https://www.zvg-portal.de/index.php?button=Suchen"
+ALLOWED_TYPES = {"gutachten", "bekanntmachung", "expose", "foto", "hinweis", "dokument"}
+
+def safe_part(s: str) -> str:
+    return re.sub(r"[^A-Za-z0-9._-]+", "_", str(s or ""))[:100].strip("._") or "file"
+
+def parse_date(v):
+    try:
+        return datetime.fromisoformat(str(v).replace("Z","+00:00"))
+    except Exception:
+        return None
+
+def ext_from(content_type: str, url: str, name: str) -> str:
+    ct=(content_type or "").split(";",1)[0].strip().lower()
+    if ct=="application/pdf": return ".pdf"
+    if ct in ("image/jpeg","image/jpg"): return ".jpg"
+    if ct=="image/png": return ".png"
+    if ct=="image/webp": return ".webp"
+    if ct=="image/gif": return ".gif"
+    for source in (name,url):
+        p=urlparse(str(source)).path
+        ext=Path(p).suffix.lower()
+        if ext in {".pdf",".jpg",".jpeg",".png",".webp",".gif"}:
+            return ".jpg" if ext==".jpeg" else ext
+    guessed=mimetypes.guess_extension(ct) if ct else None
+    return guessed or ".bin"
+
+def active_record(r, horizon_days: int) -> bool:
+    if r.get("cancelled"): return False
+    d=parse_date(r.get("auction_date"))
+    if not d: return True
+    now=datetime.now(d.tzinfo or timezone.utc)
+    return d >= now - timedelta(days=7) and d <= now + timedelta(days=horizon_days)
+
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--data",default="data/auctions.json")
+    ap.add_argument("--media-dir",default="media")
+    ap.add_argument("--max-file-mb",type=float,default=float(os.getenv("ZVG_MEDIA_MAX_FILE_MB","18")))
+    ap.add_argument("--max-run-mb",type=float,default=float(os.getenv("ZVG_MEDIA_MAX_RUN_MB","75")))
+    ap.add_argument("--max-files",type=int,default=int(os.getenv("ZVG_MEDIA_MAX_FILES","120")))
+    ap.add_argument("--horizon-days",type=int,default=int(os.getenv("ZVG_MEDIA_HORIZON_DAYS","180")))
+    args=ap.parse_args()
+
+    data_path=Path(args.data)
+    media_root=Path(args.media_dir)
+    media_root.mkdir(parents=True,exist_ok=True)
+    payload=json.loads(data_path.read_text(encoding="utf-8"))
+    records=payload.get("results",[])
+    by_id={str(r.get("id")):r for r in records if r.get("id")}
+
+    # Prune cached folders for procedures no longer relevant.
+    active_ids={rid for rid,r in by_id.items() if active_record(r,args.horizon_days)}
+    if media_root.exists():
+        for child in media_root.iterdir():
+            if child.is_dir() and child.name not in {safe_part(x) for x in active_ids}:
+                shutil.rmtree(child,ignore_errors=True)
+
+    session=requests.Session()
+    session.headers.update({
+        "User-Agent":"ZVGRadarMediaCache/1.0 (+public court-auction documents; bounded cache)",
+        "Referer":PORTAL_REFERER,
+        "Accept":"application/pdf,image/*,*/*;q=0.5",
+    })
+
+    max_file=int(args.max_file_mb*1024*1024)
+    budget=int(args.max_run_mb*1024*1024)
+    used=0
+    downloaded=0
+    failed=0
+    cached_total=0
+
+    for r in records:
+        if not active_record(r,args.horizon_days):
+            continue
+        rid=safe_part(r.get("id"))
+        atts=r.get("attachments") or []
+        if not isinstance(atts,list):
+            continue
+        for a in atts:
+            if not isinstance(a,dict) or a.get("type") not in ALLOWED_TYPES:
+                continue
+            if a.get("cached_url"):
+                cached_total+=1
+                continue
+            if downloaded>=args.max_files or used>=budget:
+                break
+            url=a.get("url")
+            if not url:
+                continue
+            try:
+                resp=session.get(url,headers={"Referer":PORTAL_REFERER},timeout=60,stream=True)
+                resp.raise_for_status()
+                ctype=(resp.headers.get("content-type") or "").lower()
+                if "text/html" in ctype:
+                    raise RuntimeError("Portal lieferte HTML statt Datei")
+                declared=resp.headers.get("content-length")
+                if declared and int(declared)>max_file:
+                    raise RuntimeError("Datei groesser als Cache-Limit")
+                ext=ext_from(ctype,url,a.get("name") or "")
+                fid=safe_part(a.get("file_id") or hashlib.sha1(url.encode()).hexdigest()[:12])
+                name=f"{fid}{ext}"
+                folder=media_root/rid
+                folder.mkdir(parents=True,exist_ok=True)
+                target=folder/name
+                size=0
+                with target.open("wb") as fh:
+                    for chunk in resp.iter_content(256*1024):
+                        if not chunk: continue
+                        size+=len(chunk)
+                        if size>max_file or used+size>budget:
+                            raise RuntimeError("Cache-Limit erreicht")
+                        fh.write(chunk)
+                if size<=0:
+                    target.unlink(missing_ok=True)
+                    raise RuntimeError("Leere Datei")
+                used+=size
+                downloaded+=1
+                cached_total+=1
+                rel=target.as_posix()
+                a["cached_path"]=rel
+                a["cached_url"]=RAW_BASE+rel
+                a["cached_bytes"]=size
+                a["content_type"]=ctype.split(";",1)[0] or None
+                a["cached_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")
+                a["cache_status"]="ok"
+                print(f"{r.get('id')}: {a.get('type')} -> {rel} ({size} bytes)")
+            except Exception as exc:
+                failed+=1
+                a["cache_status"]="error"
+                a["cache_error"]=str(exc)
+                print(f"{r.get('id')}: Medienfehler: {exc}",file=sys.stderr)
+        if downloaded>=args.max_files or used>=budget:
+            break
+
+    # Recount media availability from actual cached objects.
+    with_photos=0
+    with_pdfs=0
+    with_gutachten=0
+    for r in records:
+        atts=r.get("attachments") or []
+        if any(a.get("cached_url") and str(a.get("content_type") or "").startswith("image/") for a in atts if isinstance(a,dict)):
+            with_photos+=1
+        if any(a.get("cached_url") and (a.get("content_type")=="application/pdf" or str(a.get("cached_path","")).endswith(".pdf")) for a in atts if isinstance(a,dict)):
+            with_pdfs+=1
+        if any(a.get("type")=="gutachten" and a.get("cached_url") for a in atts if isinstance(a,dict)):
+            with_gutachten+=1
+
+    meta=payload.setdefault("meta",{})
+    meta["media_cache"]={
+        "generated_at":datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "downloaded_this_run":downloaded,
+        "failed_this_run":failed,
+        "bytes_this_run":used,
+        "with_cached_photos":with_photos,
+        "with_cached_pdfs":with_pdfs,
+        "with_cached_gutachten":with_gutachten,
+        "max_file_mb":args.max_file_mb,
+        "max_run_mb":args.max_run_mb,
+        "horizon_days":args.horizon_days,
+    }
+    tmp=data_path.with_suffix(data_path.suffix+".tmp")
+    tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
+    tmp.replace(data_path)
+    print(json.dumps(meta["media_cache"],ensure_ascii=False))
+
+if __name__=="__main__":
+    main()

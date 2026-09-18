@@ -40,6 +40,7 @@ jobs:
         run: |
           python tests/test_parser.py
           python tests/test_detail_parser.py
+          python tests/test_state_coverage.py
 
       - name: Alten Stand für Historie sichern
         run: cp data/auctions.json /tmp/auctions-before.json
@@ -49,6 +50,9 @@ jobs:
 
       - name: Objekthistorie fortschreiben
         run: python collector/merge_history.py --before /tmp/auctions-before.json --data data/auctions.json
+
+      - name: Länderabdeckung prüfen
+        run: python collector/coverage_audit.py --data data/auctions.json
 
       - name: Detailseiten schrittweise anreichern
         run: python collector/enrich_details.py --data data/auctions.json --limit 40

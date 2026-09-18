@@ -48,6 +48,13 @@ jobs:
       - name: ZVG-Daten sammeln
         run: python collector/collect.py --output data/auctions.json
 
+      - name: Baden-Württemberg aus amtlichen Gerichtsseiten ergänzen
+        continue-on-error: true
+        run: python collector/collect_bw_official.py --output data/supplemental_bw.json
+
+      - name: Zusatzquellen dedupliziert zusammenführen
+        run: python collector/merge_supplemental.py --data data/auctions.json --supplement data/supplemental_bw.json
+
       - name: Objekthistorie fortschreiben
         run: python collector/merge_history.py --before /tmp/auctions-before.json --data data/auctions.json
 

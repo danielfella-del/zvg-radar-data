@@ -15,6 +15,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: zvg-data-writes
+  cancel-in-progress: false
+
 jobs:
   enrich:
     runs-on: ubuntu-latest

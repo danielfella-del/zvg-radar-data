@@ -295,7 +295,7 @@ def parse_chunk(chunk: BeautifulSoup, state: str) -> dict[str, Any] | None:
     }
 
 def parse_search_html(html: bytes | str, state: str) -> list[dict[str, Any]]:
-    soup = BeautifulSoup(html, "html.parser")
+    soup = BeautifulSoup(decode_document(html), "html.parser")
     chunks = record_chunks(soup)
     out: dict[str, dict[str, Any]] = {}
 

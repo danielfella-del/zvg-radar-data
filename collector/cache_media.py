@@ -84,6 +84,33 @@ def prime_record_context(session: requests.Session, record: dict, primed_states:
         raise RuntimeError("Detailseite ohne Anhangskontext")
     return durl
 
+def ensure_photo_preview(a: dict, folder: Path, target: Path, fid: str) -> bool:
+    if a.get("type") != "foto":
+        return False
+    is_pdf = a.get("content_type") == "application/pdf" or str(target).lower().endswith(".pdf")
+    if not is_pdf or not target.exists():
+        return False
+    try:
+        preview = folder / f"{fid}-preview.jpg"
+        if not preview.exists():
+            doc = fitz.open(target)
+            if doc.page_count < 1:
+                raise RuntimeError("Foto-PDF ohne Seiten")
+            page = doc.load_page(0)
+            pix = page.get_pixmap(matrix=fitz.Matrix(1.6, 1.6), alpha=False)
+            pix.save(preview)
+            doc.close()
+        preview_rel = preview.as_posix()
+        a["preview_path"] = preview_rel
+        a["preview_url"] = RAW_BASE + preview_rel
+        a["preview_content_type"] = "image/jpeg"
+        a["preview_bytes"] = preview.stat().st_size
+        a.pop("preview_error", None)
+        return True
+    except Exception as exc:
+        a["preview_error"] = str(exc)
+        return False
+
 def active_record(r, horizon_days: int) -> bool:
     if r.get("cancelled"): return False
     d=parse_date(r.get("auction_date"))
@@ -158,6 +185,15 @@ def main():
                 continue
             if a.get("cached_url"):
                 cached_total+=1
+                cached_path = a.get("cached_path")
+                if a.get("type") == "foto" and not a.get("preview_url") and cached_path:
+                    target = Path(cached_path)
+                    folder = target.parent
+                    fid = safe_part(a.get("file_id") or target.stem)
+                    if ensure_photo_preview(a, folder, target, fid):
+                        print(f"{r.get('id')}: Foto-Vorschau nachgezogen -> {a.get('preview_path')}")
+                    elif a.get("preview_error"):
+                        print(f"{r.get('id')}: Foto-Vorschau fehlgeschlagen: {a.get('preview_error')}", file=sys.stderr)
                 continue
             if downloaded>=args.max_files or used>=budget:
                 break
@@ -205,23 +241,8 @@ def main():
                 # Web-Galerie erzeugen wir deshalb zusaetzlich eine echte
                 # Bildvorschau aus der ersten PDF-Seite.
                 if a.get("type") == "foto" and (a.get("content_type") == "application/pdf" or ext == ".pdf"):
-                    try:
-                        preview = folder / f"{fid}-preview.jpg"
-                        doc = fitz.open(target)
-                        if doc.page_count < 1:
-                            raise RuntimeError("Foto-PDF ohne Seiten")
-                        page = doc.load_page(0)
-                        pix = page.get_pixmap(matrix=fitz.Matrix(1.6, 1.6), alpha=False)
-                        pix.save(preview)
-                        doc.close()
-                        preview_rel = preview.as_posix()
-                        a["preview_path"] = preview_rel
-                        a["preview_url"] = RAW_BASE + preview_rel
-                        a["preview_content_type"] = "image/jpeg"
-                        a["preview_bytes"] = preview.stat().st_size
-                    except Exception as preview_exc:
-                        a["preview_error"] = str(preview_exc)
-                        print(f"{r.get('id')}: Foto-Vorschau fehlgeschlagen: {preview_exc}", file=sys.stderr)
+                    if not ensure_photo_preview(a, folder, target, fid) and a.get("preview_error"):
+                        print(f"{r.get('id')}: Foto-Vorschau fehlgeschlagen: {a.get('preview_error')}", file=sys.stderr)
 
                 print(f"{r.get('id')}: {a.get('type')} -> {rel} ({size} bytes)")
             except Exception as exc:

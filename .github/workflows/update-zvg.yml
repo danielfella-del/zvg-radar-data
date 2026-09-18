@@ -41,6 +41,7 @@ jobs:
           python tests/test_parser.py
           python tests/test_detail_parser.py
           python tests/test_state_coverage.py
+          python tests/test_official_notice_parsers.py
 
       - name: Alten Stand für Historie sichern
         run: cp data/auctions.json /tmp/auctions-before.json
@@ -52,8 +53,21 @@ jobs:
         continue-on-error: true
         run: python collector/collect_bw_official.py --output data/supplemental_bw.json
 
+      - name: Hamburg aus Amtlichem Anzeiger ergänzen
+        continue-on-error: true
+        run: python collector/collect_hh_official.py --output data/supplemental_hh.json
+
+      - name: Mecklenburg-Vorpommern aus Amtlichem Anzeiger ergänzen
+        continue-on-error: true
+        run: python collector/collect_mv_official.py --output data/supplemental_mv.json
+
+      - name: Schleswig-Holstein aus amtlichen Anzeigen ergänzen
+        continue-on-error: true
+        run: python collector/collect_sh_official.py --output data/supplemental_sh.json
+
       - name: Zusatzquellen dedupliziert zusammenführen
-        run: python collector/merge_supplemental.py --data data/auctions.json --supplement data/supplemental_bw.json
+        run: |
+          python collector/merge_supplemental.py             --data data/auctions.json             --supplement data/supplemental_bw.json             --supplement data/supplemental_hh.json             --supplement data/supplemental_mv.json             --supplement data/supplemental_sh.json
 
       - name: Objekthistorie fortschreiben
         run: python collector/merge_history.py --before /tmp/auctions-before.json --data data/auctions.json

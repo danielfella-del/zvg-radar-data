@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import os
 import re
 import sys
 import time
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -343,6 +345,52 @@ def load_existing(path: Path) -> list[dict[str, Any]]:
     except Exception:
         return []
 
+def load_postcode_centroids(session: requests.Session) -> dict[str, tuple[float, float]]:
+    url = "https://download.geonames.org/export/zip/DE.zip"
+    r = session.get(url, timeout=60)
+    r.raise_for_status()
+    points: dict[str, list[tuple[float, float]]] = {}
+    with zipfile.ZipFile(io.BytesIO(r.content)) as zf:
+        name = next((n for n in zf.namelist() if n.lower().endswith(".txt")), None)
+        if not name:
+            raise RuntimeError("GeoNames DE.zip enthält keine TXT-Datei")
+        with zf.open(name) as fh:
+            for raw in fh:
+                parts = raw.decode("utf-8", errors="replace").rstrip("\n").split("\t")
+                if len(parts) < 11:
+                    continue
+                postal = parts[1].strip()
+                try:
+                    lat = float(parts[9])
+                    lng = float(parts[10])
+                except ValueError:
+                    continue
+                if re.fullmatch(r"\d{5}", postal):
+                    points.setdefault(postal, []).append((lat, lng))
+    out = {}
+    for postal, vals in points.items():
+        out[postal] = (
+            sum(v[0] for v in vals) / len(vals),
+            sum(v[1] for v in vals) / len(vals),
+        )
+    return out
+
+def apply_postcode_positions(records: list[dict[str, Any]], centroids: dict[str, tuple[float, float]]) -> int:
+    changed = 0
+    for r in records:
+        plz = str(r.get("postcode") or "")
+        pos = centroids.get(plz)
+        if not pos:
+            continue
+        # Stable tiny jitter prevents identical markers from fully overlapping,
+        # while keeping the location clearly PLZ-level rather than house-level.
+        jlat, jlng = stable_jitter(str(r.get("id") or plz))
+        r["lat"] = round(pos[0] + jlat * 0.04, 5)
+        r["lng"] = round(pos[1] + jlng * 0.04, 5)
+        r["position_precision"] = "postcode_centroid"
+        changed += 1
+    return changed
+
 def quality_stats(records: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(records) or 1
     fields = ["court", "auction_date", "property_type_raw", "postcode", "city", "market_value", "gutachten_url"]
@@ -402,6 +450,14 @@ def main() -> int:
     dedup = {str(r.get("id")): r for r in all_records if r.get("id")}
     all_records = list(dedup.values())
 
+    postcode_positioned = 0
+    try:
+        centroids = load_postcode_centroids(session)
+        postcode_positioned = apply_postcode_positions(all_records, centroids)
+        print(f"PLZ-Positionen: {postcode_positioned}/{len(all_records)}")
+    except Exception as exc:
+        print(f"GeoNames-PLZ-Daten nicht verfügbar: {exc}", file=sys.stderr)
+
     if success_count == 0:
         print("Kein Bundesland erfolgreich. Vorhandene Datei wird NICHT überschrieben.", file=sys.stderr)
         return 2
@@ -418,7 +474,9 @@ def main() -> int:
             "count": len(all_records),
             "states": statuses,
             "quality": quality_stats(all_records),
-            "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind ohne Geocoder nur auf Bundesland-Ebene angenähert.",
+            "postcode_positioned": postcode_positioned,
+            "geodata_source": "GeoNames postal codes (CC BY 3.0) - https://www.geonames.org/",
+            "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
         },
         "results": all_records,
     }

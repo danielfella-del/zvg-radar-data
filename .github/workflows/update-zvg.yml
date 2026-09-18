@@ -66,11 +66,23 @@ jobs:
         run: |
           if git diff --quiet -- data/auctions.json media; then
             echo "Keine Änderungen."
+          else
+            git config user.name "zvg-radar-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/auctions.json media
+            git commit -m "ZVG-Daten, Historie und Dossiers stündlich aktualisiert"
+            git pull --rebase
+            git push
+          fi
+
+      - name: ZVGPro E-Mail-Alerts anstoßen
+        continue-on-error: true
+        env:
+          ZVGPRO_ALERT_CRON_TOKEN: ${{ secrets.ZVGPRO_ALERT_CRON_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$ZVGPRO_ALERT_CRON_TOKEN" ]; then
+            echo "GitHub-Secret ZVGPRO_ALERT_CRON_TOKEN fehlt - E-Mail-Alerts werden übersprungen."
             exit 0
           fi
-          git config user.name "zvg-radar-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/auctions.json media
-          git commit -m "ZVG-Daten, Historie und Dossiers stündlich aktualisiert"
-          git pull --rebase
-          git push
+          curl -fsS -X POST             -H "Authorization: Bearer $ZVGPRO_ALERT_CRON_TOKEN"             https://zvgpro.de/api/alerts-run.php

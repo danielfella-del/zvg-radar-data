@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 
 BASE = "https://www.zvg-portal.de/"
 SEARCH_REFERER = urljoin(BASE, "index.php?button=Suchen")
+SEARCH_URL = urljoin(BASE, "index.php?button=Suchen&all=1")
 
 DETAIL_FIELDS = [
     "auction_type",
@@ -233,6 +234,33 @@ def detail_completeness(record: dict[str, Any]) -> dict[str, Any]:
     score = round(sum(1 for v in checks.values() if v) / len(checks) * 100)
     return {"score": score, "checks": checks}
 
+def prime_state_session(session: requests.Session, land: str) -> None:
+    data = {
+        "ger_name": "-- Alle Amtsgerichte --",
+        "order_by": "2",
+        "land_abk": land,
+        "ger_id": "0",
+        "az1": "", "az2": "", "az3": "", "az4": "",
+        "art": "", "obj": "", "str": "", "hnr": "",
+        "plz": "", "ort": "", "ortsteil": "", "vtermin": "", "btermin": "",
+    }
+    resp = session.post(
+        SEARCH_URL,
+        data=data,
+        headers={"Referer": urljoin(BASE, "index.php?button=Termine+suchen")},
+        timeout=45,
+    )
+    resp.raise_for_status()
+    if "showZvg" not in decode_document(resp.content):
+        raise RuntimeError(f"ZVG-Suche für {land} lieferte keine Detailverweise")
+
+def detail_has_content(detail: dict[str, Any]) -> bool:
+    scalar_keys = (
+        "auction_type", "land_registry", "auction_venue", "creditor_info",
+        "detail_description", "court_url",
+    )
+    return any(detail.get(k) for k in scalar_keys) or bool(detail.get("geoserver_urls")) or bool(detail.get("detail_attachments"))
+
 def should_fetch(record: dict[str, Any]) -> bool:
     if not record.get("zvg_id") or not record.get("state_code"):
         return False
@@ -261,7 +289,7 @@ def main() -> int:
 
     session = requests.Session()
     session.headers.update({
-        "User-Agent": "ZVGRadarDetailCollector/1.0 (+public court-auction research; incremental scheduled fetch)",
+        "User-Agent": "ZVGRadarDetailCollector/1.1 (+public court-auction research; incremental scheduled fetch)",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "de-DE,de;q=0.9,en;q=0.5",
         "Referer": SEARCH_REFERER,
@@ -269,14 +297,21 @@ def main() -> int:
 
     fetched = 0
     errors = 0
+    primed_states: set[str] = set()
+    error_samples: list[dict[str, str]] = []
     for idx, record in enumerate(selected):
         land = str(record.get("state_code"))
         zvg_id = str(record.get("zvg_id"))
         url = canonical_detail_url(land, zvg_id)
         try:
+            if land not in primed_states:
+                prime_state_session(session, land)
+                primed_states.add(land)
             resp = session.get(url, headers={"Referer": SEARCH_REFERER}, timeout=45)
             resp.raise_for_status()
             detail = parse_detail_html(resp.content, land, zvg_id)
+            if not detail_has_content(detail):
+                raise RuntimeError(f"Detailseite ohne verwertbare Felder ({len(resp.content)} Bytes)")
             for k, v in detail.items():
                 record[k] = v
             merge_attachments(record, detail)
@@ -290,6 +325,8 @@ def main() -> int:
         except Exception as exc:
             record["detail_error"] = str(exc)
             errors += 1
+            if len(error_samples) < 12:
+                error_samples.append({"id": str(record.get("id")), "error": str(exc)})
             print(f"{record.get('id')}: FEHLER {exc}", file=sys.stderr)
         if idx + 1 < len(selected):
             time.sleep(max(0.0, args.pause))
@@ -311,6 +348,8 @@ def main() -> int:
         "with_gutachten": with_gutachten,
         "with_photos": with_photos,
         "limit_per_run": args.limit,
+        "primed_states": sorted(primed_states),
+        "error_samples": error_samples,
     }
 
     tmp = path.with_suffix(path.suffix + ".tmp")

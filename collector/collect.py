@@ -253,3 +253,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# Trigger: initial GitHub Actions collection

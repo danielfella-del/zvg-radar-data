@@ -1,9 +1,9 @@
-name: ZVG Daten aktualisieren
+name: ZVG Daten stündlich aktualisieren
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 6,14 * * *'
+    - cron: '17 * * * *'
   push:
     branches: [main]
     paths:
@@ -21,7 +21,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - name: Repository laden
         uses: actions/checkout@v4
@@ -41,8 +41,14 @@ jobs:
           python tests/test_parser.py
           python tests/test_detail_parser.py
 
+      - name: Alten Stand für Historie sichern
+        run: cp data/auctions.json /tmp/auctions-before.json
+
       - name: ZVG-Daten sammeln
         run: python collector/collect.py --output data/auctions.json
+
+      - name: Objekthistorie fortschreiben
+        run: python collector/merge_history.py --before /tmp/auctions-before.json --data data/auctions.json
 
       - name: Detailseiten schrittweise anreichern
         run: python collector/enrich_details.py --data data/auctions.json --limit 40
@@ -50,6 +56,10 @@ jobs:
       - name: Amtliche PDFs und Fotos begrenzt cachen
         continue-on-error: true
         run: python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 30 --max-run-mb 25
+
+      - name: Gutachten automatisch analysieren
+        continue-on-error: true
+        run: python collector/analyze_documents.py --data data/auctions.json --repo-root . --limit 20
 
       - name: Änderungen speichern
         shell: bash
@@ -61,5 +71,6 @@ jobs:
           git config user.name "zvg-radar-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/auctions.json media
-          git commit -m "ZVG-Daten und Dossiers automatisch aktualisiert"
+          git commit -m "ZVG-Daten, Historie und Dossiers stündlich aktualisiert"
+          git pull --rebase
           git push

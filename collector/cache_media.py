@@ -16,7 +16,9 @@ from urllib.parse import urlparse
 import requests
 
 RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
-PORTAL_REFERER = "https://www.zvg-portal.de/index.php?button=Suchen"
+BASE = "https://www.zvg-portal.de/"
+PORTAL_REFERER = BASE + "index.php?button=Suchen"
+SEARCH_URL = BASE + "index.php?button=Suchen&all=1"
 ALLOWED_TYPES = {"gutachten", "bekanntmachung", "expose", "foto", "hinweis", "dokument"}
 
 def safe_part(s: str) -> str:
@@ -42,6 +44,41 @@ def ext_from(content_type: str, url: str, name: str) -> str:
             return ".jpg" if ext==".jpeg" else ext
     guessed=mimetypes.guess_extension(ct) if ct else None
     return guessed or ".bin"
+
+def prime_state_session(session: requests.Session, land: str) -> None:
+    data = {
+        "ger_name": "-- Alle Amtsgerichte --",
+        "order_by": "2",
+        "land_abk": land,
+        "ger_id": "0",
+        "az1": "", "az2": "", "az3": "", "az4": "",
+        "art": "", "obj": "", "str": "", "hnr": "",
+        "plz": "", "ort": "", "ortsteil": "", "vtermin": "", "btermin": "",
+    }
+    resp = session.post(
+        SEARCH_URL,
+        data=data,
+        headers={"Referer": BASE + "index.php?button=Termine+suchen"},
+        timeout=45,
+    )
+    resp.raise_for_status()
+    if "showZvg" not in resp.text:
+        raise RuntimeError(f"ZVG-Suche fuer {land} lieferte keine Detailverweise")
+
+def detail_url(record: dict) -> str:
+    return f"{BASE}index.php?button=showZvg&zvg_id={record.get('zvg_id')}&land_abk={record.get('state_code')}"
+
+def prime_record_context(session: requests.Session, record: dict, primed_states: set[str]) -> str:
+    land = str(record.get("state_code") or "")
+    if land and land not in primed_states:
+        prime_state_session(session, land)
+        primed_states.add(land)
+    durl = detail_url(record)
+    resp = session.get(durl, headers={"Referer": PORTAL_REFERER}, timeout=45)
+    resp.raise_for_status()
+    if "showAnhang" not in resp.text and not record.get("attachments"):
+        raise RuntimeError("Detailseite ohne Anhangskontext")
+    return durl
 
 def active_record(r, horizon_days: int) -> bool:
     if r.get("cancelled"): return False
@@ -76,7 +113,7 @@ def main():
 
     session=requests.Session()
     session.headers.update({
-        "User-Agent":"ZVGRadarMediaCache/1.0 (+public court-auction documents; bounded cache)",
+        "User-Agent":"ZVGRadarMediaCache/1.1 (+public court-auction documents; bounded cache)",
         "Referer":PORTAL_REFERER,
         "Accept":"application/pdf,image/*,*/*;q=0.5",
     })
@@ -87,12 +124,29 @@ def main():
     downloaded=0
     failed=0
     cached_total=0
+    primed_states: set[str] = set()
+    context_ready: set[str] = set()
+    error_samples=[]
 
     for r in records:
         if not active_record(r,args.horizon_days):
             continue
         rid=safe_part(r.get("id"))
         atts=r.get("attachments") or []
+        record_referer = PORTAL_REFERER
+        if atts and r.get("zvg_id") and r.get("state_code"):
+            try:
+                if rid not in context_ready:
+                    record_referer = prime_record_context(session, r, primed_states)
+                    context_ready.add(rid)
+                else:
+                    record_referer = detail_url(r)
+            except Exception as exc:
+                failed += 1
+                if len(error_samples) < 12:
+                    error_samples.append({"id": str(r.get("id")), "stage": "context", "error": str(exc)})
+                print(f"{r.get('id')}: Kontextfehler: {exc}", file=sys.stderr)
+                continue
         if not isinstance(atts,list):
             continue
         for a in atts:
@@ -107,7 +161,7 @@ def main():
             if not url:
                 continue
             try:
-                resp=session.get(url,headers={"Referer":PORTAL_REFERER},timeout=60,stream=True)
+                resp=session.get(url,headers={"Referer":record_referer},timeout=60,stream=True)
                 resp.raise_for_status()
                 ctype=(resp.headers.get("content-type") or "").lower()
                 if "text/html" in ctype:
@@ -147,6 +201,8 @@ def main():
                 failed+=1
                 a["cache_status"]="error"
                 a["cache_error"]=str(exc)
+                if len(error_samples) < 12:
+                    error_samples.append({"id": str(r.get("id")), "file_id": str(a.get("file_id") or ""), "stage": "download", "error": str(exc)})
                 print(f"{r.get('id')}: Medienfehler: {exc}",file=sys.stderr)
         if downloaded>=args.max_files or used>=budget:
             break
@@ -176,6 +232,8 @@ def main():
         "max_file_mb":args.max_file_mb,
         "max_run_mb":args.max_run_mb,
         "horizon_days":args.horizon_days,
+        "primed_states":sorted(primed_states),
+        "error_samples":error_samples,
     }
     tmp=data_path.with_suffix(data_path.suffix+".tmp")
     tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")

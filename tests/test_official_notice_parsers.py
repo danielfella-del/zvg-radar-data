@@ -14,4 +14,16 @@ assert r and r['market_value']==320000 and r['postcode']=='22041' and 'Wandsbek'
 sh='''Amtsgericht Lübeck 52 K 30/26. Im Wege der Zwangsvollstreckung soll am Donnerstag, 18. März 2027, um 10:00 Uhr im Amtsgericht Lübeck ein Grundstück öffentlich versteigert werden. Verkehrswert: 410.000,00 EUR.'''
 r=make_record('sh','test','https://example.invalid',normalize_case('52 K 30/26'),sh)
 assert r and r['court']=='Lübeck' and r['market_value']==410000
+
+
+assert clean('No' + chr(2) + 'vember')=='November'
+assert clean('Hamburg' + chr(173) + '-Barmbek')=='Hamburg-Barmbek'
+assert parse_german_date(clean('soll am 6. November 2027, 9 Uhr öffentlich versteigert werden'))=='2027-11-06T09:00'
+
+sh_trailing='''Amtsgericht Ahrensburg soll am Donnerstag, 5. November 2027, um 10.00 Uhr ein Grundstück öffentlich versteigert werden. Beschreibung ''' + ('x '*600) + ''' 70 K 25/25 Amtsgericht Ahrensburg. Nächste Sache soll am 3. Dezember 2027, 9 Uhr öffentlich versteigert werden. ''' + ('y '*500) + ''' 71 K 26/25 Amtsgericht Ahrensburg'''
+parts=split_case_chunks(sh_trailing,case_at_end=True)
+assert len(parts)==2
+assert parse_german_date(parts[0][1])=='2027-11-05T10:00'
+assert parse_german_date(parts[1][1])=='2027-12-03T09:00'
+
 print('official notice parser tests: OK')

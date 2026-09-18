@@ -16,7 +16,7 @@ permissions:
 
 concurrency:
   group: zvg-data-writes
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   update:
@@ -66,7 +66,7 @@ jobs:
 
       - name: Amtliche PDFs und Fotos begrenzt cachen
         continue-on-error: true
-        run: python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 30 --max-run-mb 25
+        run: timeout 8m python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 30 --max-run-mb 25
 
       - name: Gutachten automatisch analysieren
         continue-on-error: true

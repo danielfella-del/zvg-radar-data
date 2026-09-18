@@ -89,7 +89,7 @@ def parse_money_values(raw: str) -> list[int]:
     text = clean(raw)
     # Monetary values on the portal almost always carry German decimal cents.
     # This avoids mistaking "Lfd. Nr. 1" or a Grundbuchblatt number for money.
-    found = re.findall(r"(?<!\\d)(\\d{1,3}(?:\\.\\d{3})+|\\d+),(\\d{2})(?!\\d)", text)
+    found = re.findall(r"(?<!\d)(\d{1,3}(?:\.\d{3})+|\d+),(\d{2})(?!\d)", text)
     values = []
     for whole, frac in found:
         try:

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ZVG Radar – aktuelle Zwangsversteigerungen in Deutschland übersichtlich filtern.">
+<title>ZVG Radar Deutschland</title>
+<link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">Z</div><div><b>ZVG Radar</b><small>Live-Daten · Deutschland</small></div></div>
+  <div class="status"><div><span id="statusDot" class="dot"></span><b id="statusText">Lade Daten …</b></div><small id="statusSub">GitHub-Datenfeed</small></div>
+</header>
+<div id="banner" class="banner"></div>
+<div class="shell">
+<aside>
+  <h2>Suche & Filter</h2><p>Filtere Tausende Verfahren ohne Serverlast auf STRATO.</p>
+  <div class="field"><label>PLZ, Ort, Straße, Gericht oder Aktenzeichen</label><input id="q" placeholder="z. B. 60311, Frankfurt oder 35 K 12/26"></div>
+  <div class="field"><label>Bundesland</label><select id="state"><option value="">Alle Bundesländer</option></select></div>
+  <div class="field"><label>Immobilientyp</label><select id="type"><option value="">Alle Immobilien</option><option>Eigentumswohnung</option><option>Einfamilienhaus</option><option>Mehrfamilienhaus</option><option>Grundstück</option><option>Gewerbe</option><option>Sonstige</option></select></div>
+  <div class="field"><label>Verkehrswert</label><div class="two"><input id="minValue" type="number" min="0" placeholder="von €"><input id="maxValue" type="number" min="0" placeholder="bis €"></div></div>
+  <div class="field"><label>Termin</label><div class="two"><input id="dateFrom" type="date"><input id="dateTo" type="date"></div></div>
+  <div class="checks">
+    <label><input id="futureOnly" type="checkbox" checked>Nur kommende Termine</label>
+    <label><input id="hideCancelled" type="checkbox" checked>Aufgehobene ausblenden</label>
+    <label><input id="multiValueOnly" type="checkbox">Nur mehrere Verkehrswerte</label>
+  </div>
+  <button id="apply" class="btn primary">Treffer anzeigen</button><button id="reset" class="btn ghost">Filter zurücksetzen</button>
+  <div class="diag" id="diag">Initialisierung …</div>
+  <p class="help"><b>Hinweis:</b> Die Daten dienen der Recherche. Maßgeblich sind ausschließlich die amtlichen Veröffentlichungen.</p>
+</aside>
+<main class="workspace">
+  <section class="hero"><div><span class="eyebrow">Deutschlandweite Übersicht</span><h1>Zwangsversteigerungen auf einen Blick.</h1><p>Live-Feed mit Gericht, Termin, Objektart, Lage und Verkehrswert.</p></div><div class="last"><small>Letztes Datenupdate</small><b id="generatedAt">–</b></div></section>
+  <section class="kpis">
+    <div class="kpi"><b id="count">0</b><small>Treffer</small></div>
+    <div class="kpi"><b id="pricedCount">0</b><small>mit Verkehrswert</small></div>
+    <div class="kpi"><b id="avgValue">–</b><small>Ø Verkehrswert</small></div>
+    <div class="kpi"><b id="nextDate">–</b><small>nächster Termin</small></div>
+  </section>
+  <section class="grid">
+    <div class="card">
+      <div class="head"><div><h3>Deutschlandkarte</h3><small id="mapSub">PLZ-Näherungen, sonst Bundesland</small></div><div class="legend"><span><i class="lg exact"></i>PLZ</span><span><i class="lg rough"></i>Näherung</span></div></div>
+      <div class="mapwrap"><svg id="mapSvg" viewBox="0 0 520 560" aria-label="Deutschlandkarte"><path class="country" d="M216 30 L296 38 333 80 319 118 357 150 344 199 389 225 365 272 402 320 369 356 386 407 345 433 327 498 276 523 235 493 190 506 161 466 117 446 129 394 91 359 112 310 86 266 124 225 115 177 155 151 148 99 185 78z"/><g id="pins"></g><text x="260" y="545" text-anchor="middle" class="fallback-title">Marker sind Näherungen, keine Hauskoordinaten.</text></svg></div>
+    </div>
+    <div class="card">
+      <div class="head"><div><h3>Objekte</h3><small id="resultSub">Daten werden geladen</small></div><select id="sort" class="sort"><option value="date">Nächster Termin</option><option value="valueAsc">Wert ↑</option><option value="valueDesc">Wert ↓</option><option value="updated">Zuletzt aktualisiert</option></select></div>
+      <div id="results" class="results"></div>
+      <div class="loadmore"><button id="more" class="btn ghost smallbtn" type="button">Weitere Treffer laden</button></div>
+    </div>
+  </section>
+</main>
+</div>
+<div id="tooltip" class="tooltip"></div>
+<script src="app.js"></script>
+</body></html>

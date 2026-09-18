@@ -118,6 +118,19 @@ def active_record(r, horizon_days: int) -> bool:
     now=datetime.now(d.tzinfo or timezone.utc)
     return d >= now - timedelta(days=7) and d <= now + timedelta(days=horizon_days)
 
+TYPE_PRIORITY = {"gutachten": 0, "foto": 1, "bekanntmachung": 2, "expose": 3, "hinweis": 4, "dokument": 5}
+
+def attachment_priority(a: dict):
+    return (TYPE_PRIORITY.get(str(a.get("type") or ""), 9), str(a.get("file_id") or ""))
+
+def record_priority(r: dict):
+    atts = r.get("attachments") or []
+    missing_gutachten = any(isinstance(a, dict) and a.get("type") == "gutachten" and not a.get("cached_url") for a in atts)
+    missing_foto = any(isinstance(a, dict) and a.get("type") == "foto" and (not a.get("cached_url") or not a.get("preview_url")) for a in atts)
+    d = parse_date(r.get("auction_date"))
+    ts = d.timestamp() if d else 9e18
+    return (0 if missing_gutachten else 1 if missing_foto else 2, ts, str(r.get("id") or ""))
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--data",default="data/auctions.json")
@@ -159,11 +172,14 @@ def main():
     context_ready: set[str] = set()
     error_samples=[]
 
-    for r in records:
+    for r in sorted(records, key=record_priority):
         if not active_record(r,args.horizon_days):
             continue
         rid=safe_part(r.get("id"))
         atts=r.get("attachments") or []
+        if not isinstance(atts,list):
+            continue
+        atts=sorted(atts,key=attachment_priority)
         record_referer = PORTAL_REFERER
         if atts and r.get("zvg_id") and r.get("state_code"):
             try:
@@ -178,8 +194,6 @@ def main():
                     error_samples.append({"id": str(r.get("id")), "stage": "context", "error": str(exc)})
                 print(f"{r.get('id')}: Kontextfehler: {exc}", file=sys.stderr)
                 continue
-        if not isinstance(atts,list):
-            continue
         for a in atts:
             if not isinstance(a,dict) or a.get("type") not in ALLOWED_TYPES:
                 continue

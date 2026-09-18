@@ -44,6 +44,7 @@ jobs:
         run: python collector/enrich_details.py --data data/auctions.json --limit 40
 
       - name: Amtliche PDFs und Fotos begrenzt cachen
+        continue-on-error: true
         run: python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 30 --max-run-mb 25
 
       - name: Änderungen speichern

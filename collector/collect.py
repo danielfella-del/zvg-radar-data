@@ -56,8 +56,25 @@ FILE_RE = re.compile(r"\b(?:\d{1,4}\s*)?K\s*\d{1,5}\s*/\s*\d{2,4}\b", re.I)
 PLZ_RE = re.compile(r"^(\d{5})\s*(.*)$")
 MONEY_RE = re.compile(r"(\d{1,3}(?:\.\d{3})*|\d+)(?:,(\d{1,2}))?")
 
+def repair_mojibake(text: str) -> str:
+    if not text:
+        return text
+    try:
+        repaired = text.encode("cp1252").decode("utf-8")
+        return repaired if repaired != text else text
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        return text
+
 def clean(text: str) -> str:
-    return re.sub(r"\s+", " ", text or "").strip()
+    return re.sub(r"\s+", " ", repair_mojibake(text or "")).strip()
+
+def decode_document(html: bytes | str) -> str:
+    if isinstance(html, str):
+        return html
+    # zvg-portal.de mixes Windows-1252 with occasional UTF-8 byte sequences.
+    # Decode the full page conservatively as cp1252; clean() repairs mojibake
+    # field-by-field without damaging genuine Latin-1 characters.
+    return html.decode("cp1252", errors="replace")
 
 def text_of(node) -> str:
     return clean(node.get_text(" ", strip=True) if node else "")
@@ -417,7 +434,7 @@ def main() -> int:
 
     session = requests.Session()
     session.headers.update({
-        "User-Agent": "ZVGRadarDataCollector/1.1 (+public court-auction index; scheduled fetch)",
+        "User-Agent": "ZVGRadarDataCollector/1.2 (+public court-auction index; scheduled fetch)",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-Language": "de-DE,de;q=0.9,en;q=0.5",
         "Referer": "https://www.zvg-portal.de/index.php?button=Termine+suchen",
@@ -470,7 +487,7 @@ def main() -> int:
         "meta": {
             "source": "https://www.zvg-portal.de/",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "collector": "github-actions-v1.1-list-enrichment",
+            "collector": "github-actions-v1.2-enriched",
             "count": len(all_records),
             "states": statuses,
             "quality": quality_stats(all_records),

@@ -17,7 +17,7 @@ permissions:
 
 concurrency:
   group: zvg-data-writes
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   enrich:
@@ -45,7 +45,11 @@ jobs:
 
       - name: PDFs und Fotos cachen
         continue-on-error: true
-        run: python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 20 --max-run-mb 20
+        run: timeout 8m python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 20 --max-run-mb 20
+
+      - name: Gutachten automatisch analysieren
+        continue-on-error: true
+        run: python collector/analyze_documents.py --data data/auctions.json --repo-root . --limit 20
 
       - name: Dossiers und Medien speichern
         shell: bash

@@ -57,18 +57,25 @@ def discover_court_pages(session):
         if base not in out: out.append(base)
     return out
 
-def parse_court_page(session,url):
-    r=session.get(url,timeout=35); r.raise_for_status()
-    soup=BeautifulSoup(r.text,'html.parser')
-    for x in soup(['script','style','nav','header','footer']): x.decompose()
-    text=clean(soup.get_text(' ',strip=True))
-    recs=[]
-    for case,chunk in split_case_chunks(text,pre=450,post=1500):
-        if 'versteigerungstermin' not in chunk.lower() and 'zwangsversteigerung' not in chunk.lower(): continue
-        rec=make_record('bw','bw-immobilienpool-court-linked',r.url,case,chunk,publication='Von Baden-Württembergischen Amtsgerichten verlinkte Internet-Veröffentlichung')
-        if rec:
-            rec['description']=None
-            recs.append(rec)
+def parse_court_page(session,url,max_pages=6):
+    recs=[]; seen=set()
+    for page in range(1,max_pages+1):
+        page_url=url if page==1 else url+('?page='+str(page))
+        r=session.get(page_url,timeout=35); r.raise_for_status()
+        soup=BeautifulSoup(r.text,'html.parser')
+        for x in soup(['script','style','nav','header','footer']): x.decompose()
+        text=clean(soup.get_text(' ',strip=True))
+        found=0
+        for case,chunk in split_case_chunks(text,pre=450,post=1800):
+            if 'versteigerungstermin' not in chunk.lower() and 'zwangsversteigerung' not in chunk.lower(): continue
+            key=case.casefold()
+            if key in seen: continue
+            rec=make_record('bw','bw-immobilienpool-court-linked',r.url,case,chunk,publication='Von Baden-Württembergischen Amtsgerichten verlinkte Internet-Veröffentlichung')
+            if rec:
+                rec['description']=None
+                recs.append(rec); seen.add(key); found+=1
+        if page>1 and found==0:
+            break
     return recs
 
 def main():

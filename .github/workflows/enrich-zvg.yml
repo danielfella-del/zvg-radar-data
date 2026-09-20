@@ -3,7 +3,7 @@ name: ZVG Dossiers und Medien anreichern
 on:
   workflow_dispatch:
   schedule:
-    - cron: '37 */4 * * *'
+    - cron: '37 * * * *'
   push:
     branches: [main]
     paths:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Objektfotos aus Gutachten extrahieren
         continue-on-error: true
-        run: timeout 8m python collector/extract_report_photos.py --data data/auctions.json --media-dir media --max-reports 6 --max-photos 4 --max-report-mb 180 --priority-id he-55016
+        run: timeout 8m python collector/extract_report_photos.py --data data/auctions.json --media-dir media --max-reports 12 --max-photos 2 --max-report-mb 180 --priority-id he-55016
 
       - name: PDFs und Portal-Fotos cachen
         continue-on-error: true

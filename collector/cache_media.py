@@ -16,6 +16,8 @@ from urllib.parse import urlparse
 import requests
 import fitz
 
+from photo_quality import analyze_pixmap, photo_score, looks_like_document_scan, quality_payload, VALIDATION_VERSION
+
 RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
 BASE = "https://www.zvg-portal.de/"
 PORTAL_REFERER = BASE + "index.php?button=Suchen"
@@ -84,30 +86,127 @@ def prime_record_context(session: requests.Session, record: dict, primed_states:
         raise RuntimeError("Detailseite ohne Anhangskontext")
     return durl
 
+def _clear_preview_fields(a: dict) -> None:
+    for key in ("preview_path", "preview_url", "preview_content_type", "preview_bytes"):
+        a.pop(key, None)
+
+
 def ensure_photo_preview(a: dict, folder: Path, target: Path, fid: str) -> bool:
     if a.get("type") != "foto":
         return False
     is_pdf = a.get("content_type") == "application/pdf" or str(target).lower().endswith(".pdf")
     if not is_pdf or not target.exists():
         return False
+
+    preview = folder / f"{fid}-preview.jpg"
     try:
-        preview = folder / f"{fid}-preview.jpg"
-        if not preview.exists():
-            doc = fitz.open(target)
-            if doc.page_count < 1:
-                raise RuntimeError("Foto-PDF ohne Seiten")
-            page = doc.load_page(0)
-            pix = page.get_pixmap(matrix=fitz.Matrix(1.6, 1.6), alpha=False)
-            pix.save(preview)
+        doc = fitz.open(target)
+        best = None
+        seen = set()
+
+        # First prefer actual embedded raster images. This prevents a text-heavy
+        # PDF page from being rendered and mistaken for an object photo.
+        for page_no in range(min(doc.page_count, 120)):
+            page = doc.load_page(page_no)
+            page_area = max(1.0, float(page.rect.width * page.rect.height))
+            page_ratio = float(page.rect.width / max(1.0, page.rect.height))
+            page_text_chars = len((page.get_text("text") or "").strip())
+
+            for info in page.get_images(full=True):
+                xref = int(info[0])
+                if xref in seen:
+                    continue
+                seen.add(xref)
+                try:
+                    pix = fitz.Pixmap(doc, xref)
+                    metrics = analyze_pixmap(pix)
+                    score = photo_score(metrics)
+                    if score is None:
+                        continue
+                    rects = page.get_image_rects(xref)
+                    coverage = max(
+                        ((float(rect.width) * float(rect.height)) / page_area for rect in rects),
+                        default=0.0,
+                    )
+                    image_ratio = float(pix.width / max(1, pix.height))
+                    page_ratio_match = abs(image_ratio - page_ratio) / max(0.01, page_ratio) < 0.10
+                    if looks_like_document_scan(
+                        metrics,
+                        coverage=coverage,
+                        page_text_chars=page_text_chars,
+                        page_ratio_match=page_ratio_match,
+                    ):
+                        continue
+                    adjusted = score + min(coverage, 0.8) * 70 - page_no * 0.2
+                    if best is None or adjusted > best[0]:
+                        best = (adjusted, page_no, xref, metrics, "embedded-image")
+                except Exception:
+                    continue
+
+        # Some official "Foto" PDFs contain a flattened single-page photo.
+        # Only use a rendered page when it itself looks photographic and contains
+        # very little extractable text.
+        if best is None:
+            for page_no in range(min(doc.page_count, 40)):
+                page = doc.load_page(page_no)
+                page_text_chars = len((page.get_text("text") or "").strip())
+                if page_text_chars > 120:
+                    continue
+                pix = page.get_pixmap(matrix=fitz.Matrix(1.2, 1.2), alpha=False)
+                metrics = analyze_pixmap(pix)
+                score = photo_score(metrics)
+                if score is None:
+                    continue
+                if looks_like_document_scan(
+                    metrics,
+                    coverage=1.0,
+                    page_text_chars=page_text_chars,
+                    page_ratio_match=True,
+                ):
+                    continue
+                adjusted = score - page_no * 0.2
+                if best is None or adjusted > best[0]:
+                    best = (adjusted, page_no, None, metrics, "rendered-photo-page")
+
+        if best is None:
             doc.close()
+            preview.unlink(missing_ok=True)
+            _clear_preview_fields(a)
+            a["photo_validation_version"] = VALIDATION_VERSION
+            a["photo_quality_pass"] = False
+            a["photo_quality_mode"] = "rejected-document-like-pdf"
+            a["preview_error"] = "Kein belastbares Objektfoto erkannt"
+            return False
+
+        score, page_no, xref, metrics, mode = best
+        if xref is not None:
+            pix = fitz.Pixmap(doc, xref)
+            if pix.n != 3 or pix.alpha:
+                pix = fitz.Pixmap(fitz.csRGB, pix)
+        else:
+            page = doc.load_page(page_no)
+            pix = page.get_pixmap(matrix=fitz.Matrix(1.6, 1.6), alpha=False)
+
+        while max(pix.width, pix.height) > 1600:
+            pix.shrink(1)
+        data = pix.tobytes("jpeg", jpg_quality=80)
+        preview.write_bytes(data)
+        doc.close()
+
         preview_rel = preview.as_posix()
         a["preview_path"] = preview_rel
         a["preview_url"] = RAW_BASE + preview_rel
         a["preview_content_type"] = "image/jpeg"
-        a["preview_bytes"] = preview.stat().st_size
+        a["preview_bytes"] = len(data)
+        a.update(quality_payload(metrics, score, mode=mode, page=page_no + 1))
         a.pop("preview_error", None)
         return True
     except Exception as exc:
+        preview.unlink(missing_ok=True)
+        _clear_preview_fields(a)
+        a["photo_validation_version"] = VALIDATION_VERSION
+        a["photo_quality_pass"] = False
+        a["photo_quality_mode"] = "validation-error"
         a["preview_error"] = str(exc)
         return False
 
@@ -125,11 +224,19 @@ def attachment_priority(a: dict):
 
 def record_priority(r: dict):
     atts = r.get("attachments") or []
+    stale_photo_preview = any(
+        isinstance(a, dict)
+        and a.get("type") == "foto"
+        and a.get("cached_path")
+        and str(a.get("cached_path") or "").lower().endswith(".pdf")
+        and int(a.get("photo_validation_version") or 0) < VALIDATION_VERSION
+        for a in atts
+    )
     missing_gutachten = any(isinstance(a, dict) and a.get("type") == "gutachten" and not a.get("cached_url") for a in atts)
     missing_foto = any(isinstance(a, dict) and a.get("type") == "foto" and (not a.get("cached_url") or not a.get("preview_url")) for a in atts)
     d = parse_date(r.get("auction_date"))
     ts = d.timestamp() if d else 9e18
-    return (0 if missing_gutachten else 1 if missing_foto else 2, ts, str(r.get("id") or ""))
+    return (0 if stale_photo_preview else 1 if missing_gutachten else 2 if missing_foto else 3, ts, str(r.get("id") or ""))
 
 def main():
     ap=argparse.ArgumentParser()
@@ -203,14 +310,19 @@ def main():
             if a.get("cached_url"):
                 cached_total+=1
                 cached_path = a.get("cached_path")
-                if a.get("type") == "foto" and not a.get("preview_url") and cached_path:
+                if a.get("type") == "foto" and cached_path:
                     target = Path(cached_path)
-                    folder = target.parent
-                    fid = safe_part(a.get("file_id") or target.stem)
-                    if ensure_photo_preview(a, folder, target, fid):
-                        print(f"{r.get('id')}: Foto-Vorschau nachgezogen -> {a.get('preview_path')}")
-                    elif a.get("preview_error"):
-                        print(f"{r.get('id')}: Foto-Vorschau fehlgeschlagen: {a.get('preview_error')}", file=sys.stderr)
+                    needs_validation = (
+                        not a.get("preview_url")
+                        or int(a.get("photo_validation_version") or 0) < VALIDATION_VERSION
+                    )
+                    if needs_validation and str(target).lower().endswith(".pdf"):
+                        folder = target.parent
+                        fid = safe_part(a.get("file_id") or target.stem)
+                        if ensure_photo_preview(a, folder, target, fid):
+                            print(f"{r.get('id')}: Foto-Vorschau validiert -> {a.get('preview_path')}")
+                        elif a.get("preview_error"):
+                            print(f"{r.get('id')}: Foto verworfen: {a.get('preview_error')}", file=sys.stderr)
                 continue
             if downloaded>=args.max_files or used>=budget:
                 budget_exhausted = used>=budget

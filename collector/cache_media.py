@@ -171,6 +171,7 @@ def main():
     primed_states: set[str] = set()
     context_ready: set[str] = set()
     error_samples=[]
+    budget_exhausted=False
 
     for r in sorted(records, key=record_priority):
         if not active_record(r,args.horizon_days):
@@ -195,6 +196,8 @@ def main():
                 print(f"{r.get('id')}: Kontextfehler: {exc}", file=sys.stderr)
                 continue
         for a in atts:
+            if budget_exhausted:
+                break
             if not isinstance(a,dict) or a.get("type") not in ALLOWED_TYPES:
                 continue
             if a.get("cached_url"):
@@ -210,6 +213,7 @@ def main():
                         print(f"{r.get('id')}: Foto-Vorschau fehlgeschlagen: {a.get('preview_error')}", file=sys.stderr)
                 continue
             if downloaded>=args.max_files or used>=budget:
+                budget_exhausted = used>=budget
                 break
             url=a.get("url")
             if not url:
@@ -223,6 +227,9 @@ def main():
                 declared=resp.headers.get("content-length")
                 if declared and int(declared)>max_file:
                     raise RuntimeError("Datei groesser als Cache-Limit")
+                if declared and used + int(declared) > budget:
+                    budget_exhausted = True
+                    break
                 ext=ext_from(ctype,url,a.get("name") or "")
                 fid=safe_part(a.get("file_id") or hashlib.sha1(url.encode()).hexdigest()[:12])
                 name=f"{fid}{ext}"
@@ -234,9 +241,15 @@ def main():
                     for chunk in resp.iter_content(256*1024):
                         if not chunk: continue
                         size+=len(chunk)
-                        if size>max_file or used+size>budget:
-                            raise RuntimeError("Cache-Limit erreicht")
+                        if size>max_file:
+                            raise RuntimeError("Datei groesser als Cache-Limit")
+                        if used+size>budget:
+                            budget_exhausted = True
+                            break
                         fh.write(chunk)
+                if budget_exhausted:
+                    target.unlink(missing_ok=True)
+                    break
                 if size<=0:
                     target.unlink(missing_ok=True)
                     raise RuntimeError("Leere Datei")
@@ -266,7 +279,7 @@ def main():
                 if len(error_samples) < 12:
                     error_samples.append({"id": str(r.get("id")), "file_id": str(a.get("file_id") or ""), "stage": "download", "error": str(exc)})
                 print(f"{r.get('id')}: Medienfehler: {exc}",file=sys.stderr)
-        if downloaded>=args.max_files or used>=budget:
+        if downloaded>=args.max_files or used>=budget or budget_exhausted:
             break
 
     # Recount media availability from actual cached objects.

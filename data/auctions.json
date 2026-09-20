@@ -571,21 +571,23 @@
     "geodata_source": "WZB Berlin PLZ-Geokoordinaten (Apache 2.0) - https://github.com/WZBSocialScienceCenter/plz_geocoord",
     "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
     "detail_enrichment": {
-      "generated_at": "2026-09-20T16:34:33+00:00",
-      "fetched_this_run": 20,
+      "generated_at": "2026-09-20T16:43:35+00:00",
+      "fetched_this_run": 25,
       "errors_this_run": 0,
-      "enriched_total": 1457,
-      "active_candidates_remaining": 1887,
-      "with_gutachten": 830,
-      "with_photos": 357,
-      "limit_per_run": 20,
+      "enriched_total": 1482,
+      "active_candidates_remaining": 1862,
+      "with_gutachten": 845,
+      "with_photos": 362,
+      "limit_per_run": 25,
       "primed_states": [
-        "be",
+        "bw",
         "by",
         "he",
+        "ni",
         "nw",
         "rp",
-        "sn"
+        "sn",
+        "th"
       ],
       "error_samples": []
     },
@@ -732,6 +734,11 @@
         "sh: Schleswig-Holstein nur 2 Verfahren (Warnschwelle 35)"
       ],
       "all_16_present": false
+    },
+    "smart_analysis": {
+      "generated_at": "2026-09-20T16:51:36+00:00",
+      "analyzed_this_run": 20,
+      "errors_this_run": 0
     }
   },
   "results": [
@@ -1573,7 +1580,54 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Gutenbergstrasse 8+0,+63110+Rodgau"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133554.pdf",
+        "source_signature": "1666263:1789922569",
+        "pages": 57,
+        "text_chars": 99376,
+        "summary": "§ 194 Baugesetzbuch für das mit einem Wohn- und Geschäftshaus bebaute Grundstück in 63110 Rodgau - Jügesheim, Gutenbergstraße 8 Der Verkehrswert des Grundstücks wurde zum Stichtag 17.07.2023 - dem äußeren Anschein nach - ermittelt mit rd. 1 Dieses Gutachten besteht aus 57 Seiten inkl. Das Gutachten wurde als PDF sowie in elf Ausfertigungen erstellt, davon eine für meine Unterlagen.",
+        "facts": {
+          "baujahr": "1999",
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": "884"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 48
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4014",
@@ -1735,7 +1789,64 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Kandelbrunnenstrasse+55,66887+Rammelsbach&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "6124.pdf",
+        "source_signature": "1049470:1789922569",
+        "pages": 37,
+        "text_chars": 101048,
+        "summary": "1 bezeichnet In der Zwangsversteigerungssache Aktenzeichen 1 K 6/26 wurde der Verkehrswert des Wohnungseigentums zum Stichtag 23.03.2026 ermittelt mit rd. Objekt: freistehendes Einfamilienhaus in Massivbauweise (wohnwertabhängige Wohnfläche ca. 103 m²) auf einem nach WEG aufgeteilten Grundstück mit 1.259 m², (½ Anteil entspricht 629,50 m²), Baujahr ca.",
+        "facts": {
+          "baujahr": "1953",
+          "wohnflaeche_m2": "103",
+          "grundstueck_m2": "750"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 5
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 62
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "st-30320",
@@ -2071,7 +2182,59 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Ottostr. 58&hnr=&plz=47198&ort=Duisburg"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "367007.pdf",
+        "source_signature": "1062429:1789922569",
+        "pages": 33,
+        "text_chars": 62555,
+        "summary": "142 47057 Duisburg Tel.: 0203 374033 E-Mail: info@sv-wegmann.de www.sv-wegmann.de Steuernummer: 109-5221/0200 Commerzbank AG Duisburg IBAN DE07 3508 0070 0200 4902 00 BIC DEUTDEDB350 Lars Wegmann – Bismarckstr. 142 - 47057 Duisburg Amtsgericht Duisburg Zwangsversteigerung Postfach 10 01 10 47001 Duisburg Datum: 11. Februar 2025 AZ: 651 K 33-24 G U T A C H T E N über den (sanierungsunbeeinflussten) Verkehrswert (Marktwert) i.",
+        "facts": {
+          "baujahr": "1969",
+          "wohnflaeche_m2": "84",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 6
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55229",
@@ -2162,7 +2325,59 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Ringmauer+2 A-C,+36110+Schlitz"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134457.pdf",
+        "source_signature": "1818536:1789922569",
+        "pages": 34,
+        "text_chars": 43010,
+        "summary": "- Bauingenieur (FH) VERKEHRSWERT GUTACHTEN in der Sache: 450/10.000 Miteigentumsanteil an Gebäude- und Freifläche Ringmauer 2 A-C -Wohnung Nr. 7- 36110 Schlitz Amtsgericht Alsfeld Aktenzeichen: 36 K 14/25 Der Verkehrswert des Eigentums wurde zum Stichtag 03.1 1.2025 wie folgt ermittelt: 54.500,00 € in Worten: vierundfünfzigtausendfünfhundert Euro 1. Allgemeine Angaben Wohnungsgrundbuch von Schlitz, Blatt 4315 des Amtsgerichtes Alsfeld Ifd.",
+        "facts": {
+          "baujahr": "1997",
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-12927",
@@ -2340,7 +2555,59 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Am Courts Garten 2&hnr=&plz=51143&ort=Koeln"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376459.pdf",
+        "source_signature": "1766587:1789922569",
+        "pages": 47,
+        "text_chars": 57290,
+        "summary": "1 Am Courts Garten 2 in 51143 Köln-Zündorf - 1 - DIPL.-ING. 093 K 025/25 beim Amtsgericht Köln über die Verkehrswerte (Marktwerte) der Arztpraxis Nr. 1 des Aufteilungsplans im Erdgeschoss nebst 2 Kellerräumen verbunden mit den Sondernutzungsrechten an 2 Pkw-Stellplätzen im Freien und des Garageneinstellplatzes Nr.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-3580",
@@ -2783,7 +3050,64 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Fredericiastrasse+2,14059+Berlin&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66697.pdf",
+        "source_signature": "2659053:1789922569",
+        "pages": 35,
+        "text_chars": 57409,
+        "summary": "Berlin • Frankfurt/Main • Hamburg • Leipzig • München Sachverständige für Immobilienbewertung Dr. Gleser & Dalhoefer Partnerschaftsgesellschaft AG Charlottenburg PR 284 B Kurfürstendamm 49 10707 Berlin Fon: +49 (0) 30 - 881 89 08 Fax: +49 (0) 30 - 88 70 16 09 info@gleser-dalhoefer.de www.gleser-dalhoefer.de Ausfertigung Nr. 1 von 5 Dieses Gutachten besteht aus insgesamt 35 Seiten.",
+        "facts": {
+          "baujahr": "1931",
+          "wohnflaeche_m2": "33.60",
+          "grundstueck_m2": "2296"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 5
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48719",
@@ -2970,7 +3294,64 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Angermaierstrasse+53,85356+Freising&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125773.pdf",
+        "source_signature": "2227190:1789922569",
+        "pages": 64,
+        "text_chars": 111162,
+        "summary": "15 - 85764 Oberschleißheim Amtsgericht Landshut Abteilung für Zwangsversteigerungssachen Maximilianstraße 22 84028 Landshut Dachauer Str. 15 85764 Oberschleißheim Telefon: 089/ 2170398-82 Internet: www.rau-immobilienbewertungen.de E-Mail: hubert.rau@rau-immobilienbewertungen.de Datum: 09.09.2024 Az.: 2024/RIB/0040 G U T A C H T E N über den Verkehrswert (Marktwert) i. § 194 Baugesetzbuch des 281,76/10.000 Miteigentumsanteils an dem mit einem Mehrfamilienhaus bebauten Grundstück in 85356 Freising, Angermaierstr.",
+        "facts": {
+          "baujahr": "1964",
+          "wohnflaeche_m2": "82",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 11
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 32
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 57
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167612",
@@ -3077,7 +3458,59 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Berchumer Strasse 20, Nombericher Strasse 26 (hier Berchumer Str. 20&hnr=&plz=47137&ort=Duisburg"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "375908.pdf",
+        "source_signature": "2908455:1789922569",
+        "pages": 44,
+        "text_chars": 87217,
+        "summary": "K E R S T I N S C H I C K Sachverständige für Immobilienbewertung KSN Ingenieurgesellschaft Unternehmergesellschaft (haftungsbeschränkt) Schloßstr. 44 47627 Kevelaer T +49 2825 93 96 476 Ausfertigung Nr 1: Dieses Gutachten besteht aus insgesamt 49 Seiten. Hierin sind 34 Seiten Schriftteil und 8 Anlagen mit insgesamt 15 Seiten und 10 Foto enthalten.",
+        "facts": {
+          "baujahr": "1952",
+          "wohnflaeche_m2": "108",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 8
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167909",
@@ -3185,7 +3618,59 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Ahren 17&hnr=&plz=41238&ort=Moenchengladbach"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376849.pdf",
+        "source_signature": "223690:1789922569",
+        "pages": 23,
+        "text_chars": 42636,
+        "summary": "MARKUS SAUER ARCHITEKT SACHVERSTÄNDIGER FÜR DIE BEWERTUNG VON BEBAUTEN UND UNBEBAUTEN GRUNDSTÜCKEN Hubertusstraße 12 - 41352 Korschenbroich - Telefon 0 21 61 / 688 77 63 - Fax 0 21 61 / 688 77 64 WERTGUTACHTEN (i. des § 194 Baugesetzbuch) Objekt: Wohnungseigentum im Dachgeschoss und in der Galerieebene eines Mehrfamilienhauses nebst Kellerraum jeweils Nr. 5 des Aufteilungsplanes Ahren 17 41238 Mönchengladbach Die nachstehende Internetversion des Gutachtens wurde aus Gründen des Daten- schutzes gekürzt.",
+        "facts": {
+          "baujahr": "1999",
+          "wohnflaeche_m2": "60",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 8
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168155",
@@ -3310,7 +3795,59 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Armin-T.-Wegner-Platz 7, 9, 13, 15, Schlossbleiche 34, 40, 42, 42 A, 44, 46, Maeuerchen 23, 25, 27, 39, 43, 7, Wirmhof 18&hnr=&plz=42103&ort=Wuppertal"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377613.pdf",
+        "source_signature": "1919294:1789922569",
+        "pages": 63,
+        "text_chars": 88886,
+        "summary": "In dieser Internetversion des Gutachtens befinden sich keine Anlagen (Teilungserklärung, Amtsauskünfte etc.). Das Originalgutachten kann nach vorheriger telefonischer Anmeldung in der Geschäftsstelle des Amtsgerichts eingesehen werden. Aufgabenstellung .......................................................................................................................3 2.",
+        "facts": {
+          "baujahr": "1981",
+          "wohnflaeche_m2": "243",
+          "grundstueck_m2": "2389"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 10
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 58
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 29
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168545",
@@ -3403,7 +3940,59 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Schimmelbusch Str. 50, 52, Fuhlrottstr. 40&hnr=&plz=00000&ort="
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378903.pdf",
+        "source_signature": "2721179:1789922569",
+        "pages": 45,
+        "text_chars": 66681,
+        "summary": "Sachverständigenbüro für Immobilien Dipl.-Kfm. OG, links des Mehrfamilienhauses Schimmelbuschstr. In dieser sind einige Bestandteile des Original-Gutachtens nicht enthalten.",
+        "facts": {
+          "baujahr": "1977",
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 70
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 26
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55125",
@@ -3508,7 +4097,54 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Berliner Ring 1+0,+35576+Wetzlar"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134155.pdf",
+        "source_signature": "1611929:1789922569",
+        "pages": 58,
+        "text_chars": 102507,
+        "summary": "des Gerichts: 93 K 9/25 G U T A C H T E N über den Verkehrswert (Marktwert) i. 14 sowie dem Sondernutzungsrecht an dem Garagenstellplatz Nr. 14 Der Verkehrswert des Wohnungseigentums wurde zum Stichtag 28.07.2025 ermittelt mit rd.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 18
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 60
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 9
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49043",
@@ -3635,7 +4271,29 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=etwa 1,5 km nordwestlich der Ortschaft Moedishofen und ca. 2,0 km suedlich der Ortschaft Haeder+,86514+Ustersbach&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126429.pdf",
+        "source_signature": "2905393:1789922569",
+        "pages": 28,
+        "text_chars": 30144,
+        "summary": "Seite von 1:25.000 Waldwertgutachten Fl.-Nr. Vorbemerkung ................................................................................................ Anlass des Gutachtens ..........................................................................",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "br-7251",
@@ -3908,7 +4566,59 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Angelgartenstrasse +75,+64846+Gross-Zimmern"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134314.pdf",
+        "source_signature": "1459332:1789922569",
+        "pages": 71,
+        "text_chars": 127129,
+        "summary": "Margraf & Partner Friedhofstraße 15 63150 Heusenstamm Tel.: 06106 666 111 Fax.: 06106 6398544 info@oliver-margraf.de www.oliver-margraf.de DE36505201900342666337 USt-Id.Nr. Margraf Dipl.- Immobilienökonom (ADI) Dipl.- Immobilienwirt / Dipl.- Sachverständiger V. bebauten und unbebauten Grundstücken DIAZert W+G (DIN EN ISO/IEC 17024) Maarten C.",
+        "facts": {
+          "baujahr": "1967",
+          "wohnflaeche_m2": "70.16",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 17
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4171",
@@ -4085,7 +4795,49 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Heeresstrasse 8/An der Heeresstrasse+,96361+Steinbach a. Wald&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "124894.pdf",
+        "source_signature": "2594499:1789922569",
+        "pages": 16,
+        "text_chars": 38868,
+        "summary": "SACHVERSTÄNDIGER & BERATENDER INGENIEUR A u s z u g a u s d e m V e r k e h r s w e r t g u t a c h t e n i. § 74a Zwangsversteigerungsgesetz (ZVG) für die Bewertungsobjekte a) Grundstück Flst. 174/3, bebaut mit einem Einfamilienhaus b) Grundstück Flst.",
+        "facts": {
+          "baujahr": "1950",
+          "wohnflaeche_m2": "140",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49035",
@@ -4190,7 +4942,49 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Radling +17,+93489+Schorndorf "
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126409.pdf",
+        "source_signature": "892512:1789922569",
+        "pages": 41,
+        "text_chars": 71572,
+        "summary": "An das Amtsgericht Regensburg - Vollstreckungsgericht - Augustenstrasse 3 93 049 Regensburg 11.06.2025 Ihr Aktenzeichen : 1K 95/24 Mein Aktenzeichen : G U T A C H T E N über den Verkehrswert i. § 194 BauGB des unbelasteten Grundstückes Fl.Nr. = Flurstücknummer BBPL = Bebauungsplan FLNPL = Flächennutzungsplan BauNVO = Baunutz.verordnung BauGB = Baugesetzbuch ebp = erschliessungs- beitragspflichtig ebf = erschliessungs- beitragsfrei z.Zt.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": "138.6",
+          "grundstueck_m2": "522"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 25
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-8559",
@@ -5027,7 +5821,39 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Rachelstrasse+27,84030+Landshut&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125766.pdf",
+        "source_signature": "2458410:1789922569",
+        "pages": 18,
+        "text_chars": 11857,
+        "summary": "1: 100 Die tatsächliche Bauausführung weicht von den Bauplänen ab (wesentlichen Änderungen verfasserseits „rot“ ergänzt). 1: 100 Querschnitt Wohngebäude Querschnitt Nebengebäude c V, »V J j - • \\ <V' Gl r r ;7 9 9 N o r» N Bei Ausführung d einschlägigen Bei genau zu beacht zugeiassene odei wendet werden. c' vus nlhaile’.on Hew«.-.be«!ir'nnungon 1 1 m wv -t Lendsbut, den' ..",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": "94.56",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49026",
@@ -5172,7 +5998,44 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Goldstrasse+16,18,+87600+Kaufbeuren"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126705.pdf",
+        "source_signature": "2097525:1789922569",
+        "pages": 68,
+        "text_chars": 115457,
+        "summary": "SACHVERSTÄNDIGE FÜR IMMOBILIENBEWERTUNG • CHARTERED SURVEYORS ROSSBACH & GEHRI PETER ROSSBACH Dipl.-Kfm. 7 2.2 Der Verkehrswert (Marktwert) nach § 194 BauGB ................................................................................ 7 2.3 Stichtage ........................................................................................................................................................",
+        "facts": {
+          "baujahr": "2022",
+          "wohnflaeche_m2": "1180",
+          "grundstueck_m2": "1826"
+        },
+        "signals": [
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 22
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-12845",
@@ -5445,7 +6308,49 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Duennhofsweg 24&hnr=&plz=51469&ort=Bergisch Gladbach"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376662.pdf",
+        "source_signature": "284667:1789922569",
+        "pages": 31,
+        "text_chars": 45885,
+        "summary": "Die Internetversion unterscheidet sich von der Originalversion nur dadurch, dass es keine Anlagen (Katasterplan, Bauzeichnungen, pp.) oder persönliche Angaben enthält. auf der Homepage des Amtsgerichts Bergisch Gladbach online einen Einsichtstermin buchen. Ermittlung des Verkehrswertes des Grundstücks mit aufstehenden Gebäuden und der baulichen Nebenanlagen im Zuge des Zwangsversteigerungsverfahrens.",
+        "facts": {
+          "baujahr": "1972",
+          "wohnflaeche_m2": "85.90",
+          "grundstueck_m2": "2514"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 30
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55132",
@@ -5538,7 +6443,29 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Hirzenhainer Strasse 2a+0,+63683+Ortenberg"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-20T16:51:36+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134176.pdf",
+        "source_signature": "1205118:1789922569",
+        "pages": 33,
+        "text_chars": 53925,
+        "summary": "Als Be¬ zugsfläche dient die energetische Gebäudenutzfläche nach der EnEV, die sich in der Regel von den allgemeinen Wohnflächenangaben unterscheidet. Die angegebenen Vergleichswerte sollen überschlägige Vergleiche ermögli¬ chen (Erläuterungen - siehe Seite 5). Teil des Energieausweises sind die Modernisierungsempfehlungen (Seite 4).",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 14
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "be-14320",
@@ -135867,7 +136794,36 @@
       "lng": 9.70987,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Zwangsversteigerung auf Antrag des Insolvenzverwalters",
+      "land_registry": "Schlier, Blatt 2136",
+      "auction_venue": "Amtsgericht Ravensburg, Außenstelle Kirchstr. 23, Sitzungssaal I. OG",
+      "creditor_info": null,
+      "detail_description": "lfd.Nr. Gemarkung Flurstück Wirtschaftsart u. Lage Anschrift m² Blatt 1 Schlier 70 Gebäude- und Freifläche Gessenried 3.939 2136, BV Nr. 1 2 Schlier 386/1 Landwirtschaftsfläche Schattbucher Weiher 130.320 2136, BV Nr. 11 3 Schlier 52 Gebäude- und Freifläche, Landwirtschaftsfläche, Unland Gessenried 173.298 2136, BV Nr. 14 4 Schlier 52/1 Gebäude- und Freifläche Gessenried 1 824 2136, BV Nr. 15 5 Schlier 40 Waldfläche, Landwirtschaftsfläche, Wasserfläche Halde 14.619 2136, BV Nr. 16 Lfd. Nr. 1 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : - 2- geschossiges Stallgebäude - 1- geschossige Lagerhalle; Lfd. Nr. 2 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : ; Lfd. Nr. 3 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : - Hofstelle mit 1 - geschossigen Ställen und Nebengebäuden; Lfd. Nr. 4 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : - 2 1/2 — geschossiges Wohnhaus, nicht unterkellert und teilweise ausgebautes Dachgeschoss - 1 — geschossige Garage; Lfd. Nr. 5 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : ;",
+      "court_url": "http://www.amtsgericht-ravensburg.de",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Gessenried+1,88281+Schlier&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=8636&land_abk=bw",
+      "detail_fetched_at": "2026-09-20T16:43:25+00:00",
+      "detail_source_last_updated": "2026-09-08T13:48",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 56,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": false,
+          "photos": false
+        }
+      }
     },
     {
       "id": "bw-official-6a48e25d1b97aca9",
@@ -136043,7 +136999,7 @@
       "description": "Aktenzeichen 0801 K 0001/2025 (Detailansicht) (letzte Aktualisierung 30-07-2026 10:59) Amtsgericht- Amtsgericht Schweinfurt in Bayern Objekt/Lage Einfamilienhaus : Drosselstraße 11, 97422 Schweinfurt Verkehrswert in € Verkehrswert: 620.000,00 € Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 146.44 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49061&land_abk=by",
       "gutachten_url": null,
-      "expose_url": null,
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126499&zvg_id=49061",
       "has_report": false,
       "attachments": [
         {
@@ -136051,6 +137007,30 @@
           "file_id": "126501",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126501&zvg_id=49061"
+        },
+        {
+          "type": "foto",
+          "file_id": "126500",
+          "name": "Foto",
+          "size_kb": 14876.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126500&zvg_id=49061",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "126501",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 14644.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126501&zvg_id=49061",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "126499",
+          "name": "Exposee",
+          "size_kb": 96608.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126499&zvg_id=49061",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136058,7 +137038,61 @@
       "lng": 10.24458,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Eingetragen im Grundbuch des Amtsgerichts Schweinfurt von Schweinfurt Blatt 28128",
+      "auction_venue": "Sitzungssaal 701 des Amtsgerichtes Schweinfurt, Jägersbrunnen 6 (Hochhaus), 7. Stock",
+      "creditor_info": "Raiffeisenbank eG Filiale Nüdlingen (0971/7227-0)",
+      "detail_description": "Gemarkung Flurstück Wirtschaftsart u. Lage Anschrift Hektar Blatt Schweinfurt 6655 Gebäude- und Freifläche Drosselstraße 11 0,0759 28128 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : zweigeschossiges, unterkellertes, in Mischbauweise (Massiv-/Holzkonstruktion) errichtetes Einfamilienhaus mit ausgebauter Dachgeschossetage; als KFW-Effizienzhaus 55 geplant; Wohnfläche EG+OG+DG rd. 163 m² Baujahr um 2011;",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Drosselstrasse+11,97422+Schweinfurt&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "foto",
+          "file_id": "126500",
+          "name": "Foto",
+          "size_kb": 14876.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126500&zvg_id=49061",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "126501",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 14644.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126501&zvg_id=49061",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "126499",
+          "name": "Exposee",
+          "size_kb": 96608.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126499&zvg_id=49061",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49061&land_abk=by",
+      "detail_fetched_at": "2026-09-20T16:43:16+00:00",
+      "detail_source_last_updated": "2026-07-30T10:59",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": true
+        }
+      }
     },
     {
       "id": "by-49270",
@@ -136081,15 +137115,55 @@
       "market_values": [],
       "description": "Aktenzeichen 0001 K 0031/2024 (Detailansicht) (letzte Aktualisierung 09-09-2026 11:22) Amtsgericht- Amtsgericht Deggendorf in Bayern Objekt/Lage gewerblich genutztes Grundstück, unbebautes Grundstück : Maschenberger Str. 1, 94209 Regen Verkehrswert in € Objekt 1: 129.000 € Objekt 2: 31.000 € Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 131.2 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49270&land_abk=by",
-      "gutachten_url": null,
-      "expose_url": null,
-      "has_report": false,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127316&zvg_id=49270",
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127318&zvg_id=49270",
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "127313",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127313&zvg_id=49270"
+        },
+        {
+          "type": "gutachten",
+          "file_id": "127316",
+          "name": "Gutachten",
+          "size_kb": 270354.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127316&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "127314",
+          "name": "Gutachten",
+          "size_kb": 139522.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127314&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "127317",
+          "name": "Gutachten",
+          "size_kb": 109131.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127317&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "127313",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 1312.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127313&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "127318",
+          "name": "Exposee",
+          "size_kb": 1615.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127318&zvg_id=49270",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136097,7 +137171,77 @@
       "lng": 13.11609,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Amtsgericht Viechtach für Bärndorf Blatt 1023 und Oberneumais Blatt 629",
+      "auction_venue": "Amtsgericht Deggendorf, Saal 3 - Zimmer E29",
+      "creditor_info": "Tel.: 0991/3636-169",
+      "detail_description": "Objekt 1: Gewerbliches Grundstück, ehemalige Reithalle; Baujahr ca. 1966; Objekt liegt im Überschwemmungsgebiet des Flusses Schwarzer Regen; Objekt liegt im Außenbereich gem. § 35 BauGB; Begutachtung erfolgte nach äußerem Anschein; Objektanschrift: Maschenberger Str. 1, 94209 Regen; Objekt 2: Unbebautes landwirtschaftliches Grundstück; kein Anschluss an Wasser- und Abwassernetz; Objekt liegt im Überschwemmungsgebiet des Flusses Schwarzer Regen; Grundstück ist als Freizeitfläche verpachtet; Objektanschrift: Gegenüber von Maschenberger Str. 1, 94209 Regen (anderes Flussufer);",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Maschenberger Str.+1,+94209+Regen"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "gutachten",
+          "file_id": "127316",
+          "name": "Gutachten",
+          "size_kb": 270354.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127316&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "127314",
+          "name": "Gutachten",
+          "size_kb": 139522.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127314&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "127317",
+          "name": "Gutachten",
+          "size_kb": 109131.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127317&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "127313",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 1312.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127313&zvg_id=49270",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "127318",
+          "name": "Exposee",
+          "size_kb": 1615.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127318&zvg_id=49270",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49270&land_abk=by",
+      "detail_fetched_at": "2026-09-20T16:43:26+00:00",
+      "detail_source_last_updated": "2026-09-09T11:22",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "he-55002",
@@ -136545,15 +137689,31 @@
       ],
       "description": "Aktenzeichen 0003 K 0027/2024 (Detailansicht) (letzte Aktualisierung 29-07-2026 13:43) Amtsgericht- Amtsgericht Eschwege in Hessen Objekt/Lage Baugrundstück : Auf den Teichhöfen, 37242 Bad Sooden-Allendorf Verkehrswert in € Verkehrswerte: Grundstück BV.-Nr. 1: 42.000,00 € Grundstück BV.-Nr. 2: 42.000,00 € Im Versteigerungstermin ist unter Umständen eine Bietungssicherheit in Höhe von 10% des festgesetzten Verkehrswertes an das Gericht zu leisten. Die Sicherheitsleistung kann vor dem Termin (spätestens 1 Woche vorher) auf das Konto der Gerichtskasse Frankfurt am Main: Landesbank Hessen-Thüringen, IBAN: DE73 5005 0000 0001 0060 30, BIC: HELADEFFXXX, zu dem Kassenzeichen: 030183306021 eingezahlt werden. Hinweis: Ein möglicher Ersteher hat gegenüber dem Vollstreckungsgericht seine steuerliche Identifikationsnummer schriftlich mitzuteilen, da das Vollstreckungsgericht diese, zusammen mit dem Zuschlagsbeschluss, dem zuständigen Finanzamt mitteilen muss. Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 199.3 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=55206&land_abk=he",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134390&zvg_id=55206",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "134391",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134391&zvg_id=55206"
+        },
+        {
+          "type": "gutachten",
+          "file_id": "134390",
+          "name": "Gutachten",
+          "size_kb": 226665.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134390&zvg_id=55206",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "134391",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 1993.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134391&zvg_id=55206",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136561,7 +137721,53 @@
       "lng": 9.94376,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Die im Grundbuch von Bad Sooden-Allendorf Blatt 8985 eingetragenen Grundstücke Lfd.Nr. Gemarkung Flur Flurstück Wirtschaftsart und Lage Größe m² 1 Bad Sooden-Allendorf 7 40/1 Gebäude- und Freifläche, Auf den Teichhöfen 700 2 Bad Sooden-Allendorf 7 40/2 Gebäude- und Freifläche, Auf den Teichhöfen 699",
+      "auction_venue": "Amtsgericht Eschwege, Friedr.-Wilh.-Str. 39, Sitzungssaal 2, I. Stock",
+      "creditor_info": "Förde Sparkasse, Plön, Az.: 34010/Ra, Frau Ratzke, Telefon: 0431/592 1606",
+      "detail_description": "siehe Gutachten",
+      "court_url": "http://www.ag-eschwege.justiz.hessen.de",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Auf den Teichhoefen+,+37242+Bad Sooden-Allendorf"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "gutachten",
+          "file_id": "134390",
+          "name": "Gutachten",
+          "size_kb": 226665.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134390&zvg_id=55206",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "134391",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 1993.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134391&zvg_id=55206",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=55206&land_abk=he",
+      "detail_fetched_at": "2026-09-20T16:43:14+00:00",
+      "detail_source_last_updated": "2026-07-29T13:43",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 89,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "he-55265",
@@ -136590,15 +137796,39 @@
       ],
       "description": "Aktenzeichen 0008 K 0028/2025 (Detailansicht) (letzte Aktualisierung 17-08-2026 08:38) Amtsgericht- Amtsgericht Dillenburg in Hessen Objekt/Lage Mehrfamilienhaus, land- und forstwirtschaftlich genutztes Grundstück, unbebautes Grundstück : Laaspher Straße, 35716 Dietzhölztal, Mandeln Verkehrswert in € 240,00 € (lfd. Nr. 2) 11.260,00 € (lfd. Nr. 3) 119.500,00 € (lfd. Nr. 4) 4.000,00 € (lfd. Nr. 5) Gesamtverkehrswert: 135.000,00 € Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 64.39 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=55265&land_abk=he",
-      "gutachten_url": null,
-      "expose_url": null,
-      "has_report": false,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134559&zvg_id=55265",
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134560&zvg_id=55265",
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "134558",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134558&zvg_id=55265"
+        },
+        {
+          "type": "expose",
+          "file_id": "134560",
+          "name": "Exposee",
+          "size_kb": 65442.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134560&zvg_id=55265",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "134559",
+          "name": "Gutachten",
+          "size_kb": 20044.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134559&zvg_id=55265",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "134558",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 6439.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134558&zvg_id=55265",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136606,7 +137836,61 @@
       "lng": 8.31749,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
+      "land_registry": "Mandeln Blatt 1937",
+      "auction_venue": "Amtsgericht 35683 Dillenburg, Wilhelmstraße 7, Saal 1 (EG)",
+      "creditor_info": null,
+      "detail_description": "Lfd.Nr. Gemarkung Flur Flurstück Wirtschaftsart und Lage Größe m² 2 Mandeln 8 1071 Grünland, Spitzwiese, 3. Web. 325 3 Mandeln 6 127/794 Gartenland, Oberdorf 510 4 Mandeln 6 700/2 Gebäude- und Freifläche, Laaspher Straße 713 5 Mandeln 6 795/1 Gartenland, Oberdorf 605 Detaillierte Objektbeschreibung: Lfd. Nr. 3: angrenzend an lfd. Nr. 4 und 5, Gartengrundstück, bebaut mit 4 Garagen Lfd. Nr. 4: 6 Wohnung nebst Garage und Pkw-Stellplätzen Lfd. Nr. 5: angrenzend an lfd. Nr. 3 und 4, kann als Gartengrundstück genutzt werden",
+      "court_url": "http://www.ag-dillenburg.justiz.hessen.de",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Laaspher Strasse+,+35716+Dietzhoelztal"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "expose",
+          "file_id": "134560",
+          "name": "Exposee",
+          "size_kb": 65442.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134560&zvg_id=55265",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "134559",
+          "name": "Gutachten",
+          "size_kb": 20044.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134559&zvg_id=55265",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "134558",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 6439.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134558&zvg_id=55265",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=55265&land_abk=he",
+      "detail_fetched_at": "2026-09-20T16:43:23+00:00",
+      "detail_source_last_updated": "2026-08-17T08:38",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "mv-official-c3d3f535481cc36e",
@@ -136686,15 +137970,39 @@
       ],
       "description": "Aktenzeichen 0023 K 0028/2023 (Detailansicht) (letzte Aktualisierung 14-08-2026 11:07) Amtsgericht- Amtsgericht WolfenbÃ¼ttel in Niedersachsen Objekt/Lage unbebautes Grundstück : Kuhatraße 1, 38170 Warle Verkehrswert in € Grundbuch von Warle Blatt 127 lfd.Nr. 1: 67.000,00 € Grundbuch von Warle Blatt 47 lfd.Nr. 2: 0,00 € Gesamtwert: 67.000,00 € Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 72.52 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=13380&land_abk=ni",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32881&zvg_id=13380",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "32858",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32858&zvg_id=13380"
+        },
+        {
+          "type": "gutachten",
+          "file_id": "32881",
+          "name": "Gutachten",
+          "size_kb": 16437.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32881&zvg_id=13380",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "32858",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7252.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32858&zvg_id=13380",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "32859",
+          "name": "Gutachten",
+          "size_kb": 171028.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32859&zvg_id=13380",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136702,7 +138010,61 @@
       "lng": 10.78969,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Warle Blatt 127",
+      "auction_venue": "Amtsgericht Wolfenbüttel, Rosenwall 1A, 38300 Wolfenbüttel, Raum: 136",
+      "creditor_info": null,
+      "detail_description": "Doppelhaushälfte",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Kuhatrasse 1+0,+38170+Warle"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "gutachten",
+          "file_id": "32881",
+          "name": "Gutachten",
+          "size_kb": 16437.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32881&zvg_id=13380",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "32858",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7252.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32858&zvg_id=13380",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "32859",
+          "name": "Gutachten",
+          "size_kb": 171028.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32859&zvg_id=13380",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=13380&land_abk=ni",
+      "detail_fetched_at": "2026-09-20T16:43:23+00:00",
+      "detail_source_last_updated": "2026-08-14T11:07",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 67,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "nw-168311",
@@ -136832,15 +138194,31 @@
       ],
       "description": "Aktenzeichen 0021 K 0011/2024 (Detailansicht) (letzte Aktualisierung 11-08-2026 11:32) Amtsgericht- Amtsgericht Blomberg in Nordrhein-Westfalen Objekt/Lage Zweifamilienhaus : NiesetalstraÃŸe 36, 32816 Schieder-Schwalenberg, Lothe Verkehrswert in € 225.000,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 71.17 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168635&land_abk=nw",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379178&zvg_id=168635",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "379177",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379177&zvg_id=168635"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "379177",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7117.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379177&zvg_id=168635",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379178",
+          "name": "Gutachten",
+          "size_kb": 25306.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379178&zvg_id=168635",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136848,7 +138226,55 @@
       "lng": 9.19356,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Schieder-Schwalenberg Blatt 683",
+      "auction_venue": "Amtsgericht Blomberg, Hauptgebäude, Kolberger Str. 1, 32825 Blomberg, Etage 1, Sitzungssaal Saal 1",
+      "creditor_info": null,
+      "detail_description": "Laut Wertgutachten handelt es sich um ein freistehendes vollunterkellertes, eingeschossiges Zweifamilienhaus, Wohnfläche ca. 175 qm, Baujahr 1975, Garagenanbau (Baujahr 1977) und Reihengarage (Baujahr 1983/91). Die Reihengarage stellt eine Grenzüberbauung auf das landwirtschaftlich genutzte Flurstück 87 dar.",
+      "court_url": "http://www.ag-blomberg.nrw.de/",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Niesetalstrasse 36&hnr=&plz=32816&ort=Schieder-Schwalenberg"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Niesetalstrasse 36+,+32816+Schieder-Schwalenberg"
+      ],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "379177",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7117.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379177&zvg_id=168635",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379178",
+          "name": "Gutachten",
+          "size_kb": 25306.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379178&zvg_id=168635",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168635&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:21+00:00",
+      "detail_source_last_updated": "2026-08-11T11:32",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "nw-168744",
@@ -136873,15 +138299,47 @@
       ],
       "description": "Aktenzeichen 0223 K 0010/2025 (Detailansicht) (letzte Aktualisierung 20-08-2026 10:29) Amtsgericht- Amtsgericht Bonn in Nordrhein-Westfalen Objekt/Lage Kfz-Stellplatz, Eigentumswohnung (3 bis 4 Zimmer) : AugustinusstraÃŸe 1-6, 8-18, 53123 Bonn, Duisdorf Verkehrswert in € 170.000,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 72.3 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168744&land_abk=nw",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379566&zvg_id=168744",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "379563",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379563&zvg_id=168744"
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379566",
+          "name": "Gutachten",
+          "size_kb": 31299.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379566&zvg_id=168744",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379564",
+          "name": "Gutachten",
+          "size_kb": 158057.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379564&zvg_id=168744",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "379563",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 723.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379563&zvg_id=168744",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "379565",
+          "name": "Foto",
+          "size_kb": 62019.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379565&zvg_id=168744",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136889,7 +138347,71 @@
       "lng": 7.04447,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Duisdorf Blatt 7357",
+      "auction_venue": "Amtsgericht Bonn, Hauptgebäude, Wilhelmstr. 21, 53111 Bonn, Etage 1, Sitzungssaal W 1.26 (Wilhelmbau)",
+      "creditor_info": null,
+      "detail_description": "Wohnung, im 1. OG rechts des Objekts Augustinusstraße 21, in 1959 fertig gestellter Wohnanlage, Wohnfläche von 63,6 m²",
+      "court_url": "http://www.ag-bonn.nrw.de/aufgaben/abteilungen/Zwangsversteigerung/index.php",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Augustinusstrasse 1-6, 8-18&hnr=&plz=53123&ort=Bonn"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Augustinusstrasse 1-6, 8-18+,+53123+Bonn"
+      ],
+      "detail_attachments": [
+        {
+          "type": "gutachten",
+          "file_id": "379566",
+          "name": "Gutachten",
+          "size_kb": 31299.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379566&zvg_id=168744",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379564",
+          "name": "Gutachten",
+          "size_kb": 158057.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379564&zvg_id=168744",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "379563",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 723.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379563&zvg_id=168744",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "379565",
+          "name": "Foto",
+          "size_kb": 62019.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379565&zvg_id=168744",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168744&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:24+00:00",
+      "detail_source_last_updated": "2026-08-20T10:29",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 89,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": true
+        }
+      }
     },
     {
       "id": "nw-168878",
@@ -136914,15 +138436,39 @@
       ],
       "description": "Aktenzeichen 0022 K 0001/2025 (Detailansicht) (letzte Aktualisierung 07-09-2026 11:10) Amtsgericht- Amtsgericht Viersen in Nordrhein-Westfalen Objekt/Lage gewerblich genutztes Grundstück : Sohlweg 76, 41372 NiederkrÃ¼chten, Dam Verkehrswert in € 3.095.000,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 73.36 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168878&land_abk=nw",
-      "gutachten_url": null,
-      "expose_url": null,
-      "has_report": false,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380045&zvg_id=168878",
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380044&zvg_id=168878",
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "380043",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380043&zvg_id=168878"
+        },
+        {
+          "type": "expose",
+          "file_id": "380044",
+          "name": "Exposee",
+          "size_kb": 2467.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380044&zvg_id=168878",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "380045",
+          "name": "Gutachten",
+          "size_kb": 25884.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380045&zvg_id=168878",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "380043",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7336.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380043&zvg_id=168878",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -136930,7 +138476,63 @@
       "lng": 6.1403,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Niederkrüchten Blatt 5377",
+      "auction_venue": "Amtsgericht Viersen, Hauptgebäude, Dülkener Str. 5, 41747 Viersen, Etage EG, Sitzungssaal 023",
+      "creditor_info": null,
+      "detail_description": "Lt. Wertgutachten handelt es sich um ein Gewerbe- / Industrieobjekt in Niederkrüchten-Dam. Es ist mit einer Gewerbe-/ Industriehalle bebaut, in die ein dreigeschossiges Bürogebäude integriert ist. Dem schließt sich eine z.T. überdachte und durch ein Sektionaltor gesicherte Freilagerfläche an. Im Bürokomplex befinden sich drei in sich abgeschlossene Büroeinheiten mit diversen Räumlichkeiten, ca. 403 qm im Erdgeschoss, ca. 304 qm im 1.Obergeschoss und ca. 191 qm im 2. Obergeschoss. Die durch ein Sektionaltor gesicherte Lager- und Produktionshalle ist mit großen Fahrzeugen befahrbar und bietet im Erdgeschoss eine Fläche von ca. 1.095 qm, sowie auf einer Lagerbühne im 1. Obergeschoss ca. 453 qm Nutzfläche. Auf einer Außenfläche, die ebenfalls durch ein Sektionaltor gesichert und auch mit großen Fahrzeuegen befahrbar ist, stehen weitere ca. 705 qm überdachte Lagerfläche zur Verfügung. Zusätzlich ist eine weitere nicht überdachte Abstellfläche von ca. 495 qm nutzbar. Das Objekt ist hochwertig errichtet und ausgestattet. Ansprechpartner bei der Sparkasse Krefeld: Alexander Düllings, Tel.: 02151-6848055",
+      "court_url": "http://www.ag-viersen.nrw.de",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Sohlweg 76&hnr=&plz=41372&ort=Niederkruechten"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Sohlweg 76+,+41372+Niederkruechten"
+      ],
+      "detail_attachments": [
+        {
+          "type": "expose",
+          "file_id": "380044",
+          "name": "Exposee",
+          "size_kb": 2467.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380044&zvg_id=168878",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "380045",
+          "name": "Gutachten",
+          "size_kb": 25884.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380045&zvg_id=168878",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "380043",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7336.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380043&zvg_id=168878",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168878&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:24+00:00",
+      "detail_source_last_updated": "2026-09-07T11:10",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "rp-4000",
@@ -137135,6 +138737,14 @@
           "file_id": "6173",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6173&zvg_id=4099"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "6173",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 10165.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6173&zvg_id=4099",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137142,7 +138752,45 @@
       "lng": 7.68725,
       "position_precision": "state_approximation",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
+      "land_registry": null,
+      "auction_venue": "Saal 107",
+      "creditor_info": null,
+      "detail_description": "Eingetragen im Grundbuch von Nieder-Saulheim Gemarkung Flur, Flurstück Wirtschaftsart u. Lage m² Blatt Ober-Saulheim Nr. 5 Fl.Nr.: 287 Landwirtschaftsfläche In den Bettelwingerten 378 5894 BV 14 Zusatz: in Erbengemeinschaft Objektbeschreibung/Lage (lt. Angaben d. Sachverständigen): Landwirtschaftliche Fläche, nicht bestockter Weinberg (Brache) Verkehrswert: 3.930,00 €",
+      "court_url": "http://www.agaz.justiz.rlp.de/de/service-informationen/",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&hl=de&geocode=&q=In den Bettelwingerten+,00000+Ober-Saulheim&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "6173",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 10165.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6173&zvg_id=4099",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=4099&land_abk=rp",
+      "detail_fetched_at": "2026-09-20T16:43:09+00:00",
+      "detail_source_last_updated": "2026-07-23T08:49",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 56,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": false,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "rp-4145",
@@ -137168,15 +138816,39 @@
       ],
       "description": "Aktenzeichen K 0007/2025 (Detailansicht) (letzte Aktualisierung 10-09-2026 12:24) Amtsgericht- Amtsgericht Koblenz in Rheinland-Pfalz Objekt/Lage unbebautes und unbefestigtes Hanggelände : Waldfläche, 56332 Lehmen Verkehrswert in € lfd. Nr. 1 18.000,00 € lfd. Nr. 2 43.000,00 € Termin Mittwoch, 28. Oktober 2026, 09:00 Uhr Amtliche Bekanntmachung 283.68 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=4145&land_abk=rp",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6218&zvg_id=4145",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "6220",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6220&zvg_id=4145"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "6220",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 28368.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6220&zvg_id=4145",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "6218",
+          "name": "Gutachten",
+          "size_kb": 144348.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6218&zvg_id=4145",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "6219",
+          "name": "Gutachten",
+          "size_kb": 201815.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6219&zvg_id=4145",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137184,7 +138856,61 @@
       "lng": 7.44684,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": null,
+      "auction_venue": "Amtsgericht Koblenz, Karmeliterstraße 14, 56068 Koblenz, Saal 49",
+      "creditor_info": null,
+      "detail_description": "Eingetragen im Grundbuch von Lehmen lfd.Nr. Gemarkung Flur, Flurstück Wirtschaftsart u. Lage m² Blatt 1 Lehmen Flur 25, Flurstück 14 Waldfläche/nAuf der Pat 302 2138 2 Lehmen Flur 25, Flurstück 16 Waldfläche Dass. 629 2138",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Waldflaeche+,+56332+Lehmen"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "6220",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 28368.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6220&zvg_id=4145",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "6218",
+          "name": "Gutachten",
+          "size_kb": 144348.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6218&zvg_id=4145",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "6219",
+          "name": "Gutachten",
+          "size_kb": 201815.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6219&zvg_id=4145",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=4145&land_abk=rp",
+      "detail_fetched_at": "2026-09-20T16:43:26+00:00",
+      "detail_source_last_updated": "2026-09-10T12:24",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 56,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": false,
+          "creditor_info": false,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "ni-13284",
@@ -137218,6 +138944,22 @@
           "file_id": "32652",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32652&zvg_id=13284"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "32652",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 13349.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32652&zvg_id=13284",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "32653",
+          "name": "Foto",
+          "size_kb": 26016.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32653&zvg_id=13284",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137225,7 +138967,53 @@
       "lng": 10.09137,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Oerrel Blatt 240 eingetragene Grundstück Lfd. Nr. Gemarkung Flur Flurstück Wirtschaftsart und Lage Größe m² 1 Oerrel 12 2/46 Gebäude- und Freifläche, Stettiner Straße 2 875",
+      "auction_venue": "Amtsgericht Soltau, Rühberg 13-15, 29614 Soltau, Saal II (A 1.06)",
+      "creditor_info": "Sparkasse Rotenburg Osterholz",
+      "detail_description": "Wohnhaus mit angebautem Nebengebäude. Baujahr 1963, EG: 3 Zimmer, Küche, Bad, Flur EG mit überdachter Terrasse (Wfl. ca. 71 m²); DG: 4 Zimmer, WC und Flur DG (Wfl. ca. 56 m²); KG: 5 Kellerräume und Flur KG (Nutzfl. ca. 67 m²). Ein Zugang zum Grundstück und dem Gebäude wurde nicht gewährt.",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Stettiner Strasse +2,+29633+Munster"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "32652",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 13349.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32652&zvg_id=13284",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "32653",
+          "name": "Foto",
+          "size_kb": 26016.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32653&zvg_id=13284",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=13284&land_abk=ni",
+      "detail_fetched_at": "2026-09-20T16:43:27+00:00",
+      "detail_source_last_updated": "2026-07-20T11:41",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": true
+        }
+      }
     },
     {
       "id": "sn-41106",
@@ -137253,7 +139041,7 @@
       "description": "Aktenzeichen 0001 K 0065/2024 (Detailansicht) (letzte Aktualisierung 01-09-2026 11:27) Amtsgericht- Amtsgericht GÃ¶rlitz in Sachsen Objekt/Lage Wohnhaus (teilsaniert) mit Nebengebäuden : Görlitzer Landstraße 62, 02929 Rothenburg/O.L., Nieder-Neundorf Verkehrswert in € 1 Flst. 179 82.000,00 EUR 2 Flst. 178 3.400,00 EUR Gesamtwert: 85.400,00 EUR Termin Mittwoch, 28. Oktober 2026, 09:15 Uhr Amtliche Bekanntmachung 212.49 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=41106&land_abk=sn",
       "gutachten_url": null,
-      "expose_url": null,
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109645&zvg_id=41106",
       "has_report": false,
       "attachments": [
         {
@@ -137261,6 +139049,22 @@
           "file_id": "109646",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109646&zvg_id=41106"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "109646",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 21249.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109646&zvg_id=41106",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "109645",
+          "name": "Exposee",
+          "size_kb": 39415.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109645&zvg_id=41106",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137268,7 +139072,53 @@
       "lng": 14.96144,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "des Amtsgerichts Weißwasser von Nieder-Neundorf lfd.Nr. Gemarkung Flurstück Wirtschaftsart u. Lage Anschrift m² Blatt 1 Nieder-Neundorf Flur 2 179 Gebäude- und Freifläche Görlitzer Landstraße 62 370 22 2 Nieder-Neundorf Flur 2 178 Gebäude- und Freifläche Görlitzer Landstraße 187 22",
+      "auction_venue": "Saal 119, Amtsgericht Görlitz, Postplatz 18, 02826 Görlitz",
+      "creditor_info": "Sparkasse Oberlausitz-Niederschlesien, Herr Hoffmann, Tel: 03583/6034174",
+      "detail_description": "zu lfd. Nr. 1. zu lfd. Nr. 2. freistehendes Wohnhaus (teilsaniert) mit Nebengebäuden Grundstücke bilden eine wirtschaftliche Einheit",
+      "court_url": "http://www.justiz.sachsen.de/aggr/",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Goerlitzer Landstrasse+62,+02929+Rothenburg/O.L."
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "109646",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 21249.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109646&zvg_id=41106",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "109645",
+          "name": "Exposee",
+          "size_kb": 39415.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109645&zvg_id=41106",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=41106&land_abk=sn",
+      "detail_fetched_at": "2026-09-20T16:43:28+00:00",
+      "detail_source_last_updated": "2026-09-01T11:27",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "bw-official-1ded4e0c55781cc9",
@@ -137342,15 +139192,31 @@
       ],
       "description": "Aktenzeichen 0042 K 0018/2025 (Detailansicht) (letzte Aktualisierung 15-07-2026 09:04) Amtsgericht- Amtsgericht Hanau in Hessen Objekt/Lage Einfamilienhaus : Mühlstr. 12, 61137 Schöneck, Büdesheim Verkehrswert in € 400.000,00 € Termin Mittwoch, 28. Oktober 2026, 09:30 Uhr Amtliche Bekanntmachung 71.2 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=55148&land_abk=he",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134227&zvg_id=55148",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "134226",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134226&zvg_id=55148"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "134226",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 712.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134226&zvg_id=55148",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "134227",
+          "name": "Gutachten",
+          "size_kb": 172683.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134227&zvg_id=55148",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137358,7 +139224,53 @@
       "lng": 8.85167,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Büdesheim Blatt 1980",
+      "auction_venue": "Amtsgericht Hanau, Nussallee 17, 63450 Hanau, Raum C 165",
+      "creditor_info": "Consult Personaldienstleistungen GmbH, 60439 Frankfurt/Main, vertr.d. Rechtsanwälte Waldeck, Eschersheimer Landstr. 14, 60322 Frankfurt/M., Tel:069/90747-255, Zeichen: 90/2024",
+      "detail_description": "Es handelt sich um ein unterkellertes zweigeschossiges Einfamilienhaus nebst ausgebautem Dachgeschoss, Wohnfläche ca. 148,83 qm, Baujahr 1959",
+      "court_url": "http://www.ag-hanau.justiz.hessen.de",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Muehlstr.+12,+61137+Schoeneck"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "134226",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 712.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134226&zvg_id=55148",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "134227",
+          "name": "Gutachten",
+          "size_kb": 172683.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134227&zvg_id=55148",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=55148&land_abk=he",
+      "detail_fetched_at": "2026-09-20T16:43:29+00:00",
+      "detail_source_last_updated": "2026-07-15T09:04",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 89,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "mv-official-bc954b54f5899367",
@@ -137490,15 +139402,39 @@
       ],
       "description": "Aktenzeichen 0007 K 0002/2025 (Detailansicht) (letzte Aktualisierung 19-08-2026 09:40) Amtsgericht- Amtsgericht MÃ¼lheim an der Ruhr in Nordrhein-Westfalen Objekt/Lage Eigentumswohnung : Richard-Gerlach-Str. 4, 6, 8, 10, 12, 45472 MÃ¼lheim an der Ruhr, Fulerum Verkehrswert in € 127.000,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 09:30 Uhr Amtliche Bekanntmachung 71.86 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168728&land_abk=nw",
-      "gutachten_url": null,
-      "expose_url": null,
-      "has_report": false,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379517&zvg_id=168728",
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379518&zvg_id=168728",
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "379516",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379516&zvg_id=168728"
+        },
+        {
+          "type": "expose",
+          "file_id": "379518",
+          "name": "Exposee",
+          "size_kb": 8982.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379518&zvg_id=168728",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379517",
+          "name": "Gutachten",
+          "size_kb": 112688.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379517&zvg_id=168728",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "379516",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7186.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379516&zvg_id=168728",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137506,7 +139442,63 @@
       "lng": 6.93645,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Fulerum Blatt 2564",
+      "auction_venue": "Amtsgericht Mülheim an der Ruhr, Hauptgebäude, Georgstraße 13, 45468 Mülheim an der Ruhr, Etage 2, Sitzungssaal 210",
+      "creditor_info": null,
+      "detail_description": "Es handelt sich um eine Eigentumswohnung mit insgesamt ca. 64,42 m² Wohnfläche im EG des Hauses Nr. 12. Das Baujahr ist ca. 1962. Das Grundstück ist bebaut mit zwei Wohnblöcken. Gem. TEK besteht ein Wohnblock aus zwei Mehrfamilienhäusern („Richard-Gerlach-Str. 4, 6“) mit insgesamt 8 Wohnungen und ein Wohnblock aus drei Mehrfamilienhäusern („Richard-Gerlach-Str. 8, 10, 12“) mit insgesamt 24 Wohnungen. Die zu bewertende Wohnung Nr. 17 befindet sich „Richard-Gerlach-Str. 12“ im Erdgeschoss rechts. Sondernutzungsrechte an den Kellerräumen im ATP mit Nr. K 43 und K 55 bezeichnet, an dem Abstellraum im DG im ATP mit Nr. DK 25 bezeichnet und an dem Garten im ATP GF 10 bezeichnet.",
+      "court_url": "http://www.ag-muelheim.nrw.de",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Richard-Gerlach-Str. 4, 6, 8, 10, 12&hnr=&plz=45472&ort=Muelheim an der Ruhr"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Richard-Gerlach-Str. 4, 6, 8, 10, 12+,+45472+Muelheim an der Ruhr"
+      ],
+      "detail_attachments": [
+        {
+          "type": "expose",
+          "file_id": "379518",
+          "name": "Exposee",
+          "size_kb": 8982.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379518&zvg_id=168728",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "379517",
+          "name": "Gutachten",
+          "size_kb": 112688.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379517&zvg_id=168728",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "379516",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7186.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=379516&zvg_id=168728",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168728&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:29+00:00",
+      "detail_source_last_updated": "2026-08-19T09:40",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "by-48913",
@@ -137532,7 +139524,7 @@
       "description": "Aktenzeichen 0062 K 0077/2025 (Detailansicht) (letzte Aktualisierung 07-07-2026 08:12) Amtsgericht- Amtsgericht Bayreuth in Bayern Objekt/Lage Einfamilienhaus : Richard-Wagner-Str. 15, 95369 Untersteinach Verkehrswert in € 280.000,00 Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 117.85 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=48913&land_abk=by",
       "gutachten_url": null,
-      "expose_url": null,
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126000&zvg_id=48913",
       "has_report": false,
       "attachments": [
         {
@@ -137540,6 +139532,22 @@
           "file_id": "125970",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=125970&zvg_id=48913"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "125970",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 11785.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=125970&zvg_id=48913",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "126000",
+          "name": "Exposee",
+          "size_kb": 185926.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126000&zvg_id=48913",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137547,7 +139555,53 @@
       "lng": 11.50775,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
+      "land_registry": "Amtsgericht Kulmbach Grundbuch von Untersteinach, Blatt 2175",
+      "auction_venue": "Amtsgericht Bayreuth, Justizgebäude III, Sitzungssaal E.520",
+      "creditor_info": null,
+      "detail_description": "Einfamilienwohnhaus mit Erd- und Obergeschoss mit ursprünglichem Baujahr 1977, sowie angebauter, ebenerdiger Doppelgarage mit Dachterrasse lt. Angabe Baujahr Garage wie Wohnhaus",
+      "court_url": "http://www.justiz.bayern.de/gericht/ag/bt/",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Richard-Wagner-Str. +15,+95369+Untersteinach"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "125970",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 11785.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=125970&zvg_id=48913",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "126000",
+          "name": "Exposee",
+          "size_kb": 185926.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126000&zvg_id=48913",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=48913&land_abk=by",
+      "detail_fetched_at": "2026-09-20T16:43:32+00:00",
+      "detail_source_last_updated": "2026-07-07T08:12",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 67,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "he-55202",
@@ -137764,15 +139818,31 @@
       ],
       "description": "Aktenzeichen 0002 K 0016/2024 (Detailansicht) (letzte Aktualisierung 28-07-2026 15:39) Amtsgericht- Amtsgericht Clausthal-Zellerfeld in Niedersachsen Objekt/Lage Eigentumswohnung (3 bis 4 Zimmer) : Am Kurpark 3, 38700 Braunlage, Hohegeiß Verkehrswert in € 10.000,00 Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 78.62 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=13327&land_abk=ni",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32750&zvg_id=13327",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "32749",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32749&zvg_id=13327"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "32749",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7862.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32749&zvg_id=13327",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "32750",
+          "name": "Gutachten",
+          "size_kb": 293794.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32750&zvg_id=13327",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137780,7 +139850,53 @@
       "lng": 10.6095,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Hohegeiß Blatt 826",
+      "auction_venue": "Amtsgericht Clausthal-Zellerfeld, Marktstraße 9, 38678 Clausthal-Zellerfeld",
+      "creditor_info": null,
+      "detail_description": "Eigentumswohnung ca. 50 m² in Mehrfamilienhauskomplex. Baujahr 1973. 3 Zimmer, Küche (Einbauküche), Flur, Bad, Balkon, Abstellraum.",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Am Kurpark+3,+38700+Braunlage"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "32749",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7862.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32749&zvg_id=13327",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "32750",
+          "name": "Gutachten",
+          "size_kb": 293794.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32750&zvg_id=13327",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=13327&land_abk=ni",
+      "detail_fetched_at": "2026-09-20T16:43:35+00:00",
+      "detail_source_last_updated": "2026-07-28T15:39",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 67,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "nw-167256",
@@ -137805,15 +139921,31 @@
       ],
       "description": "Aktenzeichen 0420 K 0022/2024 (Detailansicht) (letzte Aktualisierung 19-03-2026 07:58) Amtsgericht- Amtsgericht Krefeld in Nordrhein-Westfalen Objekt/Lage Wohnhaus mit Gewerbeeinheit : OelschlÃ¤gerstraÃŸe 68, 47798 Krefeld, Cracau Verkehrswert in € 1,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 73.16 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167256&land_abk=nw",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=374701&zvg_id=167256",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "374700",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=374700&zvg_id=167256"
+        },
+        {
+          "type": "gutachten",
+          "file_id": "374701",
+          "name": "Gutachten",
+          "size_kb": 106329.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=374701&zvg_id=167256",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "374700",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7316.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=374700&zvg_id=167256",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137821,7 +139953,55 @@
       "lng": 6.54603,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Krefeld Blatt 18600",
+      "auction_venue": "Amtsgericht Krefeld, Nebenstelle Preußenring, Preußenring 49, 47798 Krefeld, Etage 1, Sitzungssaal P 130",
+      "creditor_info": null,
+      "detail_description": "Laut Sachverständigengutachten handelt es sich um eine Werkstatt im Erdgeschoss des Hinterhauses Oelschlägerstraße 66-68 und befindet sich im Zustand des begonnenen Ausbaus und scheint derzeit ungenutzt und unnutzbar. Im Teileigentum fehlen soweit erkennbar, alle technischen Gebäudeausrüstungen wie Heizungs-, Sanitär- und Elektroinstallationen und der weitere Innenausbau wie Böden, Wand- und Deckenbekleidung. Bei dem Bewertungsobjekt handelt es sich um ein wirtschaftlich vollständig überaltertes Sondereigentum, in einer wirtschaftlich ebenso überalterten Eigentumsanlage mit erheblichen Mängeln in mäßiger Lage von Krefeld. Sicherheitsleistung: Kontoverbindung: ZZJ Hamm, IBAN: DE08 3005 0000 0001 4748 16, LB Hessen-Thüringen, Verwendungszweck: AG Krefeld, Geschäftszeichen, Sicherheit, Datum der Versteigerung",
+      "court_url": "https://www.ag-krefeld.nrw.de/aufgaben/abteilungen/Zwangsversteigerung/index.php",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Oelschlaegerstrasse 68&hnr=&plz=47798&ort=Krefeld"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Oelschlaegerstrasse 68+,+47798+Krefeld"
+      ],
+      "detail_attachments": [
+        {
+          "type": "gutachten",
+          "file_id": "374701",
+          "name": "Gutachten",
+          "size_kb": 106329.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=374701&zvg_id=167256",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "374700",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7316.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=374700&zvg_id=167256",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167256&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:30+00:00",
+      "detail_source_last_updated": "2026-03-19T07:58",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "nw-168060",
@@ -137846,15 +140026,31 @@
       ],
       "description": "Aktenzeichen 0017 K 0026/2023 (Detailansicht) (letzte Aktualisierung 15-06-2026 08:53) Amtsgericht- Amtsgericht Grevenbroich in Nordrhein-Westfalen Objekt/Lage Garage, Einfamilienhaus : FalkenstraÃŸe 16, 41517 Grevenbroich, Neurath Verkehrswert in € 227.000,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 70.96 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168060&land_abk=nw",
-      "gutachten_url": null,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=377324&zvg_id=168060",
       "expose_url": null,
-      "has_report": false,
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "377323",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=377323&zvg_id=168060"
+        },
+        {
+          "type": "gutachten",
+          "file_id": "377324",
+          "name": "Gutachten",
+          "size_kb": 180974.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=377324&zvg_id=168060",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "377323",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7096.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=377323&zvg_id=168060",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137862,7 +140058,55 @@
       "lng": 6.60628,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Neurath Blatt 219",
+      "auction_venue": "Amtsgericht Grevenbroich, Hauptgebäude, Lindenstr. 33/37, 41515 Grevenbroich, Etage 1, Sitzungssaal 105",
+      "creditor_info": null,
+      "detail_description": "Freistehendes, unterkellertes Einfamilienhaus mit Satteldach und angebauter Garage; Baujahr: ca. 1960; Wohn-/Nutzfläche: 165 qm.",
+      "court_url": "http://www.ag-grevenbroich.nrw.de/behoerde/zvg_termine/index.php",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Falkenstrasse 16&hnr=&plz=41517&ort=Grevenbroich"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Falkenstrasse 16+,+41517+Grevenbroich"
+      ],
+      "detail_attachments": [
+        {
+          "type": "gutachten",
+          "file_id": "377324",
+          "name": "Gutachten",
+          "size_kb": 180974.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=377324&zvg_id=168060",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "377323",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 7096.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=377323&zvg_id=168060",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168060&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:30+00:00",
+      "detail_source_last_updated": "2026-06-15T08:53",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "nw-168374",
@@ -137887,15 +140131,39 @@
       ],
       "description": "Aktenzeichen 0093 K 0083/2024 (Detailansicht) (letzte Aktualisierung 14-07-2026 13:06) Amtsgericht- Amtsgericht KÃ¶ln in Nordrhein-Westfalen Objekt/Lage Garage, Eigentumswohnung (3 bis 4 Zimmer) : GoldhÃ¤hnchenweg 15, 50829 KÃ¶ln, Vogelsang Verkehrswert in € 250.000,00 â‚¬ Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 73.2 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168374&land_abk=nw",
-      "gutachten_url": null,
-      "expose_url": null,
-      "has_report": false,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378320&zvg_id=168374",
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378321&zvg_id=168374",
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "378319",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378319&zvg_id=168374"
+        },
+        {
+          "type": "expose",
+          "file_id": "378321",
+          "name": "Exposee",
+          "size_kb": 7506.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378321&zvg_id=168374",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "378319",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 732.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378319&zvg_id=168374",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "378320",
+          "name": "Gutachten",
+          "size_kb": 109596.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378320&zvg_id=168374",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137903,7 +140171,63 @@
       "lng": 6.8616,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Müngersdorf Blatt 1777",
+      "auction_venue": "Amtsgericht Köln, Nebenstelle, Reichenspergerplatz 1, 50670 Köln, Etage E, Sitzungssaal 37 Reichenspergerpl.",
+      "creditor_info": null,
+      "detail_description": "Eigentumswohnung in einem Dreifamilienhaus in 50829 Köln (Vogelsang), Goldhähnchenweg 15, mit Garage im Hof. 3-Zimmer-Wohnung (zum Zeitpunkt der Begutachtung leerstehend) im Dachgeschoss bestehend aus Wohnzimmer, Schlafzimmer, Arbeitszimmer, Küche, Flur, Badezimmer, Loggia, verbunden mit dem Sondernutzungsrecht am gesamten Spitzboden. Es besteht starker Renovierungsbedarf. Die Wohnfläche beträgt ca. 84 m². Das Baujahr des Wohnhauses ist unbekannt. Es wurde ca. 1966 erweitert und aufgestockt. Instandhaltungsmaßnahmen sind teilweise erforderlich. Die Garage wurde ca. 1967 errichtet. Die Aufteilung der Wohnung wurde so verändert, dass ein Teil des Gemeinschaftseigentums (Treppenhausflur) innerhalb der Wohnung liegt. Auf die diesbezüglichen Ausführungen und die weiteren Angaben zu Abweichungen vom Aufteilungsplan im Sachverständigengutachten wird verwiesen. Eine Weitergabe der Kontaktdaten der Gläubiger kann gem. DSGVO nicht - auch nicht telefonisch - erfolgen. Gutachteneinsichten können zu den allgemeinen Publikumszeiten des Gerichts oder nach vorheriger Terminvereinbarung erfolgen. Entsprechende Termine können online auf der Internetseite des Amtsgerichts Köln oder telefonisch unter den Nummern 0221/7711-323, 842, 782 oder 197 vereinbart werden. Geben Sie hierbei unbedingt das Aktenzeichen des Verfahrens an (z.B. 93 K …/25)",
+      "court_url": "http://www.ag-koeln.nrw.de/behoerde/zvg_termine/index.php",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Goldhaehnchenweg 15&hnr=&plz=50829&ort=Koeln"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Goldhaehnchenweg 15+,+50829+Koeln"
+      ],
+      "detail_attachments": [
+        {
+          "type": "expose",
+          "file_id": "378321",
+          "name": "Exposee",
+          "size_kb": 7506.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378321&zvg_id=168374",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "378319",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 732.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378319&zvg_id=168374",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "378320",
+          "name": "Gutachten",
+          "size_kb": 109596.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378320&zvg_id=168374",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168374&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:34+00:00",
+      "detail_source_last_updated": "2026-07-14T13:06",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "nw-168516",
@@ -137937,6 +140261,22 @@
           "file_id": "378805",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378805&zvg_id=168516"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "378805",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 96.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378805&zvg_id=168516",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "378806",
+          "name": "Foto",
+          "size_kb": 153411.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378806&zvg_id=168516",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -137944,7 +140284,55 @@
       "lng": 8.76283,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Gohfeld Blatt 738",
+      "auction_venue": "Amtsgericht Bad Oeynhausen, Hauptgebäude, Bismarckstr. 12, 32545 Bad Oeynhausen, Etage E, Sitzungssaal 3",
+      "creditor_info": null,
+      "detail_description": "Laut Wertgutachten handelt es sich um ein 1972/73 in Massivbauweise errichtetes Mehrfamilienhaus mit 6 Wohneinheiten. Gesamtwohnfläche: ca. 467,39 qm, Wohnungen: EG ca. 85,28 qm und ca. 70,56 qm, 1. OG ca. 85,15 qm und ca. 70,56 qm, 2. OG ca. 85,28 qm und 70,56 qm. Die Wohnungen verfügen über Loggia und Kellerraum. Waschkeller als Gemeinschaftsraum. Gaszentralheizung mit Warmwasserbereitung als Etagenheizungen. Eine Innenbesichtigung durch den Gutachter war nur eingeschränkt möglich. Unterhaltungszustand ist vernachlässigt, Modernisierungen wurden nicht bzw. in geringem Umfang vorgenommen.",
+      "court_url": "http://www.ag-badoeynhausen.nrw.de",
+      "geoserver_urls": [
+        "https://map.nrw/client/?ref_src=zvg&strasse=Alter Landweg 9&hnr=&plz=32584&ort=Loehne"
+      ],
+      "portal_google_maps_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Alter Landweg 9+,+32584+Loehne"
+      ],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "378805",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 96.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378805&zvg_id=168516",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "378806",
+          "name": "Foto",
+          "size_kb": 153411.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=378806&zvg_id=168516",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168516&land_abk=nw",
+      "detail_fetched_at": "2026-09-20T16:43:35+00:00",
+      "detail_source_last_updated": "2026-07-27T12:30",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": true
+        }
+      }
     },
     {
       "id": "nw-168823",
@@ -138101,6 +140489,14 @@
           "file_id": "6137",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6137&zvg_id=4072"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "6137",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 19634.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6137&zvg_id=4072",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -138108,7 +140504,45 @@
       "lng": 7.18922,
       "position_precision": "state_approximation",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": null,
+      "auction_venue": "Amtsgericht Pirmasens, Saal153",
+      "creditor_info": null,
+      "detail_description": "fast rechteckiges Grundstück in guter Wohnlage in einer Anliegerstraße (Sackgasse mit Wendehammer) am Ortsrand von Niedersimten, bebaut mit einem freistehenden Zweifamilienhaus und Garage; Wohnhaus eingeschossiger, unterkellerter Massivbau mit Anbau; Baujahr 1970; Wohnfläche rd. 181,92 m²; besondere Bauteile: Balkon, Terrasse; Aufteilung: Untergeschoss: Wohnung 2: Essen-Wohnen, Kochen, 3 Zimmer, Bad, Garderobe, WC, Balkon, Erdgeschoss: Wohnung 1: Wohnen-Essen, Kochen, 3 Zimmer, Bad, Garderobe, WC, Balkon, Garage; Geschäfte des täglichen Bedarfs in fußläufiger Entfernung, Schulen und Ärzte ca. 3 km entfernt, öffentliche Verkehrsmittel (Bushaltestelle) in fußläufiger Entfernung, Verwaltung ca. 3 km entfernt;",
+      "court_url": "http://agps.justiz.rlp.de/de/startseite/",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Finsterbachstrasse+32,00000+Niedersimten&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "6137",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 19634.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6137&zvg_id=4072",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=4072&land_abk=rp",
+      "detail_fetched_at": "2026-09-20T16:43:34+00:00",
+      "detail_source_last_updated": "2026-07-15T06:49",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 56,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": false,
+          "creditor_info": false,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "sn-40989",
@@ -138142,6 +140576,14 @@
           "file_id": "109345",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109345&zvg_id=40989"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "109345",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 21576.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109345&zvg_id=40989",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -138149,7 +140591,45 @@
       "lng": 12.41829,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Grundbücher des Amtsgerichts Leipzig von Reudnitz Blätter 1872 und 1876",
+      "auction_venue": "Saal 101, 1. OG, Amtsgericht Leipzig, Bernhard-Göring-Str. 64, 04275 Leipzig",
+      "creditor_info": "Der Antragsteller hat der Veröffentlichung der Kontaktdaten nicht zugestimmt.",
+      "detail_description": "Gewerbeeinheit in 04317 Leipzig, Frommannstr. 5 Blatt 1872: 2-Raum-Büro, ca. 57,5 qm, gelegen im EG eines nach 1992 gebauten Mehrfamilienund Geschäftshauses, Verkehrswert: 76.000,00 € Blatt 1876: Tiefgarage, ATP 41 mit zwei Stellplätzen, Verkehrswert: 21.000,00 € Gutachten Download unter www.zvsachsen.de",
+      "court_url": "http://www.justiz.sachsen.de/agl/",
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Frommannstrasse +5,04317+Leipzig&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "109345",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 21576.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109345&zvg_id=40989",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=40989&land_abk=sn",
+      "detail_fetched_at": "2026-09-20T16:43:32+00:00",
+      "detail_source_last_updated": "2026-07-10T08:56",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 78,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": true,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "th-3106",
@@ -138175,7 +140655,7 @@
       "description": "Aktenzeichen K 0039/2025 (Detailansicht) (letzte Aktualisierung 02-07-2026 07:31) Amtsgericht- Amtsgericht Altenburg in ThÃ¼ringen Objekt/Lage Sonstiges, Kleingartenanlage : ., 00000 Altenburg Verkehrswert in € 20.000,00 Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 103.47 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3106&land_abk=th",
       "gutachten_url": null,
-      "expose_url": null,
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7925&zvg_id=3106",
       "has_report": false,
       "attachments": [
         {
@@ -138183,6 +140663,22 @@
           "file_id": "7926",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7926&zvg_id=3106"
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "7926",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 10347.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7926&zvg_id=3106",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "7925",
+          "name": "Exposee",
+          "size_kb": 104732.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7925&zvg_id=3106",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -138190,7 +140686,53 @@
       "lng": 11.38235,
       "position_precision": "state_approximation",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
+      "land_registry": "Grundbuchamt: Altenburg; Gemarkung: Altenburg; Blatt: 1503",
+      "auction_venue": "Nebengebäude, Burgstraße 11, 04600 Altenburg / Raum: NG 105 Sitzungssaal 1. OG",
+      "creditor_info": null,
+      "detail_description": "Kleingartenanlage, Grundstück mit einzelnen Lauben unterschiedlicher Art bebaut, Versorgungsleitung für Strom und Wasser liegen an, aber nicht ortsüblich erschlossen; Gärten sind überwiegend verpachtet",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=.+,+00000+Altenburg"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "bekanntmachung",
+          "file_id": "7926",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 10347.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7926&zvg_id=3106",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "7925",
+          "name": "Exposee",
+          "size_kb": 104732.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7925&zvg_id=3106",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3106&land_abk=th",
+      "detail_fetched_at": "2026-09-20T16:43:31+00:00",
+      "detail_source_last_updated": "2026-07-02T07:31",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 56,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": false,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": false,
+          "announcement": true,
+          "photos": false
+        }
+      }
     },
     {
       "id": "th-3118",
@@ -138215,15 +140757,55 @@
       ],
       "description": "Aktenzeichen K 0049/2025 (Detailansicht) (letzte Aktualisierung 10-07-2026 09:26) Amtsgericht- Amtsgericht Erfurt in ThÃ¼ringen Objekt/Lage Reihenhaus : Rämenstraße 4, 99610 Sömmerda Verkehrswert in € 88.000,00 Termin Mittwoch, 28. Oktober 2026, 10:00 Uhr Amtliche Bekanntmachung 219.66 kB",
       "source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3118&land_abk=th",
-      "gutachten_url": null,
-      "expose_url": null,
-      "has_report": false,
+      "gutachten_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7957&zvg_id=3118",
+      "expose_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7958&zvg_id=3118",
+      "has_report": true,
       "attachments": [
         {
           "type": "bekanntmachung",
           "file_id": "7959",
           "name": null,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7959&zvg_id=3118"
+        },
+        {
+          "type": "foto",
+          "file_id": "7993",
+          "name": "Foto",
+          "size_kb": 184335.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7993&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "7957",
+          "name": "Gutachten",
+          "size_kb": 145265.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7957&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "7958",
+          "name": "Exposee",
+          "size_kb": 64117.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7958&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "7959",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 21966.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7959&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "7960",
+          "name": "Foto",
+          "size_kb": 189682.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7960&zvg_id=3118",
+          "requires_portal_context": true
         }
       ],
       "score": null,
@@ -138231,7 +140813,77 @@
       "lng": 11.18091,
       "position_precision": "postcode_centroid",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
+      "land_registry": "Grundbuchamt: Sömmerda; Gemarkung: Sömmerda; Blatt: 2459 BV 1",
+      "auction_venue": "Rudolfstraße 46, 99092 Erfurt / Raum: 13 Sitzungssaal 1. OG",
+      "creditor_info": "Bankhaus Max Flessa KG, Tel.: 09721 531-277",
+      "detail_description": "Einfamilien-Reihenhaus: Baujahr: geschätzt um 1900, ca. 110 m² Wohnfläche in EG und OG- alles vermietet- Modernisierungen nach 1990, Nebengebäude ( ehem. Stall) und Freisitz- ohne Garten",
+      "court_url": null,
+      "geoserver_urls": [
+        "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Raemenstrasse +4,+99610+Soemmerda"
+      ],
+      "portal_google_maps_urls": [],
+      "detail_attachments": [
+        {
+          "type": "foto",
+          "file_id": "7993",
+          "name": "Foto",
+          "size_kb": 184335.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7993&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "gutachten",
+          "file_id": "7957",
+          "name": "Gutachten",
+          "size_kb": 145265.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7957&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "expose",
+          "file_id": "7958",
+          "name": "Exposee",
+          "size_kb": 64117.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7958&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "bekanntmachung",
+          "file_id": "7959",
+          "name": "amtliche Bekanntmachung",
+          "size_kb": 21966.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7959&zvg_id=3118",
+          "requires_portal_context": true
+        },
+        {
+          "type": "foto",
+          "file_id": "7960",
+          "name": "Foto",
+          "size_kb": 189682.0,
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=th&file_id=7960&zvg_id=3118",
+          "requires_portal_context": true
+        }
+      ],
+      "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3118&land_abk=th",
+      "detail_fetched_at": "2026-09-20T16:43:33+00:00",
+      "detail_source_last_updated": "2026-07-10T09:26",
+      "detail_error": null,
+      "dossier_completeness": {
+        "score": 89,
+        "checks": {
+          "auction_venue": true,
+          "auction_type": true,
+          "land_registry": true,
+          "creditor_info": true,
+          "court_url": false,
+          "geoserver": true,
+          "gutachten": true,
+          "announcement": true,
+          "photos": true
+        }
+      }
     },
     {
       "id": "bw-official-6efd41cdde3f0eca",

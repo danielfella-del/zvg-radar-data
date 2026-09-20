@@ -14,6 +14,8 @@ from pathlib import Path
 import fitz
 import requests
 
+from photo_quality import analyze_pixmap, photo_score, looks_like_document_scan, quality_payload
+
 RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
 BASE = "https://www.zvg-portal.de/"
 SEARCH_URL = BASE + "index.php?button=Suchen&all=1"
@@ -135,48 +137,16 @@ def download_pdf(session: requests.Session, record: dict, att: dict, referer: st
     return target, size
 
 
-def photo_score(pix: fitz.Pixmap) -> float | None:
-    if pix.width < 420 or pix.height < 280 or pix.width * pix.height < 180_000:
-        return None
-    ratio = pix.width / max(1, pix.height)
-    if ratio < 0.38 or ratio > 2.9:
-        return None
-    rgb = pix if pix.n == 3 and not pix.alpha else fitz.Pixmap(fitz.csRGB, pix)
-    samples = rgb.samples
-    pixels = rgb.width * rgb.height
-    stride = max(1, pixels // 3500)
-    lumas = []
-    unique = set()
-    white = 0
-    count = 0
-    for i in range(0, pixels, stride):
-        j = i * 3
-        if j + 2 >= len(samples):
-            break
-        r, g, b = samples[j], samples[j + 1], samples[j + 2]
-        y = (r * 299 + g * 587 + b * 114) // 1000
-        lumas.append(y)
-        unique.add((r // 16, g // 16, b // 16))
-        if r > 242 and g > 242 and b > 242:
-            white += 1
-        count += 1
-    if count < 50:
-        return None
-    mean = sum(lumas) / len(lumas)
-    var = sum((v - mean) ** 2 for v in lumas) / len(lumas)
-    white_ratio = white / count
-    if len(unique) < 38 or white_ratio > 0.84 or var < 140:
-        return None
-    return math.log10(max(10, pix.width * pix.height)) * 120 + min(var, 5000) / 25 + len(unique) / 8 - white_ratio * 180
-
-
-def extract_candidates(pdf: Path, max_pages: int = 140) -> list[tuple[float, int, int]]:
+def extract_candidates(pdf: Path, max_pages: int = 140) -> list[tuple[float, int, int, dict]]:
     doc = fitz.open(pdf)
     found = []
     seen = set()
     try:
         for page_no in range(min(doc.page_count, max_pages)):
             page = doc.load_page(page_no)
+            page_area = max(1.0, float(page.rect.width * page.rect.height))
+            page_ratio = float(page.rect.width / max(1.0, page.rect.height))
+            page_text_chars = len((page.get_text("text") or "").strip())
             for info in page.get_images(full=True):
                 xref = int(info[0])
                 if xref in seen:
@@ -184,16 +154,32 @@ def extract_candidates(pdf: Path, max_pages: int = 140) -> list[tuple[float, int
                 seen.add(xref)
                 try:
                     pix = fitz.Pixmap(doc, xref)
-                    score = photo_score(pix)
-                    if score is not None:
-                        found.append((score - page_no * 0.45, page_no, xref))
+                    metrics = analyze_pixmap(pix)
+                    score = photo_score(metrics)
+                    if score is None:
+                        continue
+                    rects = page.get_image_rects(xref)
+                    coverage = max(
+                        ((float(r.width) * float(r.height)) / page_area for r in rects),
+                        default=0.0,
+                    )
+                    image_ratio = float(pix.width / max(1, pix.height))
+                    page_ratio_match = abs(image_ratio - page_ratio) / max(0.01, page_ratio) < 0.10
+                    if looks_like_document_scan(
+                        metrics,
+                        coverage=coverage,
+                        page_text_chars=page_text_chars,
+                        page_ratio_match=page_ratio_match,
+                    ):
+                        continue
+                    adjusted = score + min(coverage, 0.8) * 55 - page_no * 0.30
+                    found.append((adjusted, page_no, xref, metrics))
                 except Exception:
                     continue
     finally:
         doc.close()
     found.sort(key=lambda x: (-x[0], x[1]))
     return found
-
 
 def save_photos(pdf: Path, record: dict, att: dict, media_root: Path, max_photos: int) -> list[dict]:
     candidates = extract_candidates(pdf)
@@ -205,7 +191,7 @@ def save_photos(pdf: Path, record: dict, att: dict, media_root: Path, max_photos
     created = []
     hashes = set()
     try:
-        for _, page_no, xref in candidates:
+        for score, page_no, xref, metrics in candidates:
             if len(created) >= max_photos:
                 break
             try:
@@ -227,7 +213,7 @@ def save_photos(pdf: Path, record: dict, att: dict, media_root: Path, max_photos
                     rel = target.relative_to(Path.cwd()).as_posix()
                 except ValueError:
                     rel = target.as_posix()
-                created.append({
+                item = {
                     "type": "foto",
                     "file_id": f"report-photo-{att.get('file_id') or 'gutachten'}-{idx}",
                     "name": f"Objektfoto aus Gutachten {idx}",
@@ -243,7 +229,9 @@ def save_photos(pdf: Path, record: dict, att: dict, media_root: Path, max_photos
                     "generated_from_type": "gutachten",
                     "source_page": page_no + 1,
                     "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                })
+                }
+                item.update(quality_payload(metrics, score, mode="gutachten-embedded-image", page=page_no + 1))
+                created.append(item)
             except Exception:
                 continue
     finally:

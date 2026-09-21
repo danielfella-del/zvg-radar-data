@@ -62,7 +62,7 @@ def main():
         pdf=next((resolve_pdf(root,x) for x in atts if resolve_pdf(root,x)),None)
         if not pdf: continue
         prev=r.get('smart_analysis') or {}
-        sig=f"{pdf.stat().st_size}:{int(pdf.stat().st_mtime)}"
+        sig=f"v2:{pdf.stat().st_size}:{int(pdf.stat().st_mtime)}"
         if prev.get('source_signature')==sig: continue
         try:
             text,pages=read_text(pdf)

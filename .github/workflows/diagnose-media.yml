@@ -31,8 +31,8 @@ jobs:
         run: |
           mkdir -p diagnostics media-test
           python collector/cache_media.py             --data data/auctions.json             --media-dir media-test             --max-files 1             --max-run-mb 8             --max-file-mb 8             > diagnostics/media.log 2>&1
-          cp data/auctions.json diagnostics/auctions-after-media.json
           find media-test -type f -maxdepth 3 -printf '%p %s bytes\n' > diagnostics/media-files.txt || true
+          git restore data/auctions.json
 
       - name: Diagnose speichern
         if: always()

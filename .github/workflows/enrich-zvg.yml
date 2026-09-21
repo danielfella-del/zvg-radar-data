@@ -45,13 +45,13 @@ jobs:
       - name: Erste Dossiers anreichern
         run: python collector/enrich_details.py --data data/auctions.json --limit 25
 
+      - name: Amtliche Dokumente und Portal-Medien zuerst cachen
+        continue-on-error: true
+        run: timeout 10m python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 80 --max-run-mb 90 --max-file-mb 24
+
       - name: Objektfotos aus Gutachten extrahieren
         continue-on-error: true
         run: timeout 8m python collector/extract_report_photos.py --data data/auctions.json --media-dir media --max-reports 12 --max-photos 2 --max-report-mb 180 --priority-id he-55016
-
-      - name: PDFs und Portal-Fotos cachen
-        continue-on-error: true
-        run: timeout 8m python collector/cache_media.py --data data/auctions.json --media-dir media --max-files 20 --max-run-mb 20
 
       - name: Gutachten automatisch analysieren
         continue-on-error: true

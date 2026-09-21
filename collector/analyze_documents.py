@@ -13,7 +13,7 @@ SIGNALS=[
  ('energy','Energie / Heizung erwähnt',r'energieausweis|heizung|wärmepumpe|waermepumpe|gasheizung|ölheizung|oelheizung|fernwärme|fernwaerme'),
  ('damage','Schäden / Mängel erwähnt',r'mangel|mängel|maengel|schaden|schäden|schaeden|rissbildung|undicht'),
  ('heritage','Denkmalschutz erwähnt',r'denkmal|denkmalschutz'),
- ('contamination','Altlasten erwähnt',r'altlast|kontamin|bodenschad'),
+ ('contamination','Altlasten erwähnt',r'altlast|kontamin|bodenschad'),\n ('flood','Hochwasser / Starkregen erwähnt',r'hochwasser|überschwemm|ueberschwemm|überflut|ueberflut|starkregen|hq100|hqextrem'),
 ]
 
 def read_text(pdf:Path,max_pages=80):

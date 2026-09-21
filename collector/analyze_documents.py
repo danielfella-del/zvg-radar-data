@@ -13,7 +13,8 @@ SIGNALS=[
  ('energy','Energie / Heizung erwähnt',r'energieausweis|heizung|wärmepumpe|waermepumpe|gasheizung|ölheizung|oelheizung|fernwärme|fernwaerme'),
  ('damage','Schäden / Mängel erwähnt',r'mangel|mängel|maengel|schaden|schäden|schaeden|rissbildung|undicht'),
  ('heritage','Denkmalschutz erwähnt',r'denkmal|denkmalschutz'),
- ('contamination','Altlasten erwähnt',r'altlast|kontamin|bodenschad'),\n ('flood','Hochwasser / Starkregen erwähnt',r'hochwasser|überschwemm|ueberschwemm|überflut|ueberflut|starkregen|hq100|hqextrem'),
+ ('contamination','Altlasten erwähnt',r'altlast|kontamin|bodenschad'),
+ ('flood','Hochwasser / Starkregen erwähnt',r'hochwasser|überschwemm|ueberschwemm|überflut|ueberflut|starkregen|hq100|hqextrem'),
 ]
 
 def read_text(pdf:Path,max_pages=80):
@@ -71,7 +72,8 @@ def main():
             year=first_num(text,[r'Baujahr\D{0,25}(18\d{2}|19\d{2}|20\d{2})',r'errichtet\D{0,20}(18\d{2}|19\d{2}|20\d{2})'])
             living=first_num(text,[r'Wohnfläche\D{0,30}([\d.,]+)\s*m²',r'Wohnfläche\D{0,30}([\d.,]+)\s*qm'])
             land=first_num(text,[r'Grundstücksfläche\D{0,30}([\d.,]+)\s*m²',r'Grundstück\D{0,30}([\d.,]+)\s*qm'])
-            r['smart_analysis']={'generated_at':now,'source':'lokal extrahierter Gutachtentext','source_file':pdf.name,'source_signature':sig,'pages':pages,'text_chars':len(text),'summary':summary(text),'facts':{'baujahr':year,'wohnflaeche_m2':living,'grundstueck_m2':land},'signals':signals,'disclaimer':'Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen.'}
+            usable=first_num(text,[r'Nutzfläche\D{0,30}([\d.,]+)\s*m²',r'Nutzfläche\D{0,30}([\d.,]+)\s*qm'])
+            r['smart_analysis']={'generated_at':now,'source':'lokal extrahierter Gutachtentext','source_file':pdf.name,'source_signature':sig,'pages':pages,'text_chars':len(text),'summary':summary(text),'facts':{'baujahr':year,'wohnflaeche_m2':living,'nutzflaeche_m2':usable,'grundstueck_m2':land},'signals':signals,'disclaimer':'Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen.'}
             done+=1
         except Exception as e:
             r['smart_analysis']={'generated_at':now,'source_file':pdf.name,'error':str(e)}; errors+=1

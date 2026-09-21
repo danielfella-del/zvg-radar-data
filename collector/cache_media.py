@@ -222,8 +222,7 @@ TYPE_PRIORITY = {"bekanntmachung": 0, "expose": 1, "hinweis": 2, "dokument": 3, 
 
 def attachment_priority(a: dict):
     t = str(a.get("type") or "")
-    size = float(a.get("size_kb") or 10**12)
-    return (0 if t in QUICK_TYPES else 1, size, TYPE_PRIORITY.get(t, 9), str(a.get("file_id") or ""))
+    return (0 if t in QUICK_TYPES else 1, TYPE_PRIORITY.get(t, 9), str(a.get("file_id") or ""))
 
 def record_priority(r: dict):
     atts = r.get("attachments") or []
@@ -240,8 +239,7 @@ def record_priority(r: dict):
     missing_foto = any(isinstance(a, dict) and a.get("type") == "foto" and (not a.get("cached_url") or not a.get("preview_url")) for a in atts)
     d = parse_date(r.get("auction_date"))
     ts = d.timestamp() if d else 9e18
-    quick_size = min((float(a.get("size_kb") or 10**12) for a in missing_quick), default=10**12)
-    return (0 if missing_quick else 1 if stale_photo_preview else 2 if missing_gutachten else 3 if missing_foto else 4, quick_size, ts, str(r.get("id") or ""))
+    return (0 if missing_quick else 1 if stale_photo_preview else 2 if missing_gutachten else 3 if missing_foto else 4, ts, str(r.get("id") or ""))
 
 def main():
     ap=argparse.ArgumentParser()
@@ -334,11 +332,6 @@ def main():
                 break
             url=a.get("url")
             if not url:
-                continue
-            declared_kb = float(a.get("size_kb") or 0)
-            if declared_kb > 0 and declared_kb * 1024 > max_file:
-                a["cache_status"]="oversize"
-                a["cache_error"]=f"Datei groesser als GitHub-Cache-Limit ({declared_kb/1024:.1f} MB > {args.max_file_mb:.1f} MB); wird ueber ZVGPro direkt bereitgestellt"
                 continue
             try:
                 resp=session.get(url,headers={"Referer":record_referer},timeout=60,stream=True)

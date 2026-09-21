@@ -249,6 +249,7 @@ def main():
     ap.add_argument("--max-run-mb",type=float,default=float(os.getenv("ZVG_MEDIA_MAX_RUN_MB","75")))
     ap.add_argument("--max-files",type=int,default=int(os.getenv("ZVG_MEDIA_MAX_FILES","120")))
     ap.add_argument("--horizon-days",type=int,default=int(os.getenv("ZVG_MEDIA_HORIZON_DAYS","180")))
+    ap.add_argument("--quick-only",action="store_true",help="Nur kleine/schnelle Dokumenttypen (Bekanntmachung, Expose, Hinweis, Dokument) cachen.")
     args=ap.parse_args()
 
     data_path=Path(args.data)
@@ -309,6 +310,8 @@ def main():
             if budget_exhausted:
                 break
             if not isinstance(a,dict) or a.get("type") not in ALLOWED_TYPES:
+                continue
+            if args.quick_only and a.get("type") not in QUICK_TYPES:
                 continue
             if a.get("cached_url"):
                 cached_total+=1
@@ -426,6 +429,7 @@ def main():
         "max_file_mb":args.max_file_mb,
         "max_run_mb":args.max_run_mb,
         "horizon_days":args.horizon_days,
+        "quick_only":args.quick_only,
         "primed_states":sorted(primed_states),
         "error_samples":error_samples,
     }

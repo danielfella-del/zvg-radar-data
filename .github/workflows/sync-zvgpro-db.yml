@@ -4,25 +4,65 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '7,22,37,52 * * * *'
-  workflow_run:
-    workflows: ['ZVG Daten stündlich aktualisieren']
-    types: [completed]
 
 permissions:
   contents: read
 
-concurrency:
-  group: zvgpro-mariadb-sync
-  cancel-in-progress: true
-
 jobs:
   sync:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Repository laden
-        uses: actions/checkout@v4
+      - name: ZVGPro Webhook und Token prüfen
+        env:
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, urllib.error, urllib.request
+
+          token = os.environ.get('ZVGPRO_DB_SYNC_TOKEN', '').strip()
+          if not token:
+              print('::error::GitHub Secret ZVGPRO_DB_SYNC_TOKEN fehlt.')
+              raise SystemExit(1)
+
+          req = urllib.request.Request(
+              'https://zvgpro.de/api/github-sync.php',
+              data=b'{"action":"ping"}',
+              method='POST',
+              headers={
+                  'Authorization': 'Bearer ' + token,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'User-Agent': 'ZVGPro-GitHub-Sync/8.9.58',
+              },
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=25) as resp:
+                  result = json.loads(resp.read().decode('utf-8'))
+          except urllib.error.HTTPError as e:
+              detail = e.read().decode('utf-8', 'replace')[:1000]
+              if e.code == 401:
+                  print('::error::ZVGPRO_DB_SYNC_TOKEN stimmt nicht mit dem Token auf ZVGPro überein. Auf /database/remote-sync.php ein neues Token erzeugen und das GitHub-Secret ersetzen.')
+              else:
+                  print(f'::error::ZVGPro Webhook antwortet mit HTTP {e.code}: {detail}')
+              raise SystemExit(1)
+          except Exception as e:
+              print(f'::error::ZVGPro Webhook nicht erreichbar: {e}')
+              raise SystemExit(1)
+
+          if not result.get('ok'):
+              print('::error::ZVGPro Webhook-Test fehlgeschlagen: ' + str(result))
+              raise SystemExit(1)
+          print('Webhook OK - MariaDB erreichbar, aktive Verfahren:', result.get('active'))
+          PY
+
+      - name: Aktuellen ZVG-Datensatz laden
+        shell: bash
+        run: |
+          curl -fL --retry 3 --retry-delay 2             "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/data/auctions.json"             -o auctions.json
+          test -s auctions.json
+          echo "Datensatz: $(du -h auctions.json | cut -f1)"
 
       - name: MariaDB in sicheren Batches synchronisieren
         env:
@@ -33,12 +73,9 @@ jobs:
           import hashlib, json, os, time, urllib.error, urllib.request
 
           endpoint = 'https://zvgpro.de/api/github-sync.php'
-          token = os.environ.get('ZVGPRO_DB_SYNC_TOKEN', '').strip()
-          if not token:
-              print('GitHub Secret ZVGPRO_DB_SYNC_TOKEN fehlt - DB-Sync wird uebersprungen.')
-              raise SystemExit(0)
+          token = os.environ['ZVGPRO_DB_SYNC_TOKEN'].strip()
 
-          raw = open('data/auctions.json', 'rb').read()
+          raw = open('auctions.json', 'rb').read()
           dataset_hash = hashlib.sha256(raw).hexdigest()
           data = json.loads(raw)
           rows = data.get('results', data) if isinstance(data, dict) else data
@@ -62,16 +99,13 @@ jobs:
                       },
                   )
                   try:
-                      with urllib.request.urlopen(req, timeout=90) as resp:
+                      with urllib.request.urlopen(req, timeout=60) as resp:
                           result = json.loads(resp.read().decode('utf-8'))
                       if not result.get('ok'):
                           raise RuntimeError(result.get('error', 'Unbekannter Serverfehler'))
                       return result
                   except urllib.error.HTTPError as e:
-                      try:
-                          detail = e.read().decode('utf-8', 'replace')[:2000]
-                      except Exception:
-                          detail = str(e)
+                      detail = e.read().decode('utf-8', 'replace')[:2000]
                       last = RuntimeError(f'HTTP {e.code}: {detail}')
                   except Exception as e:
                       last = e
@@ -87,6 +121,8 @@ jobs:
           run_id = int(begin['run_id'])
           batch_size = 75
           total_batches = (len(rows) + batch_size - 1) // batch_size
+          print(f'Sync-Run {run_id}: {len(rows)} Verfahren in {total_batches} Batches.')
+
           for n, offset in enumerate(range(0, len(rows), batch_size), 1):
               result = post({'action': 'batch', 'run_id': run_id, 'offset': offset, 'objects': rows[offset:offset + batch_size]})
               if n == 1 or n % 10 == 0 or n == total_batches:

@@ -1,0 +1,103 @@
+name: ZVGPro MariaDB synchronisieren
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_run:
+    workflows: ['ZVG Daten stündlich aktualisieren']
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zvgpro-mariadb-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+
+      - name: MariaDB in sicheren Batches synchronisieren
+        env:
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json, os, time, urllib.error, urllib.request
+
+          endpoint = 'https://zvgpro.de/api/github-sync.php'
+          token = os.environ.get('ZVGPRO_DB_SYNC_TOKEN', '').strip()
+          if not token:
+              print('GitHub Secret ZVGPRO_DB_SYNC_TOKEN fehlt - DB-Sync wird uebersprungen.')
+              raise SystemExit(0)
+
+          raw = open('data/auctions.json', 'rb').read()
+          dataset_hash = hashlib.sha256(raw).hexdigest()
+          data = json.loads(raw)
+          rows = data.get('results', data) if isinstance(data, dict) else data
+          if not isinstance(rows, list) or len(rows) < 500:
+              raise RuntimeError(f'Ungueltiger Datenbestand: {len(rows) if isinstance(rows, list) else 0} Verfahren')
+          generated_at = data.get('meta', {}).get('generated_at') if isinstance(data, dict) else None
+
+          def post(payload, attempts=3):
+              body = json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+              last = None
+              for attempt in range(1, attempts + 1):
+                  req = urllib.request.Request(
+                      endpoint,
+                      data=body,
+                      method='POST',
+                      headers={
+                          'Authorization': 'Bearer ' + token,
+                          'Content-Type': 'application/json',
+                          'Accept': 'application/json',
+                          'User-Agent': 'ZVGPro-GitHub-Sync/8.9.57',
+                      },
+                  )
+                  try:
+                      with urllib.request.urlopen(req, timeout=90) as resp:
+                          result = json.loads(resp.read().decode('utf-8'))
+                      if not result.get('ok'):
+                          raise RuntimeError(result.get('error', 'Unbekannter Serverfehler'))
+                      return result
+                  except urllib.error.HTTPError as e:
+                      try:
+                          detail = e.read().decode('utf-8', 'replace')[:2000]
+                      except Exception:
+                          detail = str(e)
+                      last = RuntimeError(f'HTTP {e.code}: {detail}')
+                  except Exception as e:
+                      last = e
+                  if attempt < attempts:
+                      time.sleep(attempt * 3)
+              raise last
+
+          begin = post({'action': 'begin', 'total': len(rows), 'dataset_hash': dataset_hash, 'generated_at': generated_at})
+          if begin.get('not_modified'):
+              print(f'Keine Aenderung - {begin.get("count", len(rows))} Verfahren bereits aktuell.')
+              raise SystemExit(0)
+
+          run_id = int(begin['run_id'])
+          batch_size = 75
+          total_batches = (len(rows) + batch_size - 1) // batch_size
+          for n, offset in enumerate(range(0, len(rows), batch_size), 1):
+              result = post({'action': 'batch', 'run_id': run_id, 'offset': offset, 'objects': rows[offset:offset + batch_size]})
+              if n == 1 or n % 10 == 0 or n == total_batches:
+                  print(f'Batch {n}/{total_batches}: {result.get("processed", 0)}/{len(rows)} verarbeitet.')
+
+          final = post({'action': 'finalize', 'run_id': run_id})
+          print('DB-Sync abgeschlossen:', json.dumps({
+              'count': final.get('count'),
+              'inserted': final.get('inserted'),
+              'updated': final.get('updated'),
+              'unchanged': final.get('unchanged'),
+              'deactivated': final.get('deactivated'),
+          }, ensure_ascii=False))
+          PY

@@ -609,17 +609,17 @@
           "error": "Portal lieferte HTML statt Datei"
         }
       ],
-      "report_photo_extraction_at": "2026-09-24T03:54:51+00:00"
+      "report_photo_extraction_at": "2026-09-24T05:02:24+00:00"
     },
     "detail_enrichment": {
-      "generated_at": "2026-09-24T04:39:31+00:00",
+      "generated_at": "2026-09-24T04:52:06+00:00",
       "fetched_this_run": 0,
       "errors_this_run": 0,
       "enriched_total": 3326,
       "active_candidates_remaining": 0,
       "with_gutachten": 1855,
       "with_photos": 812,
-      "limit_per_run": 20,
+      "limit_per_run": 25,
       "primed_states": [],
       "error_samples": []
     },
@@ -748,6 +748,28 @@
         "sh: Schleswig-Holstein nur 3 Verfahren (Warnschwelle 35)"
       ],
       "all_16_present": false
+    },
+    "report_photo_extraction": {
+      "generated_at": "2026-09-24T05:02:24+00:00",
+      "processed_this_run": 12,
+      "records_with_new_photos": 6,
+      "photos_created": 6,
+      "errors_this_run": 0,
+      "downloaded_bytes": 0,
+      "records_with_display_photos": 485,
+      "candidate_backlog": 1632,
+      "max_reports": 12,
+      "max_photos_per_report": 2,
+      "max_report_mb": 180.0,
+      "priority_ids": [
+        "he-55016"
+      ],
+      "error_samples": []
+    },
+    "smart_analysis": {
+      "generated_at": "2026-09-24T05:02:24+00:00",
+      "analyzed_this_run": 20,
+      "errors_this_run": 2
     }
   },
   "results": [
@@ -1909,7 +1931,50 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167812&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376537.pdf",
+        "source_signature": "v2:2512157:1790225506",
+        "pages": 40,
+        "text_chars": 49387,
+        "summary": "Es handelt sich hier um eine Internetversion des Gutachtens. Die Internetversion unterscheidet sich von dem Originalgutachten da- durch, dass es keine Wertermittlung bzw. Das Originalgutachten kann nach telefonischer Rücksprache während der Sprechzeiten in der Ge- schäftsstelle des Amtsgerichts Soest eingesehen werden.",
+        "facts": {
+          "baujahr": "1981",
+          "wohnflaeche_m2": "40.81",
+          "nutzflaeche_m2": "161",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48726",
@@ -2115,7 +2180,35 @@
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=48726&land_abk=by",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125301.pdf",
+        "source_signature": "v2:853064:1790225498",
+        "pages": 6,
+        "text_chars": 12753,
+        "summary": "Betriebskostenabrechnung und Mieten für Grundstücke und Gebäude (IHK Regensburg) Zertifizierter Sachverständiger für Immobilienbewertung (LF) DIAZert (DIN EN ISO/IEC 17024) Anita Richter Dipl.-Ing. (FH) Architektin Diplom Sachverständige für die Bewertung von bebauten und unbebauten Grundstücken (DIA) Markus Gomeier MRICS Dipl.-Ing. Real Estate (IREBS) Vereidigter Sachverständiger (Chartered Surveyor und RICS Registered Valuer) für die Bewertung von bebauten und unbebauten Grundstücken CIS HypZert (F) für finanzwirtschaftliche Zwecke (DIN EN ISO/IEC 17024) Josef Brunner Dipl.-Ing.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48750",
@@ -2383,7 +2476,30 @@
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49055&land_abk=by",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126478.pdf",
+        "source_signature": "v2:2898486:1790225499",
+        "pages": 14,
+        "text_chars": 2118,
+        "summary": "Lage im Landkreis Miesbach 83714 Miesbach, Von-Vollmar-Straße 27e Quelle: Wikipedia Übersichtskarte (Maßstab ca. 1:200.000) 83714 Miesbach, Von-Vollmar-Straße 27e Übersichtskarte (Maßstab ca. 1:50.000) 83714 Miesbach, Von-Vollmar-Straße 27e Stadtplanausschnitt (Maßstab ca.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "mv-official-c340a4ccdd27225a",
@@ -2589,7 +2705,60 @@
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167799&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376502.pdf",
+        "source_signature": "v2:1210875:1790225506",
+        "pages": 26,
+        "text_chars": 63422,
+        "summary": "Miteigentumsanteil): Kempen 21 835 ~ 242 m² (242/1030 MEA von 1030 m²) Es bestehen: Rechte sozialrechtliche Bindungen x Lasten, Beschränkungen Mietvertrag Baulasten Sonstiges H DIPL.-ING. STEFAN MENGDEN - ARCHITEKT AKNW - HÜCKELSMAYSTRASSE 247 - 47804 KREFELD - TELEFON +49 2151 581950 Wertgutachten Wohnungseigentum Nr. V E R K E H R S W E R T E R M I T T L U N G 1 7 5.1 Wahl des Wertermittlungsverfahrens (§ 6 ImmoWertV) 17 5.2 Festsetzung des Verkehrswertes (nach § 194 BauGB) 17 6 .",
+        "facts": {
+          "baujahr": "1986",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 24
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 9
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168230",
@@ -2740,7 +2909,70 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168230&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377875.pdf",
+        "source_signature": "v2:693999:1790225507",
+        "pages": 41,
+        "text_chars": 95884,
+        "summary": "§ 194 Baugesetzbuch) des bebauten Grundstücks Große Straße 8, 33014 Reelsen bebaut mit einem Zweifamilienhaus Gemarkung Reelsen Grundbuch von Reelsen Flur 4 Blatt 0248 lfd. (dem Gericht bekannt) Amtsgericht Brakel Geschäftsnr. 17 K 10/25 Das Gebäude konnte nur eingeschränkt von außen besichtigt werden!",
+        "facts": {
+          "baujahr": "1850",
+          "wohnflaeche_m2": "175",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "1437"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 7
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 7
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 73
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168282",
@@ -2906,7 +3138,60 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168282&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378039.pdf",
+        "source_signature": "v2:401111:1790225507",
+        "pages": 28,
+        "text_chars": 45594,
+        "summary": "2 Fachliteratur Ross, Brachmann, Holzner Ermittlung des Bauwertes von Gebäuden und des Verkehrswertes von Grundstücken Hannover: Theodor Oppermann Verlag, 30. Auflage 2012 Kleiber Verkehrswertermittlung von Grundstücken Köln: Reguvis Verlag, 10. Auflage 2023 Pohnert, Ehrenberg, Haase, Horn Kreditwirtschaftliche Wertermittlungen Luchterhand-Verlag, 6.",
+        "facts": {
+          "baujahr": "1966",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168336",
@@ -3071,7 +3356,70 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168336&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378201.pdf",
+        "source_signature": "v2:2694654:1790225507",
+        "pages": 53,
+        "text_chars": 63986,
+        "summary": "1 31 8 Zusammenstellung der Werte 31 9 Berücksichtigung der allgem. Wertverhältnisse (§7 ImmoWertV) 32 10 Plausibilisierung mittels des Vergleichswertverfahrens (§24 ff ImmoWertV) 32 11 Berücksichtigung besonderer objektspezifischer Grundstücksmerkmale (§8 Abs. Dennoch ist der Grundstücksmarkt in der Städteregion Aachen am Wertermittlungsstichtag immer noch geprägt durch ein zurückhaltendes Marktverhalten, begründet durch die aktuellen wirtschaftlichen Rahmenbedingungen.",
+        "facts": {
+          "baujahr": "1994",
+          "wohnflaeche_m2": "130.98",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 8
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 44
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168350",
@@ -3193,7 +3541,72 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168350&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-24T05:02:16+00:00",
+      "report_photo_source_file_id": "378245",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378245.pdf",
+        "source_signature": "v2:717830:1790225507",
+        "pages": 36,
+        "text_chars": 81141,
+        "summary": "I m m o b i l i e n B e w e r t u n g O h l s e n Dipl.-Ing. Es handelt sich hier um die Internetversion des Gutachtens. Die Internetversion unterscheidet sich vom Originalgutachten nur dadurch, dass Fotos und Anlagen nicht beigefügt sind.",
+        "facts": {
+          "baujahr": "1907",
+          "wohnflaeche_m2": "350",
+          "nutzflaeche_m2": "690",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 12
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 17
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "sn-41014",
@@ -3737,7 +4150,14 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3123&land_abk=th",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-24T05:02:18+00:00",
+      "report_photo_source_file_id": "7978",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source_file": "7978.pdf",
+        "error": "PDF enthält zu wenig extrahierbaren Text"
+      }
     },
     {
       "id": "th-3147",
@@ -3977,7 +4397,60 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=54958&land_abk=he",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133586.pdf",
+        "source_signature": "v2:2976325:1790225501",
+        "pages": 64,
+        "text_chars": 95558,
+        "summary": "Reinhold Beck Felix-Wiesner-Straße 1 36391 Züntersbach Tel. § 194 Baugesetzbuch für das mit einem Wohnhaus bebaute Grundstück in 63639 Flörsbachtal - Lohrhaupten, Wohnroder Straße 38 Aktenzeichen des Amtsgerichtes Gelnhausen 82 K 30/25 Der Verkehrswert des Grundstücks wurde zum Stichtag 08.10.2025 ermittelt mit rd. Grundbuch Blatt Gemarkung Flur Flurstück Verkehrswert Lohrhaupten 1723 Lohrhaupten 13 133/1 320.000,00 € Ausfertigung Nr.",
+        "facts": {
+          "baujahr": "2023",
+          "wohnflaeche_m2": "62.33",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "877"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 29
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "st-30139",
@@ -4429,7 +4902,56 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=14340&land_abk=be",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66740.pdf",
+        "source_signature": "v2:501420:1790225496",
+        "pages": 23,
+        "text_chars": 55747,
+        "summary": "Amtsgericht Mitte Zwangsversteigerungsabteilung Littenstraße 12-17 10179 Berlin G U T A C H T E N über den Verkehrswert (i.S.d. 33 bezeichnet und dem Sondernut- zungsrecht an dem im Aufteilungsplan mit K 33 bezeichneten Keller. Aktenzeichen: 30 K 24/25 Gemarkung: Prenzlauer Berg Flur: 318 Flurstück: 210 Der Verkehrswert des unbelasteten1 Wohnungseigentums wurde zum Stichtag 01.10.2025 ermittelt mit rd.",
+        "facts": {
+          "baujahr": "1893",
+          "wohnflaeche_m2": "123.49",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "be-14405",
@@ -4624,7 +5146,50 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=14405&land_abk=be",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "67245.pdf",
+        "source_signature": "v2:1783607:1790225497",
+        "pages": 27,
+        "text_chars": 41984,
+        "summary": "G U T A C H T E N über den Verkehrswert (i.S.d. 10 und dem Sondernutzungsrecht an dem PKW-Stellplatz „STPL 5“ erstellt am: 18.04.2026 Der Verkehrswert wurde zum Qualitäts-/Wertermittlungsstichtag 24.02.2026 ermittelt mit rd. 100.000,00 € Wohnfläche: 34,71 m² (gemäß Teilungserklärung) Vertragszustand: befristet vermietet (Vertragsbeginn: 01.12.2023), Mietvertrag weiterhin gültig Vertragszustand Stellplatz Nr.",
+        "facts": {
+          "baujahr": "1962",
+          "wohnflaeche_m2": "34.71",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "be-14419",
@@ -4803,7 +5368,55 @@
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=14419&land_abk=be",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "67404.pdf",
+        "source_signature": "v2:521404:1790225497",
+        "pages": 34,
+        "text_chars": 124682,
+        "summary": "1 als 782/10.000-Miteigen- tumsanteil an dem 3.727 m² großen Grundstück Dau- mstraße 116-134 (gerade), Röddelinseeweg 4-10 (gerade) und Wolzenseeweg 3-9 (ungerade) in 13599 Berlin, verbunden mit dem Sondereigentum an der im Aufteilungsplan mit der Nr. 15 bezeichneten Woh- nung (als Reihenendhaus Wolzenseeweg 9) von 2014 mit EG, OG und DG als Staffelgeschoss bei ei- ner Wohnflächengröße von ca. 141 m² (bei Anrech- nung der Grundfläche der Dachterrasse zu 50 %) zzgl.",
+        "facts": {
+          "baujahr": "2014",
+          "wohnflaeche_m2": "141",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "120"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 38
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-2bd2d4fcc0cc29c7",
@@ -5167,7 +5780,50 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49038&land_abk=by",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126451.pdf",
+        "source_signature": "v2:2342615:1790225499",
+        "pages": 38,
+        "text_chars": 64850,
+        "summary": "66, Schanzenbachstraße 10, 81371 München Seite 1 Dipl.-Kfm. und vereidigter Sachverständiger für die Bewertung bebauter u. unbebauter Grundstücke Maximilianstraße 35 A, 80539 München, Tel.: 089 / 24 21 84 08 GUTACHTEN über den Verkehrswert (im Sinne des § 194 BauGB) für die Eigentumswohnung Nr.",
+        "facts": {
+          "baujahr": "1968",
+          "wohnflaeche_m2": "86",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 30
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-54996",
@@ -5330,7 +5986,55 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=54996&land_abk=he",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133699.pdf",
+        "source_signature": "v2:1374130:1790225501",
+        "pages": 43,
+        "text_chars": 82513,
+        "summary": "Marco Rösche Sachverständiger für Immobilienbewertung (Sprengnetter Akademie) Vermessungsbüro Dipl.-Ing. 51 be- zeichnet sowie dem Sondernutzungsrecht an einem Kellerraum im Aufteilungsplan mit Nr. 10 be- zeichnet Der Verkehrswert des unbelasteten Wohnungseigentums wurde zum Stichtag 07.11.2023 ermittelt mit rd.",
+        "facts": {
+          "baujahr": "1967",
+          "wohnflaeche_m2": "69.60",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "300"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 42
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167694",
@@ -5452,7 +6156,67 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167694&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-24T05:02:19+00:00",
+      "report_photo_source_file_id": "376172",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376172.pdf",
+        "source_signature": "v2:260340:1790225506",
+        "pages": 25,
+        "text_chars": 50685,
+        "summary": "I m m o b i l i e n B e w e r t u n g O h l s e n Dipl.-Ing. Die Internetversion unterscheidet sich vom Originalgutachten nur dadurch, dass Fotos und Anlagen nicht beigefügt sind. Auf Grund des Umstandes, dass auch ein Schreibschutz elektronischer Dokumente keine abschließende Sicherheit darstellt, wird auf die authentische Wiedergabe des vorliegenden Gutachtens in elektronischer Form sowie als Ausdruck, keine Haftung übernommen.",
+        "facts": {
+          "baujahr": "1920",
+          "wohnflaeche_m2": "761",
+          "nutzflaeche_m2": "137",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 9
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 11
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167820",
@@ -5574,7 +6338,67 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167820&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-24T05:02:19+00:00",
+      "report_photo_source_file_id": "376559",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376559.pdf",
+        "source_signature": "v2:747488:1790225506",
+        "pages": 46,
+        "text_chars": 110902,
+        "summary": "AG.: 12 K 3/25 Es handelt sich hier um eine Internetversion des Gutachtens. Diese Internetversion unterscheidet sich vom Originalgutachten dadurch, dass keine Anlagen (Katasterkarten, Zeichnungen etc.) enthal- ten sind. Sie können das Originalgutachten auf der Geschäftsstelle des Amtsgerichts einsehen.",
+        "facts": {
+          "baujahr": "1999",
+          "wohnflaeche_m2": "137",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "300"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 6
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 5
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 63
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4036",
@@ -6138,7 +6962,55 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3087&land_abk=th",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "7870.pdf",
+        "source_signature": "v2:1572991:1790225514",
+        "pages": 27,
+        "text_chars": 55264,
+        "summary": "Geschäftsnummer: K 2/25 GUTACHTEN zur Ermittlung des Verkehrswertes (Marktwert) i.S. Es wurde in 4 Ausfertigungen erstellt, davon eine Ausfertigung für meine Unterlagen. Amtsgericht: Sömmerda Grundbuch: Kranichborn GB-Blatt: 373 Flur: 1 Flurstück(e): 64 Stichtag: 03.06.2025 Verkehrswert: 68.000,00 € Dipl.-Ing.",
+        "facts": {
+          "baujahr": "1910",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "183.00"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 18
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "th-3148",
@@ -6398,7 +7270,14 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=3174&land_abk=th",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-24T05:02:20+00:00",
+      "report_photo_source_file_id": "8108",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source_file": "8108.pdf",
+        "error": "PDF enthält zu wenig extrahierbaren Text"
+      }
     },
     {
       "id": "br-7297",
@@ -7194,7 +8073,55 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=14433&land_abk=be",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "67489.pdf",
+        "source_signature": "v2:466001:1790225497",
+        "pages": 13,
+        "text_chars": 37578,
+        "summary": "Ursel Schäfer, Dreilindenstraße 60, 14109 Berlin ERMITTELTER VERKEHRSWERT: 670.000,00 € WERTERMITTLUNGS-/QUALITÄTSSTICHTAG: 20.02.2023 SEITE 2 VON 13 INHALT 1. ALLGEMEINES ..................................................................................... 3 1.1 Auftraggeber ...................................................................................................................",
+        "facts": {
+          "baujahr": "2014",
+          "wohnflaeche_m2": "192.44",
+          "nutzflaeche_m2": "58.42",
+          "grundstueck_m2": "551.00"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49056",
@@ -7343,7 +8270,55 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=49056&land_abk=by",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126481.pdf",
+        "source_signature": "v2:2979674:1790225499",
+        "pages": 91,
+        "text_chars": 116119,
+        "summary": "Architektin Andrea Becker-Bergemann Sachverständige für die Bewertung von bebauten und unbebauten Grundstücken Zertifiziert nach DIN EN ISO/ IEC 17024 Romanstr. 089 / 388993-70 / Fax-71 - info@becker-bergemann.eu GUTACHTEN über den Verkehrswert im Sinne des § 194 BauBG Amtsgericht Wolfratshausen Aktenzeichen: 2 K 21/25 Wertermittlungsobjekt Einfamilienhaus Grundstück Fl.Nr. 145/8, Gemarkung Icking Kammerlbreite 9, 82057 Icking Verkehrswert 1.673.000 € Wertermittlungsstichtag: 08.10.2025 DIGITALFASSUNG MIT REDUZIERTER QUALITÄT !",
+        "facts": {
+          "baujahr": "1972",
+          "wohnflaeche_m2": "453.30",
+          "nutzflaeche_m2": "476.30",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-12990",
@@ -7522,7 +8497,50 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=12990&land_abk=ni",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-24T05:02:24+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "32815.pdf",
+        "source_signature": "v2:2306802:1790225504",
+        "pages": 59,
+        "text_chars": 100159,
+        "summary": "GUTACHTEN für Gebäude und Freifläche Großer Sand 4, 26904 Börger Dipl.-Kfm. GUNNAR VAGES DEKRA zertifizierter Sachverständiger für Immobilienbewertungen D1 + D2 Hünensand 45 - 49716 Meppen Telefon: +49 (0) 0155 109 178 19 - E-Mail: gunnar.vages@outlook.com 1. Gunnar Vages DEKRA zertifizierter Sachverständiger für Immobilienbewertungen D1 + D2 Verkehrswertgutachten über den Grundbesitz in Großer Sand 4, 26904 Börger Gutachten Nr.",
+        "facts": {
+          "baujahr": "2022",
+          "wohnflaeche_m2": "178",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 29
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 10
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167888",
@@ -9157,7 +10175,9 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168368&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-24T05:02:21+00:00",
+      "report_photo_source_file_id": "378301"
     },
     {
       "id": "by-49027",
@@ -11195,7 +12215,8 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=167526&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-168346",
@@ -11465,7 +12486,8 @@
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168662&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "ni-13249",
@@ -11885,7 +12907,8 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=13304&land_abk=ni",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-168064",
@@ -12129,7 +13152,8 @@
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168115&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-168323",
@@ -12250,7 +13274,8 @@
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "detail_source_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=168323&land_abk=nw",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "rp-3750",

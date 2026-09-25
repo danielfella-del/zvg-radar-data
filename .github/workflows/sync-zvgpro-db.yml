@@ -130,7 +130,19 @@ jobs:
               if n == 1 or n % 10 == 0 or n == total_batches:
                   print(f'Batch {n}/{total_batches}: {result.get("processed", 0)}/{len(rows)} verarbeitet.')
 
-          final = post({'action': 'finalize', 'run_id': run_id})
+          try:
+              final = post({'action': 'finalize', 'run_id': run_id}, attempts=1)
+          except Exception as finalize_error:
+              # A completed server import can lose its HTTP response. Check the
+              # stored hash and count before treating that as a sync failure.
+              try:
+                  verified = post({'action': 'begin', 'total': len(rows), 'dataset_hash': dataset_hash, 'generated_at': generated_at}, attempts=2)
+              except Exception:
+                  raise finalize_error
+              if not verified.get('not_modified') or int(verified.get('count', 0)) != len(rows):
+                  raise finalize_error
+              print('Abschlussantwort verloren; Datensatz in MariaDB verifiziert.')
+              final = {'count': verified['count'], 'recovered': True}
           print('DB-Sync abgeschlossen:', json.dumps({
               'count': final.get('count'),
               'inserted': final.get('inserted'),

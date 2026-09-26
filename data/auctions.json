@@ -571,7 +571,7 @@
     "geodata_source": "WZB Berlin PLZ-Geokoordinaten (Apache 2.0) - https://github.com/WZBSocialScienceCenter/plz_geocoord",
     "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
     "media_cache": {
-      "generated_at": "2026-09-26T01:57:40+00:00",
+      "generated_at": "2026-09-26T02:55:19+00:00",
       "downloaded_this_run": 0,
       "failed_this_run": 3,
       "bytes_this_run": 0,
@@ -617,17 +617,17 @@
           "error": "Portal lieferte HTML statt Datei"
         }
       ],
-      "report_photo_extraction_at": "2026-09-26T01:58:02+00:00"
+      "report_photo_extraction_at": "2026-09-26T02:55:40+00:00"
     },
     "detail_enrichment": {
-      "generated_at": "2026-09-26T02:36:15+00:00",
+      "generated_at": "2026-09-26T02:48:17+00:00",
       "fetched_this_run": 0,
       "errors_this_run": 0,
       "enriched_total": 3304,
       "active_candidates_remaining": 0,
       "with_gutachten": 1841,
       "with_photos": 803,
-      "limit_per_run": 20,
+      "limit_per_run": 25,
       "primed_states": [],
       "error_samples": []
     },
@@ -756,6 +756,33 @@
         "sh: Schleswig-Holstein nur 3 Verfahren (Warnschwelle 35)"
       ],
       "all_16_present": false
+    },
+    "report_photo_extraction": {
+      "generated_at": "2026-09-26T02:55:40+00:00",
+      "processed_this_run": 12,
+      "records_with_new_photos": 1,
+      "photos_created": 1,
+      "errors_this_run": 1,
+      "downloaded_bytes": 0,
+      "records_with_display_photos": 490,
+      "candidate_backlog": 1612,
+      "max_reports": 12,
+      "max_photos_per_report": 2,
+      "max_report_mb": 180.0,
+      "priority_ids": [
+        "he-55016"
+      ],
+      "error_samples": [
+        {
+          "id": "nw-168599",
+          "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+        }
+      ]
+    },
+    "smart_analysis": {
+      "generated_at": "2026-09-26T02:55:41+00:00",
+      "analyzed_this_run": 20,
+      "errors_this_run": 1
     }
   },
   "results": [
@@ -2072,7 +2099,50 @@
       "detail_description": "Die Wohnung liegt im Aufgang Rückertstraße 7 im 2. Obergeschoss eines sechsgeschossigen, vollunterkellerten Wohn- und Geschäftshauses mit drei Aufgängen und einer unterirdischen Tiefgarage. Laut Aufteilungsplan besteht die Wohnung aus 2 1/2 Zimmern, Küche, Bad, Flur und Balkon. Nach den Erkenntnissen des Gutachters ist das Objekt jedoch baulich mit der Wohnung 1.07 verbunden; das hiesige Objekt verfügt nicht über eine eigene Eingangstür. Eine Innenbesichtigung fand nicht statt. Weitere Einzelheiten können dem Sachverständigengutachten (Stand 11/2025) entnommen werden. Baujahr: ca. 2020/21 Wohnfläche: überschlägig 66 m²",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66772.pdf",
+        "source_signature": "v2:2747155:1790390875",
+        "pages": 25,
+        "text_chars": 34369,
+        "summary": "Carsten Kühne Dipl.-Wirtschaftsingenieur Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken Immobiliengutachter HypZert für finanzwirtschaftliche Zwecke und Marktwertermittlung Mitglied im Verband der vereidigten Sachverständigen e.V. Berlin und Brandenburg CIS HypZert (F/M) Gutachten Nr. 85325 über den Verkehrswert der Eigentumswohnung Nr.",
+        "facts": {
+          "baujahr": "2020",
+          "wohnflaeche_m2": "66.00",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48730",
@@ -2239,7 +2309,30 @@
       "detail_description": "Gemarkung Flurstück Wirtschaftsart u. Lage Anschrift Hektar Blatt Wildflecken 2332 Ackerland Langgewend 0,2020 1412 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : Grünland , Bestandteil eines überwiegend als Grünland genutzten Flurbereiches; Grundstück liegt im Biosphärenreservat Rhön und ist Bestandteil eines Landschaftsschutzgebietes, sowie des Naturparks Bayerische Rhön; derzeit Nutzung durch Pächter;",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125311.pdf",
+        "source_signature": "v2:1957033:1790390876",
+        "pages": 17,
+        "text_chars": 23872,
+        "summary": "Az.: 801 K 53/25 Datum: 15.01.2026 Abbildung: Das Bewertungsgrundstück ist orange hinterlegt. Quelle: BayernAtlas E x p o s é über den Verkehrswert der landwirtschaftlichen Fläche der Gemarkung Wildflecken, Fl.Nr. 2332 1.820,00 € Das Gutachten umfasst 17 Seiten inkl.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4084",
@@ -2410,7 +2503,61 @@
       "detail_description": "Doppelhaushälfte mit ausgebautem Dachgeschoss, unterkellert, Baujahr 1984, DDR Typenhaus D 42, Objekt ist überwiegend entkernt",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "108804.pdf",
+        "source_signature": "v2:2759681:1790390890",
+        "pages": 47,
+        "text_chars": 63299,
+        "summary": "24-000013 Az.: AG DD: 525 K 68/23 Sachverständigenbüro Andrea Bellmann Email: andrea.bellmann@web.de Lindenring 7, 01796 Pirna www.grundstueckswert-sachsen.de Tel. 03501-467862 Fax 468682 Lindenring 7, 01796 Pirna Tel. § 194 Baugesetzbuch für das mit einer Doppelhaushälfte bebaute Grundstück in 01814 Bad Schandau, Falkensteinstr.",
+        "facts": {
+          "baujahr": "1984",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "750"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 22
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 13
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-8309dca9ffc81499",
@@ -2952,7 +3099,60 @@
       "detail_description": "Es handelt sich um eine Eigentumswohnung in einem 1974 errichteten, 20-geschossigen Wohnhochhaus im Ortsteil Homberg-Hochheide. Das Objekt umfasst 320 Einheiten. Es besteht eine hohe Leerstandsquote. Es sind zahlreiche Zwangsversteigerungsverfahren anhängig. Die gegenständliche Wohnung unterteilt sich gemäß Aufteilungsplan in Wohnraum, Essplatz mit Küche, Abstellraum, Flur, Diele, Bad, Schlafraum und Balkon und verfügt über eine Größe von ca. 68 m 2 . Eine Innenbesichtigung war nicht möglich. Der Wohnanlage wurden in der Vergangenheit brandschutztechnische Maßnahmen auferlegt, die inzwischen überwiegend umgesetzt sein sollen. Weitere Maßnahmen zur Sanierung des Gemeinschaftseigentums (z. B. Asbestsanierungen) waren zum Wertermittlungsstichtag noch nicht vollständig ausgeführt. Im Jahr 2022 hat ein Wechsel der Verwaltung stattgefunden. Auf Grund der Datenschutzbestimmungen kann eine Bekanntgabe der betreibenden Gläubiger nicht erfolgen. Dies geht nur mit vorheriger Zustimmung der Gläubiger. Die Zustimmung liegt nicht vor. Kontoverbindung Sicherheitsleistung: ZZJ Hamm IBAN: DE08 3005 0000 0001 4748 16 LB Hessen-Thüringen, Verwendungszweck: AG Duisburg, Geschäftszeichen, Sicherheit, Datum der Versteigerung",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "367015.pdf",
+        "source_signature": "v2:1085726:1790390883",
+        "pages": 33,
+        "text_chars": 62490,
+        "summary": "142 47057 Duisburg Tel.: 0203 374033 E-Mail: info@sv-wegmann.de www.sv-wegmann.de Steuernummer: 109-5221/0200 Commerzbank AG Duisburg IBAN DE07 3508 0070 0200 4902 00 BIC DEUTDEDB350 Lars Wegmann – Bismarckstr. 142 - 47057 Duisburg Amtsgericht Duisburg Zwangsversteigerung Postfach 10 01 10 47001 Duisburg Datum: 21. Februar 2025 AZ: 651 K 60-24 G U T A C H T E N über den (sanierungsunbeeinflussten) Verkehrswert (Marktwert) i.",
+        "facts": {
+          "baujahr": "1969",
+          "wohnflaeche_m2": "68",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 6
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168263",
@@ -3118,7 +3318,65 @@
       "detail_description": "Eigentumswohnung 2 Zimmer, Küche, Diele, Bad, Abstellraum, Balkon im Dachgeschoss sowie einem Kellerraum, Wfl rd 81 m², guter Unterahltungszustand. Gaszentralheizung sowie zentrale Warmwasserversorgung, isolierverglaste Fenster, umfassende Renovierung 2018",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377981.pdf",
+        "source_signature": "v2:907903:1790390885",
+        "pages": 43,
+        "text_chars": 98346,
+        "summary": "Steffen Löw Niedertiefenbacher Weg 11d 65594 Runkel-Dehrn Az. des Gerichts: 11 K 15/25 G U T A C H T E N über den Verkehrswert (Marktwert) i.S.d. 3 bezeichnet sowie dem Sondernutzungsrecht an der Garage Nr.",
+        "facts": {
+          "baujahr": "1986",
+          "wohnflaeche_m2": "81",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "493"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 61
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "br-7281",
@@ -3329,7 +3587,65 @@
       "detail_description": "Einfamilienhaus",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134246.pdf",
+        "source_signature": "v2:2450649:1790390880",
+        "pages": 41,
+        "text_chars": 69163,
+        "summary": "Sachverständiger (DIA) für bebaute und unbebaute Grundstücke, Mieten und Pachten / Immobilienfachwirt (Dipl.-VWA/IHK) Ringstraße 2, 64409 Messel Aktenzeichen: 30 K 42/24 Datum: 08.12.2025 Az.: 01/10/2025 di Verkehrswertgutachten (i.S.d. § 194 Baugesetzbuch) Südwestansicht über die Liegenschaft: Hirschbergstraße 3 in 64823 Groß-Umstadt Gutachten Nr. 01/10/2025 di / Seite 1 Messel, 08.12.2025 Verkehrswertgutachten (i.S.d.",
+        "facts": {
+          "baujahr": "1975",
+          "wohnflaeche_m2": "70.10",
+          "nutzflaeche_m2": "151.10",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 15
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13002",
@@ -3664,7 +3980,55 @@
       "detail_description": "Laut Gutachten ist das 1.063 qm große Grundstück mit einem in Massivbauweise errichteten Einfamilienhaus (Baujahr: 2000) mit Keller und ausgebautem Dachgeschoss bebaut. Im Garten befindet sich ein Holzgartenhaus. Die Wohnfläche beträgt ca. 138 qm.",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377363.pdf",
+        "source_signature": "v2:1126977:1790390885",
+        "pages": 30,
+        "text_chars": 43674,
+        "summary": "Einfamilien-Wohnhaus, Am Brink 24, 32699 Extertal AG-Az.: 13 K 15 / 25 Detlef Korf – Zertifizierter Sachverständiger für Immobilienbewertung (EIPOS / IHK Dresden Reg.-Nr. 1221-05-2003) Seite 1 GUTACHTEN über den Verkehrswert (i. § 194 Baugesetzbuch) für: Einfamilien-Wohnhaus Am Brink 24, 32699 Extertal – Almena durch Detlef Korf finanz-domicil-Verm.",
+        "facts": {
+          "baujahr": "2000",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "138",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168453",
@@ -3829,7 +4193,65 @@
       "detail_description": "Einfamilienreihenmittelhaus in 50739 Köln (Mauenheim) Guntherstraße 167. II-geschossiges, unterkellertes Einfamilienreihenmittelhaus mit ausgebautem Dachgeschoss und nicht unterkellertem Flachdachanbau. Baujahr Mitte der 1920er Jahre, Wohnfläche: rd. 165 m², Grundstücksgröße 222 m²; zum Zeitpunkt der Begutachtung leerstehend, tlw. noch möbliert, überwiegend mäßiger Unterhaltungszustand, Instandsetzungsbedarf. Eine Weitergabe der Kontaktdaten des Antragstellers kann gem. DSGVO nicht - auch nicht telefonisch - erfolgen. Gutachteneinsichten können zu den allgemeinen Publikumszeiten des Gerichts oder nach vorheriger Terminvereinbarung erfolgen. Entsprechende Termine können online auf der Internetseite des Amtsgerichts Köln oder telefonisch unter den Nummern 0221/7711-323, 842, 782 oder 197 vereinbart werden. Geben Sie hierbei unbedingt das Aktenzeichen des Verfahrens an (z.B. 93 K …/25)",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378567.pdf",
+        "source_signature": "v2:1609418:1790390886",
+        "pages": 40,
+        "text_chars": 49274,
+        "summary": "Verkehrswertgutachten Einfamilienreihenmittelhaus Guntherstraße 167 in 50739 Köln-Mauenheim - 1 - DIPL.-ING. Der Verkehrswert (Marktwert) des mit einem Einfamilienreihenmittelhaus bebauten Grundstücks Guntherstraße 167 in Köln-Mauenheim wird ermittelt zum Bewertungsstichtag 03.11.2025 zu: 520.000 € Das Wertgutachten besteht aus 46 Seiten inkl. 12 Anlagen mit 20 Seiten und ist in 4-facher Ausfertigung angefertigt.",
+        "facts": {
+          "baujahr": "2025",
+          "wohnflaeche_m2": "165",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 17
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168599",
@@ -3936,7 +4358,61 @@
       "detail_description": "Laut Sachverständigengutachten handelt es sich um eine I-geschossige-Einfamilien-Doppelhaushälfte mit Nebengebäuden (Stall, Scheune o. ä.). Das Wohnhaus wird auf ein Baujahr von vor ca. 80 Jahren geschätzt und besteht aus Keller-, Erd- und ausgebautem Dachgeschoss. Die Wohnfläche beträgt 118 qm. Die Ausstattung wird als einfach beschrieben.",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "379073.pdf",
+        "source_signature": "v2:683015:1790390887",
+        "pages": 42,
+        "text_chars": 66918,
+        "summary": "A R C H I T E K T I N U R S U L A T R I M P O P P L A N U N G U N D B A U M A N A G E M E N T D I P L . M A R K U S T R O M P E T T E R V O N D E R S I H K Z U H A G E N Ö F F E N T L I C H B E S T E L L T E R U N D V E R E I D I G T E R S A C H V E R S T Ä N D I G E R F Ü R S C H Ä D E N A N G E B Ä U D E N S T A A T L . A N E R K A N N T E R E N E R G I E B E R A T E R D I P L .",
+        "facts": {
+          "baujahr": "1964",
+          "wohnflaeche_m2": "118.00",
+          "nutzflaeche_m2": "28.00",
+          "grundstueck_m2": "7338.00"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 24
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4034",
@@ -4595,7 +5071,50 @@
       "detail_description": "Eigentumswohnung Nr. 1.07 in der Rückertstraße 7, Schillerstraße 45, 46 in 10627 Berlin Die Wohnung liegt im Aufgang Rückertstraße 7 im 2. Obergeschoss (nordöstliche Gebäudeecke) eines sechsgeschossigen, vollunterkellerten Wohn- und Geschäftshausblockes mit drei Aufgängen und einer unterirdischen Tiefgarage. Laut Aufteilungsplan besteht die Wohnung aus 2 Zimmern, Küche, Bad, Flur und Balkon. Nach den Erkenntnissen des Gutachters ist das Objekt jedoch baulich mit der Wohnung 1.08 verbunden. Eine Innenbesichtigung fand nicht statt. Wegen aller weiteren Einzelheiten wird auf das hier ausliegende Sachverständigengutachten (Stand 12/2025) verwiesen. Der Wohnung ist das Sondernutzungsrecht an den Fahrradabstellplätzen SNR 17 und SNR 83 zugeordnet. Baujahr: ca. 2020/21 Wohnfläche: überschlägig ca. 56,00m²",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66800.pdf",
+        "source_signature": "v2:2420654:1790390875",
+        "pages": 25,
+        "text_chars": 34353,
+        "summary": "Carsten Kühne Dipl.-Wirtschaftsingenieur Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken Immobiliengutachter HypZert für finanzwirtschaftliche Zwecke und Marktwertermittlung Mitglied im Verband der vereidigten Sachverständigen e.V. Berlin und Brandenburg CIS HypZert (F/M) Gutachten Nr. 85225 über den Verkehrswert der Eigentumswohnung Nr.",
+        "facts": {
+          "baujahr": "2020",
+          "wohnflaeche_m2": "56.00",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-89f6c3dd35f25d62",
@@ -4888,7 +5407,45 @@
       "detail_description": "Grundstück Flst. 730 zu 1,0598 ha, unbebautes Grundstück",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125877.pdf",
+        "source_signature": "v2:2879262:1790390876",
+        "pages": 27,
+        "text_chars": 44716,
+        "summary": "Keber Königsberger Sachverständige GmbH & Co. Ausfertigung Das Gutachten umfasst einschließlich Anlagen und Fotos 27 Seiten und wurde für den Auftraggeber in dreifacher Ausfertigung erstellt. Keber Königsberger ’O’ IMMOBILIENGUTACHTER ■ REAL ESTATE VALUER j HypZert m i RICS unbebautes Grundstück Stichtag 11.12.2025 Giggenhauser Straße 21 in 85354 Freising WE 25114170 Seite 2/27 Inhalt 1.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "2000",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 10
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49053",
@@ -5176,7 +5733,55 @@
       "detail_description": "Einnfamilienhaus; Rohbau, nicht bewohnbar",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134324.pdf",
+        "source_signature": "v2:2207753:1790390880",
+        "pages": 47,
+        "text_chars": 89386,
+        "summary": "STRUNCK & MEINZER Bewertung von Immobilien SV-Büro Strunck & Meinzer \u0001 Thaddenstr.14 A \u0001 69469 Weinheim Amtsgericht Dieburg - Zwangsversteigerungsabteilung - Frau Moos Bei der Erlesmühle 1 64807 Dieburg Marion Strunck Dipl. Betriebswirtin (BA) Sachverständige für Immobilienbewertung www.BewertungvonImmobilien.de Datum: 08.03.2024 AZ.: DB 30K37/23 G U T A C H T E N über den Verkehrswert (Marktwert) i. § 194 Baugesetzbuch für das mit einem Einfamilienhaus bebaute Grundstück in 64823 Groß-Umstadt, Groß-Umstädter Str.",
+        "facts": {
+          "baujahr": "2006",
+          "wohnflaeche_m2": "68",
+          "nutzflaeche_m2": "68",
+          "grundstueck_m2": "700"
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 46
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13141",
@@ -5297,7 +5902,31 @@
       "detail_description": "s. Anl.",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "32329.pdf",
+        "source_signature": "v2:51174:1790390882",
+        "pages": 2,
+        "text_chars": 2217,
+        "summary": "Kurzbeschreibung Allgemein Verfahren: Amtsgericht Emden zu NZS 9 K 19/23 Erbbaurechtsgrundbuch: von Suurhusen, Blatt 802, lfd. 1 Katasterbezeichnung: Gemarkung Suurhusen, Flur 1 a) Flurstück Nr. vorliegenden Ablichtungen der Baupläne teilweise unterkellertes Einfamilien-Wohnhaus mit einem Vollgeschoss bzw.",
+        "facts": {
+          "baujahr": "1953",
+          "wohnflaeche_m2": "95.84",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49120",
@@ -5510,7 +6139,50 @@
       "detail_description": "ehemalige landwirtschaftliche Hofstelle mit Lagerhalle, Bergehalle und Rinderlaufstall (ohne Wohnhaus) sowie Grünland; Nutzflächen: Lagerhalle ca. 480 m², Bergehalle ca. 250 m², Rinderlaufstall ca. 250 m²; Baujahr: Lagerhalle ca. 1999, Bergehalle und Rinderlaufstall ca. 2007; Grundstücksgröße 22.409 m² (davon ca. 5.000 m² Hofstelle und 17.409 m² Grünland)",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126722.pdf",
+        "source_signature": "v2:2553465:1790390878",
+        "pages": 37,
+        "text_chars": 68797,
+        "summary": "(FH) SACHVERSTÄNDIGER FÜR DIE BEWERTUNG VON GRUNDSTÜCKEN UND GEBÄUDEN MITGLIED DES GUTACHTERAUSSCHUSSES DER STADT AUGSBURG 86405 MEITINGEN • HANS-ADLHOCH-STR. 0176/96053444 • archziegler@gmx.de __________________________________________________________________________________ Az.: K 58/24 GUTACHTEN über den Verkehrswert |Marktwert Grundstück der Gemarkung Prittriching Fl.Nr. 422, In der Kultur, Gebäude- und Freifläche, Landwirtschaftsfläche zu 2,2409 ha zum Bewertungsstichtag: 24.",
+        "facts": {
+          "baujahr": "1999",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "480",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 5
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 27
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4175",
@@ -5737,7 +6409,12 @@
       "detail_description": "2-Raum-Wohnung im Erdgeschoss in einer 1937 errichteten Mehrfamilienwohnhausanlage; Sanierung 2000; bestehend aus Flur, Küche, Bad/WC, Balkon, Kellerraum, WFL. ca. 54,06 qm, Die Wohnanlage steht unter Denkmalschutz",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source_file": "109419.pdf",
+        "error": "PDF enthält zu wenig extrahierbaren Text"
+      }
     },
     {
       "id": "by-48614",
@@ -5900,7 +6577,55 @@
       "detail_description": "Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : Grundstück bebaut mit einem Ein- bis Zweifamilienwohnhaus. Das Wohnhaus wurde in Massivbauweise mit Satteldach errichtet und besteht aus einem Kellergeschoss, Erdgeschoss, Obergeschoss und einem ausgebauten Dachgeschoss. Über dem Dachgeschoss befindet sich ein niedriger, nicht ausgebauter Spitzboden. An der Südwestfassade besteht ein eingeschossiger Eingangsanbau in Massivbauweise mit Dachbalkon. Das Wohnhaus ist grenzständig, hieran wurde an der nordwestlichen Grundstücksgrenze das Nachbarhaus von Grundstück Flst. 299/2 (HausNr. 7 a) angebaut. Baujahr: vermutlich um 1954 Aufstockung und südwestlicher Eingangsanbau vermutlich Anfang der 1980er Jahre Teilmodernisierungen vermtl. Anfang der 1980er und Anfang der 2000er Jahre Haus ist leerstehend. In Teilbereichen zeigen sich Instandhaltungsrückstau und bauliche Schäden.;",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "124905.pdf",
+        "source_signature": "v2:2451071:1790390876",
+        "pages": 17,
+        "text_chars": 45366,
+        "summary": "SACHVERSTÄNDIGER & BERATENDER INGENIEUR A u s z u g a u s d e m V e r k e h r s w e r t g u t a c h t e n i. § 74a Zwangsversteigerungsgesetz (ZVG) für das mit einem Ein- bis Zweifamilienhaus bebaute Grundstück Gemarkung Ketschenbach | Flurstück 299/1 | Schloßweg 7 | 96465 Neustadt bei Coburg B E G U T A C H T E T E R V E R K E H R S W E R T 1 5 7 . § 74a ZVG - Auftraggeberin: Amtsgericht Coburg Aktenzeichen: 1 K 25/24 Wertermittlungs- und Qualitätsstichtag am 07.",
+        "facts": {
+          "baujahr": "1954",
+          "wohnflaeche_m2": "178",
+          "nutzflaeche_m2": "74",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 18
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "sl-12652",
@@ -6206,7 +6931,55 @@
       "detail_description": "Das Grundstück wurde 1906 mit einem freistehenden, partiell unterkellerten, 1 ½-geschossiges Einfamilienhaus in konventioneller Mauerwerksbauweise, bebaut und ca. 1996 um einen Anbau und Garage erweitert. Das Grundstück wird durch den Eigentümer genutzt.",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "67457.pdf",
+        "source_signature": "v2:773421:1790390875",
+        "pages": 50,
+        "text_chars": 69158,
+        "summary": "§ 194 Baugesetzbuch (BauGB) das Grundstück in 12527 Berlin-Schmöckwitz Fährallee 2 ERSTATTET VOM DIPL.-ING. Allgemeine Angaben zum Auftrag .......................................................................... Rechtliche Gegebenheiten .......................................................................................",
+        "facts": {
+          "baujahr": "1906",
+          "wohnflaeche_m2": "170",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-4491e8b278a33071",
@@ -6501,7 +7274,55 @@
       "detail_description": "Erbbaurecht, eingetragen im Grundbuch des Amtsgerichts Schwandorf von Steinberg Blatt 1123, an dem im Grundbuch von Steinberg Blatt 1627 eingetragenen Grundstück Gemarkung: Steinberg Flurstück: 459/15 Wirtschaftsart und Lage: Gebäude- und Freifläche Anschrift: Pfaffenberg 7, 92449 Steinberg Hektar: 0,0803 Objektbeschreibung/Lage (lt Angabe d. Sachverständigen): Erbbaurecht bis zum 02.11.2088 an dem mit einem Einfamilienhaus und Doppelgarage bebauten Grundstück, Baujahr ca. 1991, Lage Steinberg-Süd, Wohnfläche Erdgeschoss ca. 67 qm, Dachgeschoss ca. 60 qm; Innenbesichtigung überwiegend möglich",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125670.pdf",
+        "source_signature": "v2:2298564:1790390876",
+        "pages": 48,
+        "text_chars": 75363,
+        "summary": "ZVG Innen- und Außenbesichtigung möglich Anonymisierte Kurzversion! BEWERTUNG NACH ÄUSSEREM AUGENSCHEIN Auftraggeber Amtsgericht Amberg - Abteilung für Zwangsversteigerungssachen - Paulanerplatz 4 92224 Amberg Eigentümer Anonymisiert Gutachten Nr. 1 K 9/24 Objektart Einfamilienhaus mit Doppelgarage Objektadresse Paffenberg 7, 92449 Steinberg am See Tag Ortstermin 19.",
+        "facts": {
+          "baujahr": "1994",
+          "wohnflaeche_m2": "137",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 4
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 21
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49058",
@@ -6687,7 +7508,70 @@
       "detail_description": "Lfd. Nr. 1: Doppelhaushälfte mit PKW-Einzelgarage; zwei Vollgeschosse (Erdgeschoss, Obergeschoss), Dachgeschoss als Staffelgeschoss; Baujahr: ca. 2011; Wohnfläche: ca. 133 m²; Zuwegung über Privatweg; verkehrstechnische Erschließung ist daher ohne private Zuwegungsfläche nicht hinreichend gesichert; Lfd. Nr. 2: PKW-Außenstellplatz in unmittelbarer Nähe zum Wohnbaugrundstück Flst. 2425/26;",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126488.pdf",
+        "source_signature": "v2:1132354:1790390877",
+        "pages": 47,
+        "text_chars": 89819,
+        "summary": "16a in 86807 Buchloe, Flurstück 2425/26 der Gemarkung Buchloe sowie des PKW-Außenstellplatzes, Nähe Saubsdorfer Str. in 86807 Buchloe, Flurstück 2425/30 der Gemarkung Buchloe Dieses Gutachten umfasst 47 Seiten inklusive Deckblatt. Aktenzeichen des Gerichts K 41/25 Auftraggeber Amtsgericht Kaufbeuren – (Abteilung für Zwangsversteigerungs- und Zwangsvollstreckungssachen) Gutachten-Nr.",
+        "facts": {
+          "baujahr": "2011",
+          "wohnflaeche_m2": "133",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 33
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49071",
@@ -6793,7 +7677,66 @@
       "detail_description": "Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : annähernd rechteckiges Grundstück mit ausspringender Ecke bebaut mit einem Einfamilienhaus; mittlere Grundstücksbreite ca. 11 m; mittlere Grundstückstiefe ca. 15 m; annähernd ebenes Gelände; keine Stellplätze; nicht unterkellertes, zweigeschössiges Einfamilienwohnhaus mit ausgebautem Dachgeschoss; Wohnfläche ca. 181 qm; Baujahr 2006; Ölbefeuerte Warmwasser-Pumpenheizung Stand Baujahr; Bauzustand altersgemäßer Normalzustand; befahrbar über Fremdgrundstück (Grunddienstbarkeit bestellt); durch Eigentümer selbst genutzt; Im Übrigen wird auf die ausführliche und differenzierte Darstellung im Gutachten verwiesen.;",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126538.pdf",
+        "source_signature": "v2:2128899:1790390877",
+        "pages": 66,
+        "text_chars": 149278,
+        "summary": "Hohe Leite 6 - 97532 Üchtelhausen/Zell - Tel: 09720950153 - Fax: 09720950152 Bank: Targobank Schweinfurt ( BLZ 300 209 00 ) Konto 1304732073 Florian Muck Dipl.- Sachverständiger ( DIA ) für die Bewertung bebauter u. Umfang des Gutachtens: 65 Seiten + Deckblatt Florian Muck - Dipl.-Sachverständiger ( DIA ) für die Bewertung bebauter u. Form Seite(n) 20 – 22 7.5.7 Auswahl der Bewirtschaftungskosten Seite(n) 43 – 44 2.3.9 Öffentlich-/rechtliche Situation Seite(n) 22 – 23 7.5.8 Jahresreinertrag des Grundstückes Seite(n) 44 7.5.9 Bodenwertverzinsungsbetrag Seite(n) 44 – 45 3.0 Planungs- u.",
+        "facts": {
+          "baujahr": "2006",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 51
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13113",
@@ -7178,7 +8121,55 @@
       "detail_description": "Laut Wertgutachten besteht das Bewertungsobjekt aus zwei zusammenhängenden Flurstücken, die im Rahmen der Zwangsversteigerung eine wirtschaftliche Einheit bilden. Die Liegenschaft umfasst eine Hofstelle mit Wohnung, Nebengebäuden und ausgedehnten Freiflächen im Außenbereich der Stadt Kevelaer. Während die Bewertung gemäß gerichtlicher Anordnung lastenfrei erfolgt, bestehen faktisch erhebliche Einschränkungen, die den Verkehrswert auch unter Annahme formaler Lastenfreiheit beeinflussen. Insbesondere ist eine Teilfläche durch eine bereits realisierte Kompensationsmaßnahme nach § 15 BNatSchG dauerhaft ökologisch gebunden. Die hierfür generierten Ökopunkte wurden vollständig veräußert, womit die Fläche dauerhaft nicht mehr nutzbar oder erneut verwertbar ist. Obwohl die Reallast im Grundbuch möglicherweise gelöscht wird, verbleibt eine tatsächliche Zweckbindung mit erheblichen Verwendungsrisiken, die im Gutachten mit einem pauschalen Abschlag von 30 % auf den Bodenwertanteil der Gesamtfläche berücksichtigt wird. Zusätzlich besteht auf Flurstück 142 eine personenbezogene Wohnbaulast, die die Drittverwendungsfähigkeit des Wohnhauses rechtlich einschränkt. Auch diese Belastung wird mit einem wertmindernden Ansatz von 20 % sachgerecht einbezogen. In der Gesamtbetrachtung handelt es sich um ein Objekt mit landwirtschaftlichem Charakter, eingeschränkter Flexibilität und erhöhtem Bewertungsrisiko, dessen Marktgängigkeit nur im Rahmen spezialisierter Erwerbergruppen (z. B. Eigentumsnachfolger, Hofnutzer) zu erwarten ist. Die im Gutachten vorgenommenen wertermittlungsrelevanten Anpassungen tragen diesem Umstand umfassend Rechnung.",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-26T02:55:41+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378075.pdf",
+        "source_signature": "v2:953479:1790390885",
+        "pages": 62,
+        "text_chars": 115672,
+        "summary": "§ 194 Baugesetzbuch für die folgend aufgeführten Grundstücke in 47625 Kevelaer, Heuweg 2a !!! im Zwangsversteigerungsverfahren 009 K 2/25 1) Grundbuch von Wetten, Blatt 2056, lfd. 1 Grundstück, bebaut mit Stallgebäuden und einer Betriebsleiterwohnung 2) Grundbuch von Wetten, Blatt 2056, lfd.",
+        "facts": {
+          "baujahr": "1958",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "41",
+          "grundstueck_m2": "38839"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 25
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 46
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168565",
@@ -7271,7 +8262,8 @@
       "detail_description": "Laut Wertgutachten ist das zu bewertende Teileigentum Bestandteil einer ein- und achtgeschossigen Wohn- und Geschäftsbebauung mit Tiefgarage, bestehend aus 48 Wohneinheiten und 3 Gewerbeeinheiten, die ca. 1966 in konventioneller Massivbauweise mit Flachdächern errichtet wurde. Das hier zu bewertende Teileigentum befindet sich in dem eingeschossigen Ladentrakt neben dem Wohngebäude. Im Übrigen wird zur näheren Beschreibung auf das im Internet eingestellte und auf der Geschäftsstelle einsehbare Wertgutachten Bezug genommen. Aufgrund der Nichtbegehungsmöglichkeit handelt es sich um ein Risikoobjekt.",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "sl-12648",
@@ -7651,7 +8643,8 @@
       "detail_description": "Einfamilienhaus in Kirchwistedt-Stemmermühlen, Baujahr wohl 1972, unterkellert, mit Walmdach, Dachgeschoss ausgebaut. Wohnfläche ca. 210 m². Grenzüberbauung der Doppelgarage mit Aufstockung. Grundstücksgröße 1.866 m².",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "he-55100",
@@ -8012,7 +9005,8 @@
       "detail_description": "Doppelgarage mit Aufstockung in Kirchwistedt-Stemmermühlen, Baujahr wohl 1972. Grenzüberbauung vom Nachbargrundstück. Grundstücksgröße 554 m².",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-167135",
@@ -9490,7 +10484,8 @@
       "detail_description": "Grundstück (498 m²), bebaut mit einem Einfamilienhaus (Weber-Fertighaus), freistehend, voll unterkellert mit nachträglich ausgebautem Dachgeschoss und PKW-Garage. Baujahr: 1984; Wohnfläche: ca. 176 m². Ansprechpartner für Bietinteressenten: KSK-Immobilien GmbH 02241 100-202 zwangsversteigerung@ksk-immobilien.de",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-168056",
@@ -10738,7 +11733,8 @@
       "detail_description": "Es handelt sich um eine Eigentumswohnung in einem 1974 errichteten, 20-geschossigen Wohnhochhaus im Ortsteil Homberg-Hochheide. Das Objekt umfasst 320 Einheiten. Es besteht eine hohe Leerstandsquote. Es sind zahlreiche Zwangsversteigerungsverfahren anhängig. Die gegenständliche Wohnung unterteilt sich gemäß Aufteilungsplan in Wohnraum, Essplatz mit Küche, Abstellraum, Flur, Diele, Bad, Schlafraum und Balkon und verfügt über eine Größe von ca. 68 m 2 . Eine Innenbesichtigung war nicht möglich. Der Wohnanlage wurden in der Vergangenheit brandschutztechnische Maßnahmen auferlegt, die inzwischen überwiegend umgesetzt sein sollen. Weitere Maßnahmen zur Sanierung des Gemeinschaftseigentums (z. B. Asbestsanierungen) waren zum Wertermittlungsstichtag noch nicht vollständig ausgeführt. Im Jahr 2022 hat ein Wechsel der Verwaltung stattgefunden. Auf Grund der Datenschutzbestimmungen kann derzeit eine Bekanntgabe der betreibenden Gläubiger nicht erfolgen. Dies geht nur mit vorheriger Zustimmung der Gläubiger. Diese Zustimmung liegt hier nicht vor. Kontoverbindung Sicherheitsleistung: ZZJ Hamm IBAN: DE08 3005 0000 0001 4748 16 LB Hessen-Thüringen, Verwendungszweck: AG Duisburg, Geschäftszeichen, Sicherheit, Datum der Versteigerung",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "th-3066",
@@ -13794,7 +14790,8 @@
       "detail_description": "Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : Einfamilienhaus, Baujahr nicht feststellbar, vermutlich Anfang der 1950 er Jahre, keine Innenbesichtigung, Energieausweis lag nicht vor, vermietet, Wohnfläche Erd- und Obergeschoss ca. 85 m², hinsichtlich von Baumängeln sowie Bauschäden wird auf die differenzierte Darstellung im Gutachten verwiesen. Augenscheinlich jedoch nicht gänzlich ungepflegtes Anwesen in altersgemäßem Normalzustand ( vermutlich mit Schwerpunkt Anfang der 1980er Jahre modernisierte Immobilie aus der Nachkriegszeit). Lt. Denkmalliste der Stadt Würzburg bzw. It. Denkmalliste des Landesamtes für Denkmalpflege in Bayern ( als obere Denkmalschutzbehörde ) stellt das Anwesen Fl. Nr. 161 der Gemarkung Heidingsfeld kein Denkmal nach Denkmalliste dar ( auch nicht in Teilbereichen ), allerdings befindet sich die Grundstücksfläche im Bereich eines Bodendenkmals. Das Bodendenkmal (Aktennummer D-6-6225-0361)ist in der Denkmalliste wie folgt beschrieben: Archäologische Befunde des Mittelalters und der frühen Neuzeit im Bereich des Stadtkernes von Heidingsfeld.",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "by-48957",
@@ -13977,7 +14974,8 @@
       "detail_description": "Einfamilienhaus",
       "auction_type": "Versteigerung im Wege der Zwangsvollstreckung",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "mv-official-bbf6f2b8fdaa3e8c",
@@ -14244,7 +15242,9 @@
       "detail_description": "Laut Gutachten sind die Grundstücke mit einem Einfamilienhaus (Baujahr 2010, Wohnfläche ca. 128 qm) und einem Fahrrad-/ Geräteabstellraum (Nutzfläche ca. 18 qm) bebaut. Darüber hinaus befinden sich augenscheinlich dort mind. 2 Pkw-Stellplätze im Freien.",
       "auction_type": "Zwangsversteigerung zum Zwecke der Aufhebung der Gemeinschaft",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-26T02:55:40+00:00",
+      "report_photo_source_file_id": "374212"
     },
     {
       "id": "nw-167923",

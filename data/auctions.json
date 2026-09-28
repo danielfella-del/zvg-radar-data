@@ -571,13 +571,13 @@
     "geodata_source": "WZB Berlin PLZ-Geokoordinaten (Apache 2.0) - https://github.com/WZBSocialScienceCenter/plz_geocoord",
     "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
     "media_cache": {
-      "generated_at": "2026-09-28T09:02:34+00:00",
-      "downloaded_this_run": 18,
-      "failed_this_run": 3,
-      "bytes_this_run": 6717886,
-      "with_cached_photos": 491,
+      "generated_at": "2026-09-28T10:02:45+00:00",
+      "downloaded_this_run": 29,
+      "failed_this_run": 4,
+      "bytes_this_run": 11811400,
+      "with_cached_photos": 490,
       "with_cached_pdfs": 3223,
-      "with_cached_gutachten": 1826,
+      "with_cached_gutachten": 1825,
       "max_file_mb": 24.0,
       "max_run_mb": 90.0,
       "horizon_days": 180,
@@ -615,27 +615,25 @@
           "file_id": "135023",
           "stage": "download",
           "error": "Portal lieferte HTML statt Datei"
+        },
+        {
+          "id": "st-30391",
+          "stage": "context",
+          "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
         }
       ],
-      "report_photo_extraction_at": "2026-09-28T09:03:05+00:00"
+      "report_photo_extraction_at": "2026-09-28T10:03:13+00:00"
     },
     "detail_enrichment": {
-      "generated_at": "2026-09-28T09:42:27+00:00",
-      "fetched_this_run": 8,
+      "generated_at": "2026-09-28T09:53:15+00:00",
+      "fetched_this_run": 0,
       "errors_this_run": 0,
       "enriched_total": 3316,
       "active_candidates_remaining": 0,
       "with_gutachten": 1846,
       "with_photos": 804,
-      "limit_per_run": 20,
-      "primed_states": [
-        "be",
-        "by",
-        "hb",
-        "he",
-        "nw",
-        "rp"
-      ],
+      "limit_per_run": 25,
+      "primed_states": [],
       "error_samples": []
     },
     "supplemental_merge": {
@@ -830,6 +828,28 @@
         "sh: Schleswig-Holstein nur 3 Verfahren (Warnschwelle 35)"
       ],
       "all_16_present": false
+    },
+    "report_photo_extraction": {
+      "generated_at": "2026-09-28T10:03:13+00:00",
+      "processed_this_run": 12,
+      "records_with_new_photos": 1,
+      "photos_created": 1,
+      "errors_this_run": 0,
+      "downloaded_bytes": 0,
+      "records_with_display_photos": 490,
+      "candidate_backlog": 1621,
+      "max_reports": 12,
+      "max_photos_per_report": 2,
+      "max_report_mb": 180.0,
+      "priority_ids": [
+        "he-55016"
+      ],
+      "error_samples": []
+    },
+    "smart_analysis": {
+      "generated_at": "2026-09-28T10:03:14+00:00",
+      "analyzed_this_run": 20,
+      "errors_this_run": 1
     }
   },
   "results": [
@@ -2146,7 +2166,50 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Rueckertstrasse 7, Schillerstrasse 45, 46+,10627+Berlin&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66772.pdf",
+        "source_signature": "v2:2747155:1790589153",
+        "pages": 25,
+        "text_chars": 34369,
+        "summary": "Carsten Kühne Dipl.-Wirtschaftsingenieur Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken Immobiliengutachter HypZert für finanzwirtschaftliche Zwecke und Marktwertermittlung Mitglied im Verband der vereidigten Sachverständigen e.V. Berlin und Brandenburg CIS HypZert (F/M) Gutachten Nr. 85325 über den Verkehrswert der Eigentumswohnung Nr.",
+        "facts": {
+          "baujahr": "2020",
+          "wohnflaeche_m2": "66.00",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48730",
@@ -2313,7 +2376,30 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Langgewend+,97772+Wildflecken&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125311.pdf",
+        "source_signature": "v2:1957033:1790589156",
+        "pages": 17,
+        "text_chars": 23872,
+        "summary": "Az.: 801 K 53/25 Datum: 15.01.2026 Abbildung: Das Bewertungsgrundstück ist orange hinterlegt. Quelle: BayernAtlas E x p o s é über den Verkehrswert der landwirtschaftlichen Fläche der Gemarkung Wildflecken, Fl.Nr. 2332 1.820,00 € Das Gutachten umfasst 17 Seiten inkl.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4084",
@@ -2484,7 +2570,61 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Falkensteinstrasse+7,+01814+Bad Schandau"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "108804.pdf",
+        "source_signature": "v2:2759681:1790589175",
+        "pages": 47,
+        "text_chars": 63299,
+        "summary": "24-000013 Az.: AG DD: 525 K 68/23 Sachverständigenbüro Andrea Bellmann Email: andrea.bellmann@web.de Lindenring 7, 01796 Pirna www.grundstueckswert-sachsen.de Tel. 03501-467862 Fax 468682 Lindenring 7, 01796 Pirna Tel. § 194 Baugesetzbuch für das mit einer Doppelhaushälfte bebaute Grundstück in 01814 Bad Schandau, Falkensteinstr.",
+        "facts": {
+          "baujahr": "1984",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "750"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 22
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 13
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-8309dca9ffc81499",
@@ -3026,7 +3166,60 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Ottostrasse 62&hnr=&plz=47198&ort=Duisburg"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "367015.pdf",
+        "source_signature": "v2:1085726:1790589165",
+        "pages": 33,
+        "text_chars": 62490,
+        "summary": "142 47057 Duisburg Tel.: 0203 374033 E-Mail: info@sv-wegmann.de www.sv-wegmann.de Steuernummer: 109-5221/0200 Commerzbank AG Duisburg IBAN DE07 3508 0070 0200 4902 00 BIC DEUTDEDB350 Lars Wegmann – Bismarckstr. 142 - 47057 Duisburg Amtsgericht Duisburg Zwangsversteigerung Postfach 10 01 10 47001 Duisburg Datum: 21. Februar 2025 AZ: 651 K 60-24 G U T A C H T E N über den (sanierungsunbeeinflussten) Verkehrswert (Marktwert) i.",
+        "facts": {
+          "baujahr": "1969",
+          "wohnflaeche_m2": "68",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 6
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168263",
@@ -3192,7 +3385,65 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Stadtpark 19&hnr=&plz=53359&ort=Rheinbach"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377981.pdf",
+        "source_signature": "v2:907903:1790589167",
+        "pages": 43,
+        "text_chars": 98346,
+        "summary": "Steffen Löw Niedertiefenbacher Weg 11d 65594 Runkel-Dehrn Az. des Gerichts: 11 K 15/25 G U T A C H T E N über den Verkehrswert (Marktwert) i.S.d. 3 bezeichnet sowie dem Sondernutzungsrecht an der Garage Nr.",
+        "facts": {
+          "baujahr": "1986",
+          "wohnflaeche_m2": "81",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "493"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 61
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "br-7281",
@@ -3403,7 +3654,65 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Hirschbergstrasse+3,+64823+Gross-Umstadt"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134246.pdf",
+        "source_signature": "v2:2450649:1790589161",
+        "pages": 41,
+        "text_chars": 69163,
+        "summary": "Sachverständiger (DIA) für bebaute und unbebaute Grundstücke, Mieten und Pachten / Immobilienfachwirt (Dipl.-VWA/IHK) Ringstraße 2, 64409 Messel Aktenzeichen: 30 K 42/24 Datum: 08.12.2025 Az.: 01/10/2025 di Verkehrswertgutachten (i.S.d. § 194 Baugesetzbuch) Südwestansicht über die Liegenschaft: Hirschbergstraße 3 in 64823 Groß-Umstadt Gutachten Nr. 01/10/2025 di / Seite 1 Messel, 08.12.2025 Verkehrswertgutachten (i.S.d.",
+        "facts": {
+          "baujahr": "1975",
+          "wohnflaeche_m2": "70.10",
+          "nutzflaeche_m2": "151.10",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 15
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13002",
@@ -3738,7 +4047,55 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Am Brink 24&hnr=&plz=32699&ort=Extertal"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377363.pdf",
+        "source_signature": "v2:1126977:1790589167",
+        "pages": 30,
+        "text_chars": 43674,
+        "summary": "Einfamilien-Wohnhaus, Am Brink 24, 32699 Extertal AG-Az.: 13 K 15 / 25 Detlef Korf – Zertifizierter Sachverständiger für Immobilienbewertung (EIPOS / IHK Dresden Reg.-Nr. 1221-05-2003) Seite 1 GUTACHTEN über den Verkehrswert (i. § 194 Baugesetzbuch) für: Einfamilien-Wohnhaus Am Brink 24, 32699 Extertal – Almena durch Detlef Korf finanz-domicil-Verm.",
+        "facts": {
+          "baujahr": "2000",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "138",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168453",
@@ -3903,7 +4260,65 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Guntherstrasse 167&hnr=&plz=50739&ort=Koeln"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378567.pdf",
+        "source_signature": "v2:1609418:1790589169",
+        "pages": 40,
+        "text_chars": 49274,
+        "summary": "Verkehrswertgutachten Einfamilienreihenmittelhaus Guntherstraße 167 in 50739 Köln-Mauenheim - 1 - DIPL.-ING. Der Verkehrswert (Marktwert) des mit einem Einfamilienreihenmittelhaus bebauten Grundstücks Guntherstraße 167 in Köln-Mauenheim wird ermittelt zum Bewertungsstichtag 03.11.2025 zu: 520.000 € Das Wertgutachten besteht aus 46 Seiten inkl. 12 Anlagen mit 20 Seiten und ist in 4-facher Ausfertigung angefertigt.",
+        "facts": {
+          "baujahr": "2025",
+          "wohnflaeche_m2": "165",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 17
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168599",
@@ -4010,7 +4425,61 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Wigginghausen 2&hnr=&plz=58849&ort=Herscheid"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "379073.pdf",
+        "source_signature": "v2:683015:1790589170",
+        "pages": 42,
+        "text_chars": 66918,
+        "summary": "A R C H I T E K T I N U R S U L A T R I M P O P P L A N U N G U N D B A U M A N A G E M E N T D I P L . M A R K U S T R O M P E T T E R V O N D E R S I H K Z U H A G E N Ö F F E N T L I C H B E S T E L L T E R U N D V E R E I D I G T E R S A C H V E R S T Ä N D I G E R F Ü R S C H Ä D E N A N G E B Ä U D E N S T A A T L . A N E R K A N N T E R E N E R G I E B E R A T E R D I P L .",
+        "facts": {
+          "baujahr": "1964",
+          "wohnflaeche_m2": "118.00",
+          "nutzflaeche_m2": "28.00",
+          "grundstueck_m2": "7338.00"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 24
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4034",
@@ -4669,7 +5138,50 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Rueckertstrasse 7, Schillerstrasse 45, 46+,10627+Berlin&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66800.pdf",
+        "source_signature": "v2:2420654:1790589153",
+        "pages": 25,
+        "text_chars": 34353,
+        "summary": "Carsten Kühne Dipl.-Wirtschaftsingenieur Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken Immobiliengutachter HypZert für finanzwirtschaftliche Zwecke und Marktwertermittlung Mitglied im Verband der vereidigten Sachverständigen e.V. Berlin und Brandenburg CIS HypZert (F/M) Gutachten Nr. 85225 über den Verkehrswert der Eigentumswohnung Nr.",
+        "facts": {
+          "baujahr": "2020",
+          "wohnflaeche_m2": "56.00",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-89f6c3dd35f25d62",
@@ -4962,7 +5474,45 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Giggenhauser Str.+21,85354+Freising&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125877.pdf",
+        "source_signature": "v2:2879262:1790589156",
+        "pages": 27,
+        "text_chars": 44716,
+        "summary": "Keber Königsberger Sachverständige GmbH & Co. Ausfertigung Das Gutachten umfasst einschließlich Anlagen und Fotos 27 Seiten und wurde für den Auftraggeber in dreifacher Ausfertigung erstellt. Keber Königsberger ’O’ IMMOBILIENGUTACHTER ■ REAL ESTATE VALUER j HypZert m i RICS unbebautes Grundstück Stichtag 11.12.2025 Giggenhauser Straße 21 in 85354 Freising WE 25114170 Seite 2/27 Inhalt 1.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "2000",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 10
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49053",
@@ -5250,7 +5800,55 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Gross-Umstaedter Strasse +25,+64823+Gross-Umstadt"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134324.pdf",
+        "source_signature": "v2:2207753:1790589161",
+        "pages": 47,
+        "text_chars": 89386,
+        "summary": "STRUNCK & MEINZER Bewertung von Immobilien SV-Büro Strunck & Meinzer \u0001 Thaddenstr.14 A \u0001 69469 Weinheim Amtsgericht Dieburg - Zwangsversteigerungsabteilung - Frau Moos Bei der Erlesmühle 1 64807 Dieburg Marion Strunck Dipl. Betriebswirtin (BA) Sachverständige für Immobilienbewertung www.BewertungvonImmobilien.de Datum: 08.03.2024 AZ.: DB 30K37/23 G U T A C H T E N über den Verkehrswert (Marktwert) i. § 194 Baugesetzbuch für das mit einem Einfamilienhaus bebaute Grundstück in 64823 Groß-Umstadt, Groß-Umstädter Str.",
+        "facts": {
+          "baujahr": "2006",
+          "wohnflaeche_m2": "68",
+          "nutzflaeche_m2": "68",
+          "grundstueck_m2": "700"
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 46
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13141",
@@ -5371,7 +5969,31 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Suedring 15+0,+26759+Hinte"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "32329.pdf",
+        "source_signature": "v2:51174:1790589163",
+        "pages": 2,
+        "text_chars": 2217,
+        "summary": "Kurzbeschreibung Allgemein Verfahren: Amtsgericht Emden zu NZS 9 K 19/23 Erbbaurechtsgrundbuch: von Suurhusen, Blatt 802, lfd. 1 Katasterbezeichnung: Gemarkung Suurhusen, Flur 1 a) Flurstück Nr. vorliegenden Ablichtungen der Baupläne teilweise unterkellertes Einfamilien-Wohnhaus mit einem Vollgeschoss bzw.",
+        "facts": {
+          "baujahr": "1953",
+          "wohnflaeche_m2": "95.84",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49120",
@@ -5584,7 +6206,50 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Flst. 422+,00000+Gemarkung Pittriching&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126722.pdf",
+        "source_signature": "v2:2553465:1790589157",
+        "pages": 37,
+        "text_chars": 68797,
+        "summary": "(FH) SACHVERSTÄNDIGER FÜR DIE BEWERTUNG VON GRUNDSTÜCKEN UND GEBÄUDEN MITGLIED DES GUTACHTERAUSSCHUSSES DER STADT AUGSBURG 86405 MEITINGEN • HANS-ADLHOCH-STR. 0176/96053444 • archziegler@gmx.de __________________________________________________________________________________ Az.: K 58/24 GUTACHTEN über den Verkehrswert |Marktwert Grundstück der Gemarkung Prittriching Fl.Nr. 422, In der Kultur, Gebäude- und Freifläche, Landwirtschaftsfläche zu 2,2409 ha zum Bewertungsstichtag: 24.",
+        "facts": {
+          "baujahr": "1999",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "480",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 5
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 27
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4175",
@@ -5811,7 +6476,12 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Boltenhagener Strasse +84,+01109+Dresden "
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source_file": "109419.pdf",
+        "error": "PDF enthält zu wenig extrahierbaren Text"
+      }
     },
     {
       "id": "by-48614",
@@ -5974,7 +6644,55 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Schlossweg+7,96465+Neustadt b. Coburg&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "124905.pdf",
+        "source_signature": "v2:2451071:1790589155",
+        "pages": 17,
+        "text_chars": 45366,
+        "summary": "SACHVERSTÄNDIGER & BERATENDER INGENIEUR A u s z u g a u s d e m V e r k e h r s w e r t g u t a c h t e n i. § 74a Zwangsversteigerungsgesetz (ZVG) für das mit einem Ein- bis Zweifamilienhaus bebaute Grundstück Gemarkung Ketschenbach | Flurstück 299/1 | Schloßweg 7 | 96465 Neustadt bei Coburg B E G U T A C H T E T E R V E R K E H R S W E R T 1 5 7 . § 74a ZVG - Auftraggeberin: Amtsgericht Coburg Aktenzeichen: 1 K 25/24 Wertermittlungs- und Qualitätsstichtag am 07.",
+        "facts": {
+          "baujahr": "1954",
+          "wohnflaeche_m2": "178",
+          "nutzflaeche_m2": "74",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 18
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "sl-12652",
@@ -6280,7 +6998,55 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Faehrallee+2,12527+Berlin&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "67457.pdf",
+        "source_signature": "v2:773421:1790589154",
+        "pages": 50,
+        "text_chars": 69158,
+        "summary": "§ 194 Baugesetzbuch (BauGB) das Grundstück in 12527 Berlin-Schmöckwitz Fährallee 2 ERSTATTET VOM DIPL.-ING. Allgemeine Angaben zum Auftrag .......................................................................... Rechtliche Gegebenheiten .......................................................................................",
+        "facts": {
+          "baujahr": "1906",
+          "wohnflaeche_m2": "170",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-4491e8b278a33071",
@@ -6575,7 +7341,55 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Pfaffenberg+7,92449+Steinberg&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125670.pdf",
+        "source_signature": "v2:2298564:1790589156",
+        "pages": 48,
+        "text_chars": 75363,
+        "summary": "ZVG Innen- und Außenbesichtigung möglich Anonymisierte Kurzversion! BEWERTUNG NACH ÄUSSEREM AUGENSCHEIN Auftraggeber Amtsgericht Amberg - Abteilung für Zwangsversteigerungssachen - Paulanerplatz 4 92224 Amberg Eigentümer Anonymisiert Gutachten Nr. 1 K 9/24 Objektart Einfamilienhaus mit Doppelgarage Objektadresse Paffenberg 7, 92449 Steinberg am See Tag Ortstermin 19.",
+        "facts": {
+          "baujahr": "1994",
+          "wohnflaeche_m2": "137",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 4
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 21
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49058",
@@ -6761,7 +7575,70 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Saubsdorfer Strasse+16 a,+86807+Buchloe"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126488.pdf",
+        "source_signature": "v2:1132354:1790589157",
+        "pages": 47,
+        "text_chars": 89819,
+        "summary": "16a in 86807 Buchloe, Flurstück 2425/26 der Gemarkung Buchloe sowie des PKW-Außenstellplatzes, Nähe Saubsdorfer Str. in 86807 Buchloe, Flurstück 2425/30 der Gemarkung Buchloe Dieses Gutachten umfasst 47 Seiten inklusive Deckblatt. Aktenzeichen des Gerichts K 41/25 Auftraggeber Amtsgericht Kaufbeuren – (Abteilung für Zwangsversteigerungs- und Zwangsvollstreckungssachen) Gutachten-Nr.",
+        "facts": {
+          "baujahr": "2011",
+          "wohnflaeche_m2": "133",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 33
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49071",
@@ -6867,7 +7744,66 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Wuerzburger Strasse+12 a,97228+Rottendorf&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126538.pdf",
+        "source_signature": "v2:2128899:1790589157",
+        "pages": 66,
+        "text_chars": 149278,
+        "summary": "Hohe Leite 6 - 97532 Üchtelhausen/Zell - Tel: 09720950153 - Fax: 09720950152 Bank: Targobank Schweinfurt ( BLZ 300 209 00 ) Konto 1304732073 Florian Muck Dipl.- Sachverständiger ( DIA ) für die Bewertung bebauter u. Umfang des Gutachtens: 65 Seiten + Deckblatt Florian Muck - Dipl.-Sachverständiger ( DIA ) für die Bewertung bebauter u. Form Seite(n) 20 – 22 7.5.7 Auswahl der Bewirtschaftungskosten Seite(n) 43 – 44 2.3.9 Öffentlich-/rechtliche Situation Seite(n) 22 – 23 7.5.8 Jahresreinertrag des Grundstückes Seite(n) 44 7.5.9 Bodenwertverzinsungsbetrag Seite(n) 44 – 45 3.0 Planungs- u.",
+        "facts": {
+          "baujahr": "2006",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 51
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13113",
@@ -7252,7 +8188,55 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Heuweg 2 a&hnr=&plz=47625&ort=Kevelaer"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-28T10:03:14+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378075.pdf",
+        "source_signature": "v2:953479:1790589167",
+        "pages": 62,
+        "text_chars": 115672,
+        "summary": "§ 194 Baugesetzbuch für die folgend aufgeführten Grundstücke in 47625 Kevelaer, Heuweg 2a !!! im Zwangsversteigerungsverfahren 009 K 2/25 1) Grundbuch von Wetten, Blatt 2056, lfd. 1 Grundstück, bebaut mit Stallgebäuden und einer Betriebsleiterwohnung 2) Grundbuch von Wetten, Blatt 2056, lfd.",
+        "facts": {
+          "baujahr": "1958",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": "41",
+          "grundstueck_m2": "38839"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 25
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 46
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168565",
@@ -7345,7 +8329,8 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Burgbongert 25, 27, 31&hnr=&plz=41199&ort=Moenchengladbach"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "sl-12648",
@@ -7725,7 +8710,8 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Parkallee 7+0,+27616+Beverstedt"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "he-55100",
@@ -7860,7 +8846,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 6901.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=134055&zvg_id=55100",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/he-55100/134055.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/he-55100/134055.pdf",
+          "cached_bytes": 70670,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:32+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,
@@ -8134,7 +9126,8 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Parkallee 7+0,+27616+Beverstedt"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-167135",
@@ -9612,7 +10605,8 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Barbarastrasse 9&hnr=&plz=50389&ort=Wesseling"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "nw-168056",
@@ -10860,7 +11854,8 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Ottostrasse 58,60,62,64 (hier Ottostr. 64)&hnr=&plz=47198&ort=Duisburg"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "th-3066",
@@ -13753,7 +14748,8 @@
         "http://maps.google.de/maps?f=q&hl=de&geocode=&q=Duerrenberg +3,97084+Wuerzburg&sll=51.151786,10.415039&sspn=9.101599,16.54541&ie=UTF8&t=h&z=16"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "by-48957",
@@ -13936,7 +14932,8 @@
         "http://maps.google.de/maps?f=q&source=s_q&output=html&hl=de&q=Breslauer Strasse+10,+64720+Michelstadt"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "mv-official-bbf6f2b8fdaa3e8c",
@@ -14203,7 +15200,9 @@
         "https://map.nrw/client/?ref_src=zvg&strasse=Pastorskamp 17&hnr=&plz=51381&ort=Leverkusen"
       ],
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-28T10:03:13+00:00",
+      "report_photo_source_file_id": "374212"
     },
     {
       "id": "nw-167923",
@@ -171838,7 +172837,13 @@
           "type": "bekanntmachung",
           "file_id": "380527",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380527&zvg_id=169033"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380527&zvg_id=169033",
+          "cached_path": "media/nw-169033/380527.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169033/380527.pdf",
+          "cached_bytes": 74315,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:36+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "gutachten",
@@ -171846,7 +172851,13 @@
           "name": "Gutachten",
           "size_kb": 104351.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380528&zvg_id=169033",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/nw-169033/380528.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169033/380528.pdf",
+          "cached_bytes": 1068553,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:37+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -171854,7 +172865,13 @@
           "name": "Exposee",
           "size_kb": 2418.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380529&zvg_id=169033",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/nw-169033/380529.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169033/380529.pdf",
+          "cached_bytes": 24762,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:36+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -171862,7 +172879,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 7257.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380527&zvg_id=169033",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/nw-169033/380527.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169033/380527.pdf",
+          "cached_bytes": 74315,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:36+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,
@@ -204771,7 +205794,13 @@
           "type": "bekanntmachung",
           "file_id": "6502",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6502&zvg_id=4340"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6502&zvg_id=4340",
+          "cached_path": "media/rp-4340/6502.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/rp-4340/6502.pdf",
+          "cached_bytes": 224935,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:48+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -204779,7 +205808,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 21966.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=rp&file_id=6502&zvg_id=4340",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/rp-4340/6502.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/rp-4340/6502.pdf",
+          "cached_bytes": 224935,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:49+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,
@@ -230039,7 +231074,13 @@
           "type": "bekanntmachung",
           "file_id": "67864",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=be&file_id=67864&zvg_id=14482"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=be&file_id=67864&zvg_id=14482",
+          "cached_path": "media/be-14482/67864.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/be-14482/67864.pdf",
+          "cached_bytes": 118915,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:49+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -230047,7 +231088,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 11613.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=be&file_id=67864&zvg_id=14482",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/be-14482/67864.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/be-14482/67864.pdf",
+          "cached_bytes": 118915,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:49+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "gutachten",
@@ -230055,7 +231102,13 @@
           "name": "Gutachten",
           "size_kb": 172151.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=be&file_id=67862&zvg_id=14482",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/be-14482/67862.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/be-14482/67862.pdf",
+          "cached_bytes": 1762829,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:50+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -230063,7 +231116,13 @@
           "name": "Exposee",
           "size_kb": 42154.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=be&file_id=67865&zvg_id=14482",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/be-14482/67865.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/be-14482/67865.pdf",
+          "cached_bytes": 431656,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:50+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "foto",
@@ -230071,7 +231130,17 @@
           "name": "Foto",
           "size_kb": 13414.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=be&file_id=67861&zvg_id=14482",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/be-14482/67861.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/be-14482/67861.pdf",
+          "cached_bytes": 137362,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:50+00:00",
+          "cache_status": "ok",
+          "photo_validation_version": 3,
+          "photo_quality_pass": false,
+          "photo_quality_mode": "rejected-document-like-pdf",
+          "preview_error": "Kein belastbares Objektfoto erkannt"
         }
       ],
       "score": null,
@@ -272173,7 +273242,13 @@
           "type": "bekanntmachung",
           "file_id": "8347",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=hb&file_id=8347&zvg_id=4822"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=hb&file_id=8347&zvg_id=4822",
+          "cached_path": "media/hb-4822/8347.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/hb-4822/8347.pdf",
+          "cached_bytes": 63619,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:51+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -272181,7 +273256,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 6213.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=hb&file_id=8347&zvg_id=4822",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/hb-4822/8347.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/hb-4822/8347.pdf",
+          "cached_bytes": 63619,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:51+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -272189,7 +273270,13 @@
           "name": "Exposee",
           "size_kb": 29333.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=hb&file_id=8348&zvg_id=4822",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/hb-4822/8348.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/hb-4822/8348.pdf",
+          "cached_bytes": 300366,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:51+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,
@@ -320836,7 +321923,13 @@
           "type": "bekanntmachung",
           "file_id": "127660",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127660&zvg_id=49371"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127660&zvg_id=49371",
+          "cached_path": "media/by-49371/127660.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49371/127660.pdf",
+          "cached_bytes": 136592,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:53+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -320844,7 +321937,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 13339.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127660&zvg_id=49371",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49371/127660.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49371/127660.pdf",
+          "cached_bytes": 136592,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:53+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "gutachten",
@@ -320852,7 +321951,13 @@
           "name": "Gutachten",
           "size_kb": 113683.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127663&zvg_id=49371",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49371/127663.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49371/127663.pdf",
+          "cached_bytes": 1164112,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:54+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -320860,7 +321965,13 @@
           "name": "Exposee",
           "size_kb": 6758.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127661&zvg_id=49371",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49371/127661.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49371/127661.pdf",
+          "cached_bytes": 69199,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:53+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -320868,7 +321979,13 @@
           "name": "Exposee",
           "size_kb": 1719.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127662&zvg_id=49371",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49371/127662.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49371/127662.pdf",
+          "cached_bytes": 176030,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:53+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,
@@ -322938,7 +324055,13 @@
           "type": "bekanntmachung",
           "file_id": "127658",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127658&zvg_id=49370"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127658&zvg_id=49370",
+          "cached_path": "media/by-49370/127658.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49370/127658.pdf",
+          "cached_bytes": 125194,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:54+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -322946,7 +324069,13 @@
           "name": "Exposee",
           "size_kb": 1719.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127657&zvg_id=49370",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49370/127657.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49370/127657.pdf",
+          "cached_bytes": 176030,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:54+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -322954,7 +324083,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 12226.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127658&zvg_id=49370",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49370/127658.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49370/127658.pdf",
+          "cached_bytes": 125194,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:54+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "gutachten",
@@ -322962,7 +324097,13 @@
           "name": "Gutachten",
           "size_kb": 262673.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127656&zvg_id=49370",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49370/127656.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49370/127656.pdf",
+          "cached_bytes": 2689773,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:55+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "expose",
@@ -322970,7 +324111,13 @@
           "name": "Exposee",
           "size_kb": 6758.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127659&zvg_id=49370",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/by-49370/127659.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49370/127659.pdf",
+          "cached_bytes": 69199,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:54+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,
@@ -363603,7 +364750,13 @@
           "type": "bekanntmachung",
           "file_id": "380530",
           "name": null,
-          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380530&zvg_id=169034"
+          "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380530&zvg_id=169034",
+          "cached_path": "media/nw-169034/380530.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169034/380530.pdf",
+          "cached_bytes": 73460,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:55+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "gutachten",
@@ -363611,7 +364764,13 @@
           "name": "Gutachten",
           "size_kb": 191278.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380531&zvg_id=169034",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/nw-169034/380531.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169034/380531.pdf",
+          "cached_bytes": 1958691,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:56+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "bekanntmachung",
@@ -363619,7 +364778,13 @@
           "name": "amtliche Bekanntmachung",
           "size_kb": 7174.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380530&zvg_id=169034",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/nw-169034/380530.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169034/380530.pdf",
+          "cached_bytes": 73460,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:55+00:00",
+          "cache_status": "ok"
         },
         {
           "type": "gutachten",
@@ -363627,7 +364792,13 @@
           "name": "Gutachten",
           "size_kb": 7628.0,
           "url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=nw&file_id=380532&zvg_id=169034",
-          "requires_portal_context": true
+          "requires_portal_context": true,
+          "cached_path": "media/nw-169034/380532.pdf",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-169034/380532.pdf",
+          "cached_bytes": 78108,
+          "content_type": "application/pdf",
+          "cached_at": "2026-09-28T09:53:56+00:00",
+          "cache_status": "ok"
         }
       ],
       "score": null,

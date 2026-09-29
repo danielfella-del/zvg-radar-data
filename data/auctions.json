@@ -571,13 +571,13 @@
     "geodata_source": "WZB Berlin PLZ-Geokoordinaten (Apache 2.0) - https://github.com/WZBSocialScienceCenter/plz_geocoord",
     "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
     "media_cache": {
-      "generated_at": "2026-09-29T18:00:08+00:00",
+      "generated_at": "2026-09-29T19:02:25+00:00",
       "downloaded_this_run": 0,
       "failed_this_run": 3,
       "bytes_this_run": 0,
-      "with_cached_photos": 494,
-      "with_cached_pdfs": 3232,
-      "with_cached_gutachten": 1823,
+      "with_cached_photos": 478,
+      "with_cached_pdfs": 3188,
+      "with_cached_gutachten": 1802,
       "max_file_mb": 24.0,
       "max_run_mb": 90.0,
       "horizon_days": 180,
@@ -617,17 +617,17 @@
           "error": "Portal lieferte HTML statt Datei"
         }
       ],
-      "report_photo_extraction_at": "2026-09-29T18:00:26+00:00"
+      "report_photo_extraction_at": "2026-09-29T19:02:59+00:00"
     },
     "detail_enrichment": {
-      "generated_at": "2026-09-29T18:44:30+00:00",
+      "generated_at": "2026-09-29T18:54:40+00:00",
       "fetched_this_run": 0,
       "errors_this_run": 0,
       "enriched_total": 3280,
       "active_candidates_remaining": 0,
       "with_gutachten": 1823,
       "with_photos": 783,
-      "limit_per_run": 20,
+      "limit_per_run": 25,
       "primed_states": [],
       "error_samples": []
     },
@@ -1307,6 +1307,28 @@
         "sh: Schleswig-Holstein nur 3 Verfahren (Warnschwelle 35)"
       ],
       "all_16_present": false
+    },
+    "report_photo_extraction": {
+      "generated_at": "2026-09-29T19:02:59+00:00",
+      "processed_this_run": 12,
+      "records_with_new_photos": 7,
+      "photos_created": 12,
+      "errors_this_run": 0,
+      "downloaded_bytes": 0,
+      "records_with_display_photos": 478,
+      "candidate_backlog": 1618,
+      "max_reports": 12,
+      "max_photos_per_report": 2,
+      "max_report_mb": 180.0,
+      "priority_ids": [
+        "he-55016"
+      ],
+      "error_samples": []
+    },
+    "smart_analysis": {
+      "generated_at": "2026-09-29T19:03:00+00:00",
+      "analyzed_this_run": 20,
+      "errors_this_run": 0
     }
   },
   "results": [
@@ -2634,7 +2656,70 @@
       "detail_description": "Laut Gutachten: freistehendes Einfamilienhaus, ca. 201 qm Wohnfläche, Vollkeller, ausgebautes Dachgeschoß.",
       "court_url": "http://www.ag-detmold.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378825.pdf",
+        "source_signature": "v2:930446:1790708069",
+        "pages": 67,
+        "text_chars": 85742,
+        "summary": "Roland Murschall - Postfach 1161 - 33804 Oerlinghausen Amtsgericht Detmold Heinrich-Drake-Str. ROLAND M U R S C H A L L Architekt und Sachverständiger 33813 Oerlinghausen - Auf dem Berge 11 Von der Architektenkammer Nordrhein-Westfalen öffentlich bestellter und vereidigter Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken 2. März 2026 Zwangsversteigerung Es handelt sich hier um die Internetversion des Gutachtens.",
+        "facts": {
+          "baujahr": "1980",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "bw-official-96648671346dfac5",
@@ -3019,7 +3104,65 @@
       "detail_description": "Einseitig angebautes Einfamilienhaus (Doppelhaushälfte) in II-geschossiger Bauweise, unterkellert mit zu Wohnzwecken ausgebautem Dachgeschoss, in Inden-Lamersdorf, Am Wehebach 68. Wohnfläche: ca. 123,5 qm; Fertiggarage. Es fand nur eine Bewertung von außen statt.",
       "court_url": "http://www.ag-juelich.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377344.pdf",
+        "source_signature": "v2:941340:1790708067",
+        "pages": 42,
+        "text_chars": 90918,
+        "summary": "Die Internetversion unterscheidet sich von dem Originalgutachten dadurch, dass es keine Anlagen (Katasterplan, Bauzeichnungen pp.) enthält. Sie können nach telefonischer Rücksprache (Tel. 02461-681-0) auf der Geschäftsstelle des Amtsgerichts Jülich eingese- hen werden.",
+        "facts": {
+          "baujahr": "1991",
+          "wohnflaeche_m2": "123.5",
+          "nutzflaeche_m2": "0",
+          "grundstueck_m2": "381.00"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 5
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 27
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 25
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "br-7285",
@@ -3324,7 +3467,66 @@
       "detail_description": "Objektbeschreibung/Lage (lt Angabe d. Sachverständigen) : Einfamilienhaus, Baujahr nicht feststellbar, vermutlich Anfang der 1950 er Jahre, keine Innenbesichtigung, Energieausweis lag nicht vor, vermietet, Wohnfläche Erd- und Obergeschoss ca. 85 m², hinsichtlich von Baumängeln sowie Bauschäden wird auf die differenzierte Darstellung im Gutachten verwiesen. Augenscheinlich jedoch nicht gänzlich ungepflegtes Anwesen in altersgemäßem Normalzustand ( vermutlich mit Schwerpunkt Anfang der 1980er Jahre modernisierte Immobilie aus der Nachkriegszeit). Lt. Denkmalliste der Stadt Würzburg bzw. It. Denkmalliste des Landesamtes für Denkmalpflege in Bayern ( als obere Denkmalschutzbehörde ) stellt das Anwesen Fl. Nr. 161 der Gemarkung Heidingsfeld kein Denkmal nach Denkmalliste dar ( auch nicht in Teilbereichen ), allerdings befindet sich die Grundstücksfläche im Bereich eines Bodendenkmals. Das Bodendenkmal (Aktennummer D-6-6225-0361)ist in der Denkmalliste wie folgt beschrieben: Archäologische Befunde des Mittelalters und der frühen Neuzeit im Bereich des Stadtkernes von Heidingsfeld.",
       "court_url": "http://www.justiz.bayern.de/gericht/ag/wue/",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "125902.pdf",
+        "source_signature": "v2:2300145:1790708059",
+        "pages": 64,
+        "text_chars": 150529,
+        "summary": "Hohe Leite 6 - 97532 Üchtelhausen/Zell - Tel: 09720950153 - Fax: 09720950152 Bank: Targobank Schweinfurt ( BLZ 300 209 00 ) Konto 1304732073 Florian Muck Dipl.- Sachverständiger ( DIA ) für die Bewertung bebauter u. Umfang des Gutachtens: 63 Seiten + Deckblatt Florian Muck - Dipl.-Sachverständiger ( DIA ) für die Bewertung bebauter u. Form Seite(n) 23 – 25 7.5.7 Auswahl der Bewirtschaftungskosten Seite(n) 44 – 45 2.3.9 Öffentlich-/rechtliche Situation Seite(n) 25 – 26 7.5.8 Jahresreinertrag des Grundstückes Seite(n) 45 7.5.9 Bodenwertverzinsungsbetrag Seite(n) 45 – 46 3.0 Planungs- u.",
+        "facts": {
+          "baujahr": "1965",
+          "wohnflaeche_m2": "150",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 45
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48957",
@@ -3507,7 +3709,71 @@
       "detail_description": "Einfamilienhaus",
       "court_url": "http://www.ag-michelstadt.justiz.hessen.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133639.pdf",
+        "source_signature": "v2:1907730:1790708062",
+        "pages": 52,
+        "text_chars": 88964,
+        "summary": "Von der IHK öffentlich bestellter und vereidigter freier Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken. Freier Sachverständiger für Mieten und Pachten. Ost West Nord Amtsgericht Michelstadt AZ: 21 K 11/24 05.03.2024 NASEDY Sachverständigenbüro Dipl.",
+        "facts": {
+          "baujahr": "1973",
+          "wohnflaeche_m2": "82.84",
+          "nutzflaeche_m2": "51.50",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 4
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 15
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 37
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "mv-official-bbf6f2b8fdaa3e8c",
@@ -3819,7 +4085,65 @@
       "detail_description": "Laut Wertgutachten handelt es sich um eine Eigentumswohnung Nr. 7 im 1.OG, Werkstraße 48, 52224 Stolberg / Zweifall, in Mehrfamilienhaus mit 10 Wohneinheiten, zwei Zimmer, Küche, Diele, Flur, Bad, Balkon und Kellerraum, Wohnfläche rd. 59 m², zzgl. Sondernutzungsrecht an Außenstellplatz Nr. 700, Baujahr ca. 1995.",
       "court_url": "http://www.ag-eschweiler.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376893.pdf",
+        "source_signature": "v2:1140980:1790708067",
+        "pages": 37,
+        "text_chars": 70510,
+        "summary": "20, 52477 Alsdorf Telefon: 02404 - 6777 582 Fax: 02404 - 6777 579 E- mail: irisackermann@freenet.de Seite 1 von 37 Wohnungseigentum Nr. 7 / 1.OG - Werkstraße 48, Stolberg / Zweifall 43K01-25.GUTACHTEN GUTACHTEN Amtsgericht Eschweiler - 43 K 01 / 25 - über den Verkehrswert des Wohnungseigentums Nr. OG Mitte mit Sondernutzungsrecht an Stellplatz Nr.",
+        "facts": {
+          "baujahr": "1995",
+          "wohnflaeche_m2": "59",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 16
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168014",
@@ -3970,7 +4294,65 @@
       "detail_description": "Hohenrenner Weg 13, 32825 Blomberg Laut Verkehrswertgutachten handelt es sich um ein Zweifamilienhaus mit einer Wohnfläche von ca. 144 qm (Baujahr 1938 nebst Anbau aus 1981) mit Garage.",
       "court_url": "http://www.ag-blomberg.nrw.de/",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377178.pdf",
+        "source_signature": "v2:1549301:1790708067",
+        "pages": 75,
+        "text_chars": 128311,
+        "summary": "Auftraggeber: Amtsgericht Blomberg Dipl.-Ing. Gabriele Stork Sachverständige für Immobilienbewertung (EIPOS) Lärchenweg 5 32805 Horn – Bad Meinberg Tel. 05234 204 256 Mobil 0160 8423 616 Info@gs-immobilienbewertung.de Aktenzeichen: 21 K 6/25 Gutachten- Nr.: GAB 2025.011 Datum: 11.11.2025 Gutachten über den Verkehrswert gem.",
+        "facts": {
+          "baujahr": "1938",
+          "wohnflaeche_m2": "144",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "418"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 29
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 19
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 42
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 13
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168077",
@@ -4242,7 +4624,60 @@
       "detail_description": "lt. Gutachten handelt es sich um ein 2-geschossiges Einfamilienhaus, mit nicht ausgebautem DG, nicht unterkellert. Massiver Mauerwerksbau mit flach geneigtem Satteldach. Eingeschossiger Anbau mit Flachdach. Eine Innenbesichtigung hat nicht stattgefunden. BGF: 396 m² WFL: 278 m² Bj.: ursprünglich 1897, An-/Umbau: 1963/1964 Das Grundstück wird über das vorgelagerte Nachbargrundstück Flurstück 77 erschlossen.. Notwegerecht, Bl. 36 GA",
       "court_url": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377554.pdf",
+        "source_signature": "v2:2365494:1790708067",
+        "pages": 62,
+        "text_chars": 98629,
+        "summary": "Grundschule H Gymnasium * Q H © Hauptschule JT© Ç.-Ür ’-A*v.Y • % Kjtrrnbrrq^C.T K indertagessfitte » •■• Voqc Dm- i m Pv ET ' 'AlûnrÆiSuù.^ ? Es handelt sich um eine statistische Wahrscheinlichkeit, die nur einen Anhaltspunkt dafür bietet wie oft dieser Regen wirklich auftreten kann. Auf der Karte wird die Ausdehnung der Überschwemmung flächenhaft gezeigt.",
+        "facts": {
+          "baujahr": "1949",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168241",
@@ -4407,7 +4842,60 @@
       "detail_description": "Grundstück bebaut mit Einfamilienhaus (Doppelhaushälfte), voll unterkellert, zweigeschossig mit ausgebautem Dachgeschoss und ausgebautem Spitzboden, ca 144 m² Wohnfläche Kontakt Immobilienmanagerin: Frau Laufenberg Tel.: 06101 98911 568",
       "court_url": "http://www.ag-bonn.nrw.de/aufgaben/abteilungen/Zwangsversteigerung/index.php",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377912.pdf",
+        "source_signature": "v2:814660:1790708068",
+        "pages": 30,
+        "text_chars": 73813,
+        "summary": "Januar 2026 Verkehrswert: 575.000 EUR Dieses Gutachten enthält ohne Deckblatt 25 Seiten. Es wurde in vier Ausfertigungen erstellt, davon eine für meine Unterlagen. 3 2 Grundstück ....................................................................................................................",
+        "facts": {
+          "baujahr": "1987",
+          "wohnflaeche_m2": "144",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 8
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168296",
@@ -4543,7 +5031,52 @@
       "detail_description": "Laut Gutachten – ohne Innenbesichtigung - : Eigentumswohnung in einem Wohn- und Geschäftsgebäude im 2. OG bestehend aus Diele, Küche, Bad, WC, Wohnzimmer, Kinderzimmer, Arbeitszimmer, Schlafzimmer; Wohnfläche (nach Teilungserklärung) 99,58 m², Ursprungsbaujahr: 1897, Wiederaufbau Teils 1953, teils 1962; unterdurchschnittlicher baulicher Zustand; erhöhter Modernisierungs-, Unterhaltungsstau und Renovierungsbedarf; Es liegt eine Eintragung im Altlastenverdachtsflächenkataster der Stadt Hagen vor; von 1856 bis 1895 wurde hier ein Gaswerk betrieben. Der Gutachter kommt zu der Bewertung, dass das zu bewertende Objekt in den nächsten Jahrzehnten nicht durch einen Neubau ersetzt wird, bei welchem Kosten — bezogen auf den Altlastenverdacht — entstehen würden. Der Altlastenverdacht kommt erst dann zum Tragen, wenn eine Neuausnutzung des Grundstücks durchgeführt wird. Sollten jedoch bei zukünftigen Baumaßnahmen Untergrundarbeiten erforderlich sein, sind weitere Untersuchungen erforderlich. Ein gesondertes Altlastengutachten wurde daher nicht eingeholt.",
       "court_url": "http://www.ag-hagen.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:43+00:00",
+      "report_photo_source_file_id": "378085",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378085.pdf",
+        "source_signature": "v2:748378:1790708068",
+        "pages": 52,
+        "text_chars": 103473,
+        "summary": "Immobilienbewertung - Grundstücksbewertung - Mieten und Pachten - Bauschäden    H. OG nebst Ab- stellraum im Keller, im Aufteilungsplan mit Nr. 5 bezeichnet  Verkehrswert des Wohnungseigentums w       58.600,00 €.",
+        "facts": {
+          "baujahr": "1994",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168326",
@@ -4726,7 +5259,60 @@
       "detail_description": "Laut Wertgutachten handelt es sich um ein massives unterkellertes zweigeschossiges Einfamilienhaus mit ausgebauten Dachgeschoss nebst Anbau als Zweifamilienhaus (Baujahr 1925, Anbau 2003, Dachgeschossausbau 2018, Wohnfläche ca. 194 m²).",
       "court_url": "http://www.ag-rheine.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378168.pdf",
+        "source_signature": "v2:1640871:1790708068",
+        "pages": 47,
+        "text_chars": 99284,
+        "summary": "20 48143 Münster 46399 Bocholt Telefon 0251-87126-31 Telefon 02871-29205-87 Mail info@immobiliengutachter.ms Homepage: www.immobiliengutachter.ms Datum: 24.09.2025 Az.: 1724-2025 Gerichts-Az: 12 K 40/24 G U T A C H T E N über den Verkehrswert (Marktwert) i. § 194 Baugesetzbuch für das mit einem Zweifamilienhaus bebaute Grundstück in 48429 Rheine, Servatiistraße 2a Grundbuch Blatt lfd. Rheine Stadt 10362 4 Gemarkung Flur Flurstücke Rheine Stadt 158 1126 Der Verkehrswert des Grundstücks wurde zum Stichtag 07.08.2025 ermittelt mit rd.",
+        "facts": {
+          "baujahr": "1925",
+          "wohnflaeche_m2": "194.00",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "500"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 53
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168408",
@@ -4891,7 +5477,50 @@
       "detail_description": "Laut Gutachten ist das 1.138 m² große Grundstück (Hinterland) bebaut mit einem freistehenden, zweigeschossigen Einfamilienhaus, nicht unterkellert, nicht ausgebautes Dachgeschoss, mit Garage. Das Haus (NF im EG: 85 m² und im OG 84 m²) wurde erstellt mit Porenbetonwände mit Bruchsteinverblendmauerwerk mit Zeltdach mit Ziegeleindeckung, Kunststofffenster mit Isolierverglasung. Das neu erstellte Wohnhaus ist noch nicht eingemessen. Die Garage (Massivbau), 1 Stellplatz, ist an das Wohnhaus angebaut und befindet sich im Rohbau. Installiert ist eine Wärmepumpenheizung mit Warmwasserversorgung und Fußbodenheizung. Ein Energieausweis liegt nicht vor. Zur Zeit der Begutachtung wurde das Objekt eigengenutzt. Bauschäden wurden keine festgestellt; der Außenbereich ist noch nicht fertiggestellt.",
       "court_url": "http://www.ag-minden.nrw.de/aufgaben/Abteilungen/Immobiliarvollstreckung/index.php",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378419.pdf",
+        "source_signature": "v2:2159873:1790708068",
+        "pages": 35,
+        "text_chars": 49767,
+        "summary": "Februar 2025 Aktenzeichen 53 K 23 / 24 Bewertungszweck: Ermittlung des Verkehrswertes i.S.d. § 194 Bauge- setzbuch - hier für das Zwangsversteigerungsverfahren - Wertermittlungsstichtag: 25. März 2025 Verkehrswert 470.000,00 EUR Dieses Gutachten wurde in 7-facher Ausfertigung erstellt (6 x Auftraggeber / 1 x Archiv), es besteht aus 35 Seiten, davon 31 Seiten Text und 4 Seiten Anlagen.",
+        "facts": {
+          "baujahr": "2024",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-3934",
@@ -5300,7 +5929,65 @@
       "detail_description": "Es handelt sich um ein mit einem Einfamilienhaus und Garage bebautes Grundstück. Das Baujahr des Wohngebäudes ist ca. 1976, die Wohnfläche beträgt ca. 89,79 qm",
       "court_url": "http://www.ag-hanau.justiz.hessen.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133673.pdf",
+        "source_signature": "v2:1540187:1790708062",
+        "pages": 50,
+        "text_chars": 81762,
+        "summary": "Von der IHK öffentlich bestellter und vereidigter freier Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken. Freier Sachverständiger für Mieten und Pachten. 09.05.2025 Amtsgericht Hanau; AZ: 42 K 88/24 NASEDY Sachverständigenbüro Dipl.",
+        "facts": {
+          "baujahr": "1976",
+          "wohnflaeche_m2": "89.79",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "435.00"
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 4
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 15
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "ni-13163",
@@ -5623,7 +6310,25 @@
       "detail_description": "unterkellertes eingeschossiges Wohnhaus, Baujahr ca. 1980-1982, ausgebautes Dachgeschoss; zwei Wohnungen, zwei Garagen, keine Innenbesichtigung",
       "court_url": "http://www.ag-euskirchen.nrw.de/",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377762.pdf",
+        "source_signature": "v2:722602:1790708067",
+        "pages": 3,
+        "text_chars": 401,
+        "summary": "Blatt Öffentlich bestellter Vermessungsingenieur 2025/281 -21- Dipl.-Ing. Blatt Öffentlich bestellter Vermessungsingenieur 2025/281 -22- Dipl.-Ing. Blatt Öffentlich bestellter Vermessungsingenieur 2025/281 -23-",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168388",
@@ -5745,7 +6450,67 @@
       "detail_description": "Laut Gutachten handelt es sich um zwei Grundstücke als wirtschaftliche Einheit, bebaut mit einem dreigeschossigen Wohn- und Geschäftshaus, Baujahr 1983, Wohnung OG ca. 109 m², DG ca. 102 m², Nutzfläche ca. 112 m² und einem Zweifamilienhaus, umgebaut 1986, Wohnung EG ca. 97 m², OG und DG ca. 89 m² nebst Anbauten, Garage und Geräteschuppen. Für weitere Informationen hinsichltich der Immobilie wenden Sie sich bitte an: Deutsche Bank Immobilien GmbH, Thorsten Wolff, Bahnhofstraße 11a, 34477 Twistetal",
       "court_url": "https://www.ag-lennestadt.nrw.de/behoerde/zvg_termine/index.php",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:44+00:00",
+      "report_photo_source_file_id": "378360",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378360.pdf",
+        "source_signature": "v2:588134:1790708068",
+        "pages": 67,
+        "text_chars": 189676,
+        "summary": "Michael Söhler Geprüfter Sachverständiger für Immobilienbewertung, EnEV 07 plus Heuslinger Hang 12 57258 Freudenberg Amtsgericht Lennestadt Kölner Straße 104 Tel.: 02734/20429 E-Mail: info@immobilienbewertung-soehler.de 57368 Lennestadt Datum: 28.04.2025 AZ. AG: 009 K 021/18 (Aktualisierung des Wertgutachtens vom 19.04.2019) Es handelt sich hier um die Internetversion des Gutachtens. Die Internetversion unterscheidet sich vom Originalgutachten dadurch, dass keine Anlagen (Liegenschaftskarte, Bauzeichnungen etc.) enthalten sind.",
+        "facts": {
+          "baujahr": "1983",
+          "wohnflaeche_m2": "109.19",
+          "nutzflaeche_m2": "112.77",
+          "grundstueck_m2": "1817"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 4
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 6
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 34
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 91
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48976",
@@ -6035,7 +6800,65 @@
       "detail_description": "Dreifamilienhaus mit unterkellerter Doppelgarage, Baujahr Wohnhaus 1956 (spätere Modernisierungen), Baujahr Garage 1972, Wohnfläche ca. 227 m², Grundstücksgröße 887 m²",
       "court_url": "http://www.justiz.bayern.de/gerichte-und-behoerden/amtsgerichte/augsburg/verfahren_28.php",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126799.pdf",
+        "source_signature": "v2:2777684:1790708060",
+        "pages": 70,
+        "text_chars": 102000,
+        "summary": "20-0941-GA 08.04.2021 Gutachtenausfertigungen: 5 gebunden, 1 lose 1 PDF-Datei Anzahl der Seiten: 49 Anzahl der Anlagen: 21 Dr. Helge Ludwig, FRICS, CIS HypZert (M/F), Dipl. Sachverständiger (DIA) Thomas Mascha, DIA Zert (F), Dipl.",
+        "facts": {
+          "baujahr": "1975",
+          "wohnflaeche_m2": "227",
+          "nutzflaeche_m2": "227",
+          "grundstueck_m2": "887"
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 8
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-54991",
@@ -6129,7 +6952,25 @@
       "detail_description": "Objektbeschreibung: land- und forstwirtschaftlich genutzte Grundstücke Die Gutachten können auf der Geschäftsstelle des Amtsgericht Frankenberg/Eder, Geismarer Straße 22, Zimmer-Nr. 104, Erdgeschoss, zu den üblichen Sprechzeiten eingesehen werden.",
       "court_url": "http://www.ag-frankenberg.justiz.hessen.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133688.pdf",
+        "source_signature": "v2:1065540:1790708062",
+        "pages": 12,
+        "text_chars": 8225,
+        "summary": "Bei dem genannten Grundstück handelt es sich um Grünland mit einer Größe von 5.190 m*. Der Bodenrichtwert beträgt aktuell 1,00 € pro Quadratmeter. Das Grundstück ist in einem leicht verwilderten Zustand, was aber einem Wertansatz des genannten Bodenrichtwerts nicht entgegensteht.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55020",
@@ -6278,7 +7119,40 @@
       "detail_description": "Einfamilienhaus (Baujahr 2020), unfertiger Bauzustand, Hanglage, ruhig gelegene Anliegerstraße, konventionelle Massivbauweise, Gastbrennwerttherme fehlt, die Fußbodenheizleitung wurde bereits unter dem Estrich verlegt, Kunststofffenster, deutliche Feuchtigkeitsbelastung bis zur vollständigen Durchfeuchtung einzelner Wandbereiche Erdgeschoss (Keller 2, Abstellraum, HAR/Waschen wird der Wohnfläche nicht angerechnet, Windfang, Keller 1, Treppe, Flur) 51qm, Obergeschoss (Treppe, Flur, Arbeiten, Abstellraum, WC/Dusche, Küche, Wohnen/Essen 59qm, Dachgeschoss (Treppe /Flur, Schlafen, Bad, Kind 1 und 2) 52qm.",
       "court_url": "http://www.ag-huenfeld.justiz.hessen.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "133766.pdf",
+        "source_signature": "v2:1659218:1790708062",
+        "pages": 7,
+        "text_chars": 5487,
+        "summary": "OBJEKT Zum Germanendorf 14 36088 Hünfeld AUFTRAGGEBER Amtsgericht Hünfeld Hauptstraße 24 36088 Hünfeld Az.: 22 K 6/25 GUTACHTEN-NR. 25090 SEITENUMFANG: 7 E X P O S E E - G U T A C H T E N über den Verkehrswert i. § 194 Baugesetzbuch des bebauten Grundstückes Einfamilienwohnhaus ARCHITEKT DIPL.-ING.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55121",
@@ -6441,7 +7315,45 @@
       "detail_description": "Freizeitgarten-Grundstück Antragsteller: Herr U. Wagner Kontoverbindung für die Überweisung der Sicherheitsleistung: Gerichtskasse Frankfurt am Main: Landesbank Hessen-Thüringen, IBAN: DE73 5005 0000 0001 0060 30, BIC: HELADEFFXXX, 1 Woche vor Termin unter Angabe des Kassenzeichens: 141618102018.",
       "court_url": "http://www.ag-frankfurt-justiz.hessen.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134719.pdf",
+        "source_signature": "v2:2176377:1790708062",
+        "pages": 10,
+        "text_chars": 11857,
+        "summary": "Eine Verwendung der Daten ist nur zur persönlichen Kenntnisnahme gestattet. Eine Verwendung des Gutachtens durch Dritte ist nicht gestattet. Änderungen am Gutachten behält sich der Ersteller des Gutachtens ausdrücklich vor!",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55133",
@@ -6604,7 +7516,55 @@
       "detail_description": "Reihenmittelhaus nebst Einzelgarage und KfZ-Stellplatz sowie Weg (Erschließungsfläche/Straße) Aufteilung: KG: Flur, Wasch-/Hausanschlussraum, Heizungskeller mit Öltanklager und Hobbyraum EG: Eingangsdiele/Windfang, Gäste-WC, Küche, offenes Wohnzimmer mit Essecke, Wintergarten und Terrasse OG: Flur, 3 Schlafzimmer (davon ein Schlafzimmer mit begehbarer Ankleide) und Badezimmer DG: Flur, 2 Zimmer, Duschbad Baujahr ca. 1976 Wohnfläche ca. 137 m²",
       "court_url": "http://www.ag-offenbach.justiz.hessen.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134178.pdf",
+        "source_signature": "v2:2632314:1790708062",
+        "pages": 41,
+        "text_chars": 84821,
+        "summary": "Carlo Gross Zertifizierter Sachverständiger für Immobilienbewertung Dipl.-Ing. Architekt Mitglied im Bundesverband öffentlich bestellter und vereidigter sowie qualifizierter Sachverständiger Landesverband Hessen e.V. und Architektenkammer Hessen Telefon: 06071 / 96 99 32 | E-Mail: carlo.gross@gmx.net C.",
+        "facts": {
+          "baujahr": "1976",
+          "wohnflaeche_m2": "137",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "162"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 42
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "mv-official-51d97f919551c091",
@@ -6983,7 +7943,55 @@
       "detail_description": "Wohn- und Geschäftshaus in 50667 Köln (Altstadt - Nord), Komödienstraße 5, denkmalgeschützt, eingebaut, voll unterkellert, mit 5 Vollgeschossen, insgesamt enthaltend 1 Ladenlokal zwei Geschosse und 3 Wohnungen. Nutzfläche 120 m², Wohnflächen 102,96 m². Wiederaufbau ca. 1949/50, 2. Bauabschnitt 1954 /1955, in Teilbereichen verbessert, Teiländerung im EG und 1. OG ca. 2004. Der Innenausbau entspricht überwiegend dem Ausstattungsstandard des Baujahres bzw. der einzelnen Teilmodernisierungsjahre / -phasen und genügt durchschnittlichen Wohn-/ Gewerbeansprüchen. Instandsetzungsarbeiten waren z. Zeitpunkt der Begutachtung dringlich nicht erforderlich. Kontakt Gläubiger: Tel.: 0221 226-55512 Gutachteneinsichten können zu den allgemeinen Publikumszeiten des Gerichts oder nach vorheriger Terminvereinbarung erfolgen. Entsprechende Termine können online auf der Internetseite des Amtsgerichts Köln oder telefonisch unter den Nummern 0221/7711- 782, 197, 323 oder 842 vereinbart werden. Geben Sie hierbei unbedingt das Aktenzeichen des Verfahrens an (z.B. 92 K …/25)",
       "court_url": "http://www.ag-koeln.nrw.de/behoerde/zvg_termine/index.php",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-09-29T19:03:00+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376997.pdf",
+        "source_signature": "v2:351010:1790708067",
+        "pages": 32,
+        "text_chars": 49690,
+        "summary": "BORCHARDT BAUINGENIEUR IKNW · Öffentlich bestellter und vereidigter SACHVERSTÄNDIGER von der Industrie- und Handelskammer zu Köln öffentlich bestellter und vereidigter Sachver- ständiger für die Wertermittlung von bebauten und unbebauten Grundstücken. 50259 PULHEIM, den 19.01.2026 HAUPTSTRASSE 69 TEL.: 0 22 38 / 96 51 20 FAX : 0 22 38 / 96 51 222 E-mail: buero@gutachter-borchardt.de web: www.gutachter-borchardt.de Reg.- Nr. 25.197 G U T A C H T E N Verkehrswertfeststellung gem.",
+        "facts": {
+          "baujahr": "1949",
+          "wohnflaeche_m2": "103",
+          "nutzflaeche_m2": "120",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 20
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168244",
@@ -7652,7 +8660,8 @@
       "detail_description": "teilunterkellertes mehrstöckiges Einfamilienhaus als Doppelhaushälfte ; zweigeschossiger Anbau vorhanden ; weiterer eingeschossiger Anbau mit Dachterrasse ; Baujahr 1965 ; guter baulicher Zustand",
       "court_url": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "th-3085",
@@ -7941,6 +8950,64 @@
           "content_type": "application/pdf",
           "cached_at": "2026-09-22T12:53:43+00:00",
           "cache_status": "ok"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-379093-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/nw-168606/gutachten-photo-379093-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-168606/gutachten-photo-379093-01.jpg",
+          "preview_path": "media/nw-168606/gutachten-photo-379093-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-168606/gutachten-photo-379093-01.jpg",
+          "cached_bytes": 70346,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "379093",
+          "generated_from_type": "gutachten",
+          "source_page": 14,
+          "generated_at": "2026-09-29T19:02:46+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1625.54,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 14,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0152,
+            "mid_ratio": 0.8467,
+            "color_ratio": 0.9669,
+            "variance": 2550.3,
+            "unique_bins": 866
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-379093-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/nw-168606/gutachten-photo-379093-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-168606/gutachten-photo-379093-02.jpg",
+          "preview_path": "media/nw-168606/gutachten-photo-379093-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-168606/gutachten-photo-379093-02.jpg",
+          "cached_bytes": 70337,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "379093",
+          "generated_from_type": "gutachten",
+          "source_page": 18,
+          "generated_at": "2026-09-29T19:02:46+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1284.04,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 18,
+          "photo_quality_metrics": {
+            "white_ratio": 0.1394,
+            "mid_ratio": 0.7411,
+            "color_ratio": 0.3382,
+            "variance": 4412.5,
+            "unique_bins": 477
+          }
         }
       ],
       "score": null,
@@ -7978,7 +9045,9 @@
       "detail_description": "Laut Gutachten: Es handelt sich um zwei unbebaute nebeneinanderliegende landwirtschaftliche Grundstücke, welche als Grünland bzw. ungenutzte Freifläche bewirtschaftet werden. Die Grundstücke grenzen an die südlich verlaufende Straße Sandheite und werden über diese erschlossen. Bodenzahl/Ackerzahl: bzgl. des Flurstücks 92 für eine Teilfläche von 171 m²: 45/46; bzgl. des Flurstücks 92 für eine Teilfläche von 1.130 m²: 53/46; bzgl. des Flurstücks 93: 54/46. Einzelverkehrswerte: Flurstück 92: 114.000,00 EUR, Flurstück 93: 1.000,00 EUR Die Bankverbindung bei einer Überweisung der Sicherheitsleistung lautet: Zahlungsempfängerin: Zentrale Zahlstelle Justiz Bankverbindung: Landesbank Hessen-Thüringen (Helaba) BIC: WELADEDD, IBAN: DE08 3005 0000 0001 4748 16 Verwendungszweck: AG Paderborn 14 K 61/24 Sicherheit 30.09.2025 + Name des Bieters, sofern abweichend vom Kontoinhaber",
       "court_url": "http://www.ag-paderborn.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:46+00:00",
+      "report_photo_source_file_id": "379093"
     },
     {
       "id": "rp-3945",
@@ -8060,6 +9129,64 @@
           "content_type": "application/pdf",
           "cached_at": "2026-09-22T12:53:44+00:00",
           "cache_status": "ok"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-5931-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/rp-3945/gutachten-photo-5931-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/rp-3945/gutachten-photo-5931-01.jpg",
+          "preview_path": "media/rp-3945/gutachten-photo-5931-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/rp-3945/gutachten-photo-5931-01.jpg",
+          "cached_bytes": 50781,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "5931",
+          "generated_from_type": "gutachten",
+          "source_page": 50,
+          "generated_at": "2026-09-29T19:02:57+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1485.29,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 50,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0729,
+            "mid_ratio": 0.6712,
+            "color_ratio": 0.6242,
+            "variance": 5597.0,
+            "unique_bins": 628
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-5931-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/rp-3945/gutachten-photo-5931-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/rp-3945/gutachten-photo-5931-02.jpg",
+          "preview_path": "media/rp-3945/gutachten-photo-5931-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/rp-3945/gutachten-photo-5931-02.jpg",
+          "cached_bytes": 41242,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "5931",
+          "generated_from_type": "gutachten",
+          "source_page": 51,
+          "generated_at": "2026-09-29T19:02:57+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1462.34,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 51,
+          "photo_quality_metrics": {
+            "white_ratio": 0.1633,
+            "mid_ratio": 0.5863,
+            "color_ratio": 0.4591,
+            "variance": 6867.8,
+            "unique_bins": 607
+          }
         }
       ],
       "score": null,
@@ -8095,7 +9222,9 @@
       "detail_description": "Miteigentumsanteil an dem mit einem gemischt genutzten Objekt bebauten Grundstück, verbunden mit dem Sondereigentum an gewerblich genutzten Räume, im Aufteilungsplan mit C bezeichnet",
       "court_url": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:57+00:00",
+      "report_photo_source_file_id": "5931"
     },
     {
       "id": "br-7279",
@@ -8618,6 +9747,64 @@
           "content_type": "application/pdf",
           "cached_at": "2026-09-21T15:35:46+00:00",
           "cache_status": "ok"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-375873-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/nw-167602/gutachten-photo-375873-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167602/gutachten-photo-375873-01.jpg",
+          "preview_path": "media/nw-167602/gutachten-photo-375873-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167602/gutachten-photo-375873-01.jpg",
+          "cached_bytes": 72055,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "375873",
+          "generated_from_type": "gutachten",
+          "source_page": 31,
+          "generated_at": "2026-09-29T19:02:57+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1114.49,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 31,
+          "photo_quality_metrics": {
+            "white_ratio": 0.1222,
+            "mid_ratio": 0.3781,
+            "color_ratio": 0.552,
+            "variance": 2708.2,
+            "unique_bins": 448
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-375873-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/nw-167602/gutachten-photo-375873-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167602/gutachten-photo-375873-02.jpg",
+          "preview_path": "media/nw-167602/gutachten-photo-375873-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167602/gutachten-photo-375873-02.jpg",
+          "cached_bytes": 34599,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "375873",
+          "generated_from_type": "gutachten",
+          "source_page": 1,
+          "generated_at": "2026-09-29T19:02:57+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1110.21,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 1,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0315,
+            "mid_ratio": 0.7625,
+            "color_ratio": 0.2136,
+            "variance": 3717.2,
+            "unique_bins": 326
+          }
         }
       ],
       "score": null,
@@ -8655,7 +9842,9 @@
       "detail_description": "Laut Sachverständigengutachten (zum Wertermittlungsstichtag 08.07.2015): Drei Teileigentumseinheiten, die als ein Ladenlokal zusammen verbunden sind, innerhalb des ca. 1970/71 errichteten Wohn-/Geschäftskomplexes \"Stadtmitte A, Luminaden\" in der Innenstadt von Leverkusen-Wiesdorf, postalische Anschrift: Wiesdorfer Platz 70, 72 bzw. 34e, 51373 Leverkusen. Die verbundenen Einheiten befinden sich im 1. Obergeschoss (T6), Erdgeschoss (T4, 5, 6) und 1. Untergeschoss (T4, 6) und verfügen über eine Gesamtnutzfläche von ca. 2.989 m². Ein kleiner Teilbereich der Einheit T6 im Erdgeschoss ist ggf. als eigenständiges, kleines Ladenlokal (ca. 44 m²) einschließlich einer Teilfläche im 1. Untergeschoss nutzbar. Die ersichtlichen Räumlichkeiten vor Ort stimmen nicht (mehr) mit den Aufteilungsplänen der 1970er Jahre, und damit der Grundbucheintragung sowie der Beschlagnahme im Rahmen des Versteigerungsverfahren überein.",
       "court_url": "http://www.ag-leverkusen.nrw.de/aufgaben/abteilungen/zwangsversteigerungssachen/index.php",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:57+00:00",
+      "report_photo_source_file_id": "375873"
     },
     {
       "id": "nw-167653",
@@ -8729,6 +9918,64 @@
           "content_type": "application/pdf",
           "cached_at": "2026-09-22T12:53:47+00:00",
           "cache_status": "ok"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-376104-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/nw-167653/gutachten-photo-376104-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167653/gutachten-photo-376104-01.jpg",
+          "preview_path": "media/nw-167653/gutachten-photo-376104-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167653/gutachten-photo-376104-01.jpg",
+          "cached_bytes": 36339,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "376104",
+          "generated_from_type": "gutachten",
+          "source_page": 37,
+          "generated_at": "2026-09-29T19:02:58+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1358.84,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 37,
+          "photo_quality_metrics": {
+            "white_ratio": 0.1235,
+            "mid_ratio": 0.4964,
+            "color_ratio": 0.6563,
+            "variance": 6556.6,
+            "unique_bins": 496
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-376104-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/nw-167653/gutachten-photo-376104-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167653/gutachten-photo-376104-02.jpg",
+          "preview_path": "media/nw-167653/gutachten-photo-376104-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167653/gutachten-photo-376104-02.jpg",
+          "cached_bytes": 34715,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "376104",
+          "generated_from_type": "gutachten",
+          "source_page": 39,
+          "generated_at": "2026-09-29T19:02:58+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1270.68,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 39,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0514,
+            "mid_ratio": 0.7403,
+            "color_ratio": 0.5399,
+            "variance": 4636.7,
+            "unique_bins": 441
+          }
         }
       ],
       "score": null,
@@ -8766,7 +10013,9 @@
       "detail_description": "Laut Gutachten handelt es sich um eine renovierungsbedürftige, nicht unterkellerte, leerstehende Gewerbehalle mit Bürotrakt, die Dachgeschossebene ist nicht ausgebaut, BJ 1969, Anbau 1990; mit Doppelcarport in einfacher Profilblechausführung und dem Zubehör Kranbahn mit Kran; eine Wertminderung aufgrund von Schäden wurde berücksichtigt.",
       "court_url": "http://www.ag-badoeynhausen.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:58+00:00",
+      "report_photo_source_file_id": "376104"
     },
     {
       "id": "nw-167681",
@@ -8822,6 +10071,64 @@
           "content_type": "application/pdf",
           "cached_at": "2026-09-22T12:53:48+00:00",
           "cache_status": "ok"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-376124-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/nw-167681/gutachten-photo-376124-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167681/gutachten-photo-376124-01.jpg",
+          "preview_path": "media/nw-167681/gutachten-photo-376124-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167681/gutachten-photo-376124-01.jpg",
+          "cached_bytes": 65282,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "376124",
+          "generated_from_type": "gutachten",
+          "source_page": 57,
+          "generated_at": "2026-09-29T19:02:59+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1161.99,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 57,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0031,
+            "mid_ratio": 0.9008,
+            "color_ratio": 0.771,
+            "variance": 2465.5,
+            "unique_bins": 380
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-376124-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/nw-167681/gutachten-photo-376124-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167681/gutachten-photo-376124-02.jpg",
+          "preview_path": "media/nw-167681/gutachten-photo-376124-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/nw-167681/gutachten-photo-376124-02.jpg",
+          "cached_bytes": 78516,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "376124",
+          "generated_from_type": "gutachten",
+          "source_page": 56,
+          "generated_at": "2026-09-29T19:02:59+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1117.19,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 56,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0021,
+            "mid_ratio": 0.897,
+            "color_ratio": 0.7561,
+            "variance": 2025.9,
+            "unique_bins": 353
+          }
         }
       ],
       "score": null,
@@ -8859,7 +10166,9 @@
       "detail_description": "Flurstück 93: Es handelt sich um ein Grundstück, bebaut mit einem vollunterkellerten 1-geschossigen Zweifamilienhaus mit Mansarddach und Erker sowie einer Kleingarage Baujahr Wohnhaus: ca. 1930 (Instandhaltung/Modernisierung teilweise erfolgt) Wohnfläche Wohnung 1 ca. 49m², Wohnung 2 ca. 51m² Baujahr Garage: ca. 1934 Flurstück 94: Gartenfläche (wirtschaft. Einheit mit Flurstück 93) Flurstück 95: selbstständig nutzbares und bebaubares Grundstück (baureifes Land), z. Zt. mit zwei Blechgaragen und einem Holzschuppen bebaut",
       "court_url": "http://www.ag-bergheim.nrw.de",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-09-29T19:02:59+00:00",
+      "report_photo_source_file_id": "376124"
     },
     {
       "id": "nw-168300",

@@ -89,8 +89,24 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/auctions.json media
             git commit -m "ZVG-Daten, Historie und Dossiers stündlich aktualisiert"
-            git pull --rebase
-            git push
+            pushed=false
+            for attempt in 1 2 3; do
+              if ! git pull --rebase origin main; then
+                git rebase --abort || true
+                echo "::error::Inhaltlicher Git-Konflikt; keine Daten werden überschrieben."
+                exit 1
+              fi
+              if git push origin HEAD:main; then
+                pushed=true
+                break
+              fi
+              echo "Upload abgewiesen (Versuch $attempt/3); neuesten Stand erneut übernehmen."
+              sleep 2
+            done
+            if [ "$pushed" != true ]; then
+              echo "::error::Upload nach drei Versuchen fehlgeschlagen."
+              exit 1
+            fi
           fi
 
       - name: ZVGPro E-Mail-Alerts anstoßen

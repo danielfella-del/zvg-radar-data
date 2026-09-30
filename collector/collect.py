@@ -63,6 +63,7 @@ PERSIST_FIELDS = {
     "detail_description", "court_url", "geoserver_urls",
     "portal_google_maps_urls", "detail_source_url", "detail_fetched_at",
     "detail_source_last_updated", "detail_error", "dossier_completeness",
+    "detail_attachments", "detail_attachments_authoritative", "attachment_sync_version", "archived_attachments",
 }
 PERSIST_META_FIELDS = {"detail_enrichment", "media_cache"}
 
@@ -377,12 +378,12 @@ def load_existing(path: Path) -> list[dict[str, Any]]:
     return arr if isinstance(arr, list) else []
 
 def merge_attachment_history(fresh: list[dict[str, Any]], old: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    merged: dict[tuple[str, str], dict[str, Any]] = {}
+    merged: dict[str, dict[str, Any]] = {}
     for item in old + fresh:
         if not isinstance(item, dict):
             continue
-        key = (str(item.get("file_id") or item.get("url") or ""), str(item.get("type") or ""))
-        if not key[0]:
+        key = str(item.get("file_id") or item.get("url") or "")
+        if not key:
             continue
         if key in merged:
             prior = merged[key]
@@ -404,8 +405,19 @@ def preserve_enrichment(fresh_records: list[dict[str, Any]], old_records: list[d
         for key in PERSIST_FIELDS:
             if key in old:
                 fresh[key] = old[key]
+        # Search results may omit reports/photos: only a confirmed detail page
+        # may retire files. Do not resurrect already retired IDs from a stale list.
+        retired = {str(a.get("file_id") or a.get("url") or "") for a in old.get("archived_attachments") or [] if isinstance(a, dict)} if old.get("last_updated") == fresh.get("last_updated") else set()
+        if old.get("attachment_sync_version") == "1.4.8" and old.get("last_updated") == fresh.get("last_updated"):
+            authoritative = {str(a.get("file_id") or a.get("url") or ""): a for a in old.get("detail_attachments") or [] if isinstance(a, dict)}
+            for a in fresh.get("attachments") or []:
+                prior = authoritative.get(str(a.get("file_id") or a.get("url") or ""))
+                if prior:
+                    for field in ("type", "name", "size_kb"):
+                        if field in prior:
+                            a[field] = prior[field]
         fresh["attachments"] = merge_attachment_history(
-            list(fresh.get("attachments") or []),
+            [a for a in fresh.get("attachments") or [] if str(a.get("file_id") or a.get("url") or "") not in retired],
             list(old.get("attachments") or []),
         )
         fresh["has_report"] = any(a.get("type") == "gutachten" for a in fresh["attachments"])

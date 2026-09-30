@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 BASE = "https://www.zvg-portal.de/"
 SEARCH_REFERER = urljoin(BASE, "index.php?button=Suchen")
 SEARCH_URL = urljoin(BASE, "index.php?button=Suchen&all=1")
+ATTACHMENT_SYNC_VERSION = "1.4.8"
 
 DETAIL_FIELDS = [
     "auction_type",
@@ -96,20 +97,54 @@ def classify_attachment(label: str, name: str) -> str:
         return "hinweis"
     return "dokument"
 
+def parse_size_kb(value: str) -> float | None:
+    value = value.strip()
+    if "." in value and "," in value:
+        if value.rfind(",") > value.rfind("."):
+            value = value.replace(".", "").replace(",", ".")
+        else:
+            value = value.replace(",", "")
+    else:
+        value = value.replace(",", ".")
+    # Portal reports kB with decimal dots as well as decimal commas.
+    if not re.fullmatch(r"[0-9]+(?:\.[0-9]{1,2})?", value):
+        return None
+    return float(value)
+
+
+def case_identity(value: str) -> tuple[int, int, int] | None:
+    m = re.search(r"(\d+)\s*K\s*(\d+)\s*/\s*(\d{2,4})", clean(value), re.I)
+    if not m:
+        return None
+    court, number, year = map(int, m.groups())
+    return court, number, year + 2000 if year < 100 else year
+
+
 def attachment_from_anchor(label: str, anchor, land: str, zvg_id: str, row_text: str) -> dict[str, Any] | None:
     href = (anchor.get("href") or "").replace("&amp;", "&")
     if "showAnhang" not in href:
         return None
-    qs = parse_qs(urlparse(href).query)
+    qs = parse_qs(urlparse(href.strip()).query)
+    if (qs.get("zvg_id") and str(qs["zvg_id"][0]).strip() != zvg_id) or (qs.get("land_abk") and str(qs["land_abk"][0]).strip() != land):
+        raise RuntimeError("Anhang gehört nicht zum angefragten Verfahren")
     file_id = (qs.get("file_id") or [""])[0]
     name = clean(anchor.get_text(" ", strip=True)) or clean(label)
     if not file_id:
         return None
-    size_match = re.search(r"([\d.,]+)\s*kB\b", row_text, re.I)
+    adjacent = []
+    for sibling in anchor.next_siblings:
+        if getattr(sibling, "name", None) == "a":
+            break
+        adjacent.append(sibling.get_text(" ", strip=True) if hasattr(sibling, "get_text") else str(sibling))
+    size_text = " ".join(adjacent)
+    size_match = re.search(r"([\d.,]+)\s*kB\b", size_text, re.I)
+    row = anchor.find_parent("tr")
+    if not size_match and row is not None and len(row.find_all("a", href=re.compile("showAnhang"))) == 1:
+        size_match = re.search(r"([\d.,]+)\s*kB\b", row_text, re.I)
     size_kb = None
     if size_match:
         try:
-            size_kb = float(size_match.group(1).replace(".", "").replace(",", "."))
+            size_kb = parse_size_kb(size_match.group(1))
         except ValueError:
             pass
     url = f"{BASE}index.php?button=showAnhang&land_abk={land}&file_id={file_id}&zvg_id={zvg_id}"
@@ -122,11 +157,20 @@ def attachment_from_anchor(label: str, anchor, land: str, zvg_id: str, row_text:
         "requires_portal_context": True,
     }
 
-def parse_detail_html(content: bytes, land: str, zvg_id: str) -> dict[str, Any]:
+def parse_detail_html(content: bytes, land: str, zvg_id: str, expected_case: str = "") -> dict[str, Any]:
     html = decode_document(content)
     if len(html.strip()) < 30 and "error" in html.lower():
         raise RuntimeError("ZVG-Portal verlangt einen gültigen Referer")
     soup = BeautifulSoup(html, "html.parser")
+    scope = soup.find("table", id="anzeige")
+    if scope is None:
+        raise RuntimeError("Keine vollständige amtliche Detailtabelle; Anlagen bleiben erhalten")
+    actual_case = case_identity(scope.get_text(" ", strip=True))
+    if not actual_case or (expected_case and actual_case != case_identity(expected_case)):
+        raise RuntimeError("Aktenzeichen der Detailseite fehlt oder passt nicht")
+    labels = {label_key(label) for label, _ in row_map(soup)}
+    if not {"art der versteigerung", "objekt/lage"}.issubset(labels):
+        raise RuntimeError("Unvollständige Detailseite; Anlagen bleiben erhalten")
     result: dict[str, Any] = {
         "auction_type": None,
         "land_registry": None,
@@ -137,6 +181,7 @@ def parse_detail_html(content: bytes, land: str, zvg_id: str) -> dict[str, Any]:
         "geoserver_urls": [],
         "portal_google_maps_urls": [],
         "detail_attachments": [],
+        "detail_attachments_authoritative": True,
     }
 
     rows = row_map(soup)
@@ -203,21 +248,40 @@ def parse_detail_html(content: bytes, land: str, zvg_id: str) -> dict[str, Any]:
 
     return result
 
+def attachment_key(item: dict[str, Any]) -> str:
+    return str(item.get("file_id") or item.get("url") or "")
+
+
 def merge_attachments(record: dict[str, Any], detail: dict[str, Any]) -> None:
-    merged = []
-    seen = set()
-    for item in (record.get("attachments") or []) + (detail.get("detail_attachments") or []):
-        if not isinstance(item, dict):
+    if detail.get("detail_attachments_authoritative") is not True:
+        raise RuntimeError("Kein bestätigter Anlagenabgleich; bestehende Anlagen unverändert")
+    previous = {attachment_key(a): a for a in record.get("attachments") or [] if isinstance(a, dict) and attachment_key(a)}
+    merged = {}
+    for item in detail.get("detail_attachments") or []:
+        if not isinstance(item, dict) or not attachment_key(item):
             continue
-        key = (str(item.get("file_id") or ""), str(item.get("type") or ""), str(item.get("name") or ""))
-        if key in seen:
-            continue
-        seen.add(key)
-        merged.append(item)
-    record["attachments"] = merged
-    record["has_report"] = any(a.get("type") == "gutachten" for a in merged)
-    record["gutachten_url"] = next((a.get("url") for a in merged if a.get("type") == "gutachten"), None)
-    record["expose_url"] = next((a.get("url") for a in merged if a.get("type") == "expose"), None)
+        key = attachment_key(item)
+        # Keep a cached copy only for the SAME source file. Source metadata wins.
+        current = dict(previous.get(key, {}))
+        current.update(item)
+        merged[key] = current
+    for key, item in previous.items():
+        parent = str(item.get("generated_from_file_id") or "")
+        host = urlparse(str(item.get("url") or "")).hostname or ""
+        official = host in {"zvg-portal.de", "www.zvg-portal.de"} or bool(item.get("requires_portal_context"))
+        if key not in merged and ((parent and parent in merged) or (not parent and not official and not item.get("file_id"))):
+            merged[key] = dict(item)
+    removed = [dict(a, retired_at=datetime.now(timezone.utc).isoformat(timespec="seconds"), retired_reason="not_in_current_official_detail") for key, a in previous.items() if key not in merged]
+    archive = {attachment_key(a): a for a in record.get("archived_attachments") or [] if isinstance(a, dict)}
+    archive.update({attachment_key(a): a for a in removed})
+    for key in merged:
+        archive.pop(key, None)
+    record["archived_attachments"] = list(archive.values())[-200:]
+    record["attachments"] = list(merged.values())
+    record["attachment_sync_version"] = ATTACHMENT_SYNC_VERSION
+    record["has_report"] = any(a.get("type") == "gutachten" for a in merged.values())
+    record["gutachten_url"] = next((a.get("cached_url") or a.get("url") for a in merged.values() if a.get("type") == "gutachten"), None)
+    record["expose_url"] = next((a.get("cached_url") or a.get("url") for a in merged.values() if a.get("type") == "expose"), None)
 
 def detail_completeness(record: dict[str, Any]) -> dict[str, Any]:
     checks = {
@@ -266,6 +330,10 @@ def should_fetch(record: dict[str, Any]) -> bool:
         return False
     if record.get("cancelled"):
         return False
+    if record.get("attachment_sync_version") != ATTACHMENT_SYNC_VERSION:
+        return True
+    if record.get("detail_error"):
+        return True
     if not record.get("detail_fetched_at"):
         return True
     return record.get("detail_source_last_updated") != record.get("last_updated")
@@ -274,6 +342,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default="data/auctions.json")
     ap.add_argument("--limit", type=int, default=int(os.getenv("ZVG_DETAIL_LIMIT", "300")))
+    ap.add_argument("--object-id", action="append", default=[], help="Nur diese Objekt-ID abgleichen; wiederholbar")
     ap.add_argument("--pause", type=float, default=float(os.getenv("ZVG_DETAIL_PAUSE", "0.35")))
     args = ap.parse_args()
 
@@ -283,7 +352,7 @@ def main() -> int:
     if not isinstance(records, list):
         raise RuntimeError("results ist keine Liste")
 
-    candidates = [r for r in records if should_fetch(r)]
+    candidates = [r for r in records if (not args.object_id or str(r.get("id")) in args.object_id) and (bool(args.object_id) or should_fetch(r))]
     candidates.sort(key=lambda r: (str(r.get("auction_date") or "9999"), str(r.get("last_updated") or ""), str(r.get("id") or "")))
     selected = candidates[: max(0, args.limit)]
 
@@ -309,12 +378,12 @@ def main() -> int:
                 primed_states.add(land)
             resp = session.get(url, headers={"Referer": SEARCH_REFERER}, timeout=45)
             resp.raise_for_status()
-            detail = parse_detail_html(resp.content, land, zvg_id)
+            detail = parse_detail_html(resp.content, land, zvg_id, str(record.get("file_number") or ""))
             if not detail_has_content(detail):
                 raise RuntimeError(f"Detailseite ohne verwertbare Felder ({len(resp.content)} Bytes)")
+            merge_attachments(record, detail)
             for k, v in detail.items():
                 record[k] = v
-            merge_attachments(record, detail)
             record["detail_source_url"] = url
             record["detail_fetched_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
             record["detail_source_last_updated"] = record.get("last_updated")

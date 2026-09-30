@@ -34,7 +34,9 @@ jobs:
         run: pip install -r collector/requirements.txt
 
       - name: Detailparser testen
-        run: python tests/test_detail_parser.py
+        run: |
+          python tests/test_detail_parser.py
+          python tests/test_report_photo_queue.py
 
       - name: Erste Dossiers anreichern
         run: python collector/enrich_details.py --data data/auctions.json --limit 25

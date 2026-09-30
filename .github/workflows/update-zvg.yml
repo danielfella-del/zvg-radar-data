@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Repository laden
         uses: actions/checkout@v4
+        with:
+          # Resolve main when this serialized job starts, not when it was queued.
+          ref: main
 
       - name: Python einrichten
         uses: actions/setup-python@v5

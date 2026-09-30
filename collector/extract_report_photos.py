@@ -7,6 +7,7 @@ import json
 import math
 import os
 import re
+import shutil
 import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -239,11 +240,71 @@ def save_photos(pdf: Path, record: dict, att: dict, media_root: Path, max_photos
     return created
 
 
-def candidate_key(record: dict, priority: set[str]):
-    rid = str(record.get("id") or "")
-    d = parse_date(record.get("auction_date"))
-    ts = d.timestamp() if d else 9e18
-    return (0 if rid in priority else 1, ts, rid)
+PHOTO_CHECK_VERSION = 1
+
+
+def source_signature(att: dict) -> str:
+    # Only source metadata: hourly fetch/cache timestamps are not PDF changes.
+    fields = ("file_id", "url", "size_kb", "etag", "last_modified", "sha256")
+    value = {key: att.get(key) for key in fields}
+    return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+
+
+def report_signature(att: dict) -> str:
+    value = [PHOTO_CHECK_VERSION, source_signature(att), att.get("cached_bytes")]
+    return hashlib.sha256(json.dumps(value).encode()).hexdigest()
+
+
+def pending_reports(records: list[dict], horizon_days: int, priority: set[str], now: datetime):
+    pending = []
+    for record in records:
+        if not active_record(record, horizon_days):
+            continue
+        for report in gutachten(record):
+            check = report.get("report_photo_check") or {}
+            unchanged = check.get("signature") == report_signature(report)
+            if unchanged and check.get("status") in {"photos", "no_photos"}:
+                continue
+            retry = parse_date(check.get("retry_after"))
+            if unchanged and check.get("status") == "error" and retry and retry > now:
+                continue
+            # New/changed reports come before retries, even for priority objects.
+            rank = 1 if unchanged and check.get("status") == "error" else 0
+            date = parse_date(record.get("auction_date"))
+            key = (rank, 0 if str(record.get("id")) in priority else 1,
+                   date.timestamp() if date else 9e18, str(record.get("id")),
+                   str(report.get("file_id") or report.get("url") or ""))
+            pending.append((key, record, report))
+    pending.sort(key=lambda item: item[0])
+    return [(record, report) for _, record, report in pending]
+
+
+def mark_report(report: dict, status: str, now: datetime, error: str = "") -> None:
+    previous = report.get("report_photo_check") or {}
+    same = previous.get("signature") == report_signature(report)
+    attempts = int(previous.get("attempts", 0)) + 1 if same else 1
+    check = {"signature": report_signature(report), "source_signature": source_signature(report),
+             "status": status, "checked_at": now.isoformat(timespec="seconds"),
+             "attempts": attempts}
+    if status == "error":
+        check["refresh_required"] = bool(previous and (previous.get("refresh_required") or previous.get("source_signature") != source_signature(report)))
+        check["retry_after"] = (now + timedelta(hours=min(24, 6 * attempts))).isoformat(timespec="seconds")
+        check["error"] = error
+    report["report_photo_check"] = check
+
+
+def replace_report_photos(record: dict, report: dict, new: list[dict]) -> None:
+    source_id = str(report.get("file_id") or "")
+    source_url = str(report.get("url") or "")
+    def from_this_report(item):
+        if item.get("type") != "foto" or item.get("photo_source") != "gutachten":
+            return False
+        if source_id:
+            return str(item.get("generated_from_file_id") or "") == source_id
+        return bool(source_url and item.get("generated_from_url") == source_url)
+    for item in new:
+        item["generated_from_url"] = source_url
+    record["attachments"] = [item for item in attachments(record) if not from_this_report(item)] + new
 
 
 def recount_photo_records(records: list[dict]) -> int:
@@ -267,8 +328,7 @@ def main() -> int:
     payload = json.loads(data_path.read_text(encoding="utf-8"))
     records = payload.get("results") or []
     priority = {str(x) for x in args.priority_id if x}
-    candidates = [r for r in records if active_record(r, args.horizon_days) and gutachten(r) and len(display_photos(r)) < 2]
-    candidates.sort(key=lambda r: candidate_key(r, priority))
+    candidates = pending_reports(records, args.horizon_days, priority, datetime.now(timezone.utc))
 
     session = requests.Session()
     session.headers.update({
@@ -287,26 +347,33 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(prefix="zvg-report-photo-") as tmp:
         tmp_dir = Path(tmp)
-        for record in candidates:
+        for record, report in candidates:
             if processed >= args.max_reports:
                 break
             processed += 1
             rid = str(record.get("id") or "")
             try:
-                referer = prepare_context(session, record, primed_states)
-                report = gutachten(record)[0]
-                pdf, size = download_pdf(session, record, report, referer, tmp_dir, max_bytes)
-                if not report.get("cached_path"):
+                check = report.get("report_photo_check") or {}
+                source_changed = bool(check and (check.get("refresh_required") or check.get("source_signature") != source_signature(report)))
+                download_att = dict(report)
+                if source_changed:
+                    download_att.pop("cached_path", None)
+                referer = (detail_url(record) if local_cached_pdf(download_att)
+                           else prepare_context(session, record, primed_states))
+                pdf, size = download_pdf(session, record, download_att, referer, tmp_dir, max_bytes)
+                if not local_cached_pdf(download_att):
                     downloaded_bytes += size
                 new = save_photos(pdf, record, report, media_root, args.max_photos)
+                # A completed scan replaces only photos derived from this PDF.
+                # On download/parse failure no existing photos are removed.
+                if source_changed and local_cached_pdf(report):
+                    shutil.copyfile(pdf, local_cached_pdf(report))
+                    report["cached_bytes"] = size
+                    report["cached_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+                replace_report_photos(record, report, new)
+                mark_report(report, "photos" if new else "no_photos", datetime.now(timezone.utc))
+                record.pop("report_photo_error", None)
                 if new:
-                    existing = attachments(record)
-                    existing_keys = {(str(a.get("file_id") or ""), str(a.get("preview_url") or a.get("cached_url") or "")) for a in existing}
-                    for item in new:
-                        key = (str(item.get("file_id") or ""), str(item.get("preview_url") or ""))
-                        if key not in existing_keys:
-                            existing.append(item)
-                    record["attachments"] = existing
                     record["report_photo_extracted_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
                     record["report_photo_source_file_id"] = str(report.get("file_id") or "")
                     with_new_photos += 1
@@ -317,6 +384,7 @@ def main() -> int:
                     print(f"{rid}: keine geeigneten eingebetteten Fotos")
             except Exception as exc:
                 errors += 1
+                mark_report(report, "error", datetime.now(timezone.utc), str(exc))
                 record["report_photo_error"] = str(exc)
                 if len(samples) < 12:
                     samples.append({"id": rid, "error": str(exc)})

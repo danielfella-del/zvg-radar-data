@@ -571,17 +571,18 @@
     "geodata_source": "WZB Berlin PLZ-Geokoordinaten (Apache 2.0) - https://github.com/WZBSocialScienceCenter/plz_geocoord",
     "note": "Amtliche Quelle bleibt maßgeblich. Kartenpositionen sind PLZ-Zentren bzw. ersatzweise Bundesland-Näherungen, keine Hauskoordinaten.",
     "detail_enrichment": {
-      "generated_at": "2026-10-03T06:55:43+00:00",
+      "generated_at": "2026-10-03T07:04:59+00:00",
       "fetched_this_run": 0,
-      "errors_this_run": 20,
+      "errors_this_run": 25,
       "enriched_total": 3135,
-      "active_candidates_remaining": 3035,
+      "active_candidates_remaining": 3030,
       "with_gutachten": 1731,
       "with_photos": 1007,
-      "limit_per_run": 20,
+      "limit_per_run": 25,
       "primed_states": [
         "bw",
         "by",
+        "hb",
         "nw",
         "rp",
         "st",
@@ -639,11 +640,11 @@
       ]
     },
     "media_cache": {
-      "generated_at": "2026-10-03T06:04:00+00:00",
+      "generated_at": "2026-10-03T07:14:25+00:00",
       "downloaded_this_run": 0,
-      "failed_this_run": 4,
+      "failed_this_run": 3,
       "bytes_this_run": 0,
-      "with_cached_photos": 764,
+      "with_cached_photos": 771,
       "with_cached_pdfs": 3133,
       "with_cached_gutachten": 1711,
       "max_file_mb": 24.0,
@@ -683,14 +684,9 @@
           "file_id": "135023",
           "stage": "download",
           "error": "Portal lieferte HTML statt Datei"
-        },
-        {
-          "id": "ni-13301",
-          "stage": "context",
-          "error": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
         }
       ],
-      "report_photo_extraction_at": "2026-10-03T06:04:06+00:00"
+      "report_photo_extraction_at": "2026-10-03T07:14:30+00:00"
     },
     "supplemental_merge": {
       "generated_at": "2026-10-03T06:55:13+00:00",
@@ -817,6 +813,28 @@
         "sh: Schleswig-Holstein nur 3 Verfahren (Warnschwelle 35)"
       ],
       "all_16_present": false
+    },
+    "report_photo_extraction": {
+      "generated_at": "2026-10-03T07:14:30+00:00",
+      "processed_this_run": 12,
+      "records_with_new_photos": 9,
+      "photos_created": 17,
+      "errors_this_run": 0,
+      "downloaded_bytes": 0,
+      "records_with_display_photos": 771,
+      "candidate_backlog": 1462,
+      "max_reports": 12,
+      "max_photos_per_report": 2,
+      "max_report_mb": 180.0,
+      "priority_ids": [
+        "he-55016"
+      ],
+      "error_samples": []
+    },
+    "smart_analysis": {
+      "generated_at": "2026-10-03T07:14:31+00:00",
+      "analyzed_this_run": 20,
+      "errors_this_run": 1
     }
   },
   "results": [
@@ -2820,7 +2838,55 @@
       "land_registry": "Stadt Charlottenburg Blatt 41454",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66751.pdf",
+        "source_signature": "v2:1509025:1791011030",
+        "pages": 41,
+        "text_chars": 69611,
+        "summary": "Steffen Bachmann zertifizierter Sachverständiger für die Bewertung von Grundstücken & Standardimmobilien EN ISO / IEC 17024 Gutachten Nr. 26627/25 über den Verkehrswert (Marktwert) für das Wohnungseigentum Halemweg 2, 4, 6, 8, 10, 12 Heilmannring 50, 52, 54 - Wohnung Nr. 51 - in 13627 Berlin-Charlottenburg Wertermittlungs-/Qualitätsstichtag: 07.",
+        "facts": {
+          "baujahr": "1959",
+          "wohnflaeche_m2": "67.26",
+          "nutzflaeche_m2": "67.26",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-48924",
@@ -2939,7 +3005,50 @@
       "land_registry": "Amtsgericht Landshut, Gemarkung Hüttenkofen, Blatt 546, FlNr. 304 zu 16849 qm",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126010.pdf",
+        "source_signature": "v2:3108730:1791011031",
+        "pages": 95,
+        "text_chars": 128201,
+        "summary": "810811752 (BLZ 74351430) Verkehrswert Wald(teil-)grundstück 304 in der Gemarkung Hüttenkofen, Seite – 1 – im Zwangsversteigerungsverfahren des Amtsgerichts Landshut, Abteilung für Zwangsversteigerungssachen, mit Aktenzeichen 1 K 45/25 Gliederung I. Auftrag und Bewertungsstichtag des Gutachtens 2 2. Verwendete Literatur und Informationsquellen 5 4.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168616",
@@ -3150,7 +3259,70 @@
       "land_registry": "Bergisch Neukirchen Blatt 917",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "379116.pdf",
+        "source_signature": "v2:375527:1791011042",
+        "pages": 32,
+        "text_chars": 67400,
+        "summary": "Bärbel Steinacker Architektin AKNW Sachverständige für die Bewertung von be- bauten und unbebauten Grundstücken Zertifizierte1 Sachverständige für die Markt- und Beleihungswertermittlung von Standardi- mmobilien, ZIS Sprengnetter Zert (S) Max-Delbrück-Str. 10 51377 Leverkusen Telefon: 0214/500 4171 E-Mail: info@knaeuper.com Internet: www.knaeuper.com Datum: 21.05.2025 Az.: 042 K 50/25 - WE 260303_AG Dies ist eine verkürzte Version des Verkehrs- wertgutachtens. Es handelt sich um eine Zu- sammenfassung der wichtigsten wertbestim- menden Merkmale des Bewertungsobjektes.",
+        "facts": {
+          "baujahr": "1953",
+          "wohnflaeche_m2": "129",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 41
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4169",
@@ -3331,7 +3503,60 @@
       "land_registry": "Grundbuch von Herren-Sulzbach Miteigentumsanteil verbunden mit Sondereigentum Lfd.Nr. 1 ME-Anteil 11/1000 Sondereigentums-Art an sämtlichen Räumen des im Wochenendhaus im Aufteilungsplan bezeichnet mit Nr. 38 a Sondernutzungsrecht an der im Lageplan mit Ziffer 38 a gekennzeichneten Grundstücksfläche und der darauf befindlichen Baulichkeiten Blatt 726 BV 1 an Grundstück Gemarkung Herren-Sulzbach Flur 3 Fl.St.Nr. 39/4 Gebäude- und Freifläche, Heideheck, Feriendorf Rheinpfalz 23.051 m² Grundbuch von Herren-Sulzbach Miteigentumsanteil verbunden mit Sondereigentum Lfd.Nr. 2 ME-Anteil 11/1000 Blatt 726 BV 2 Gemarkung Herren-Sulzbach Flur 3, Fl.St.Nr. 39/1 Gebäude- und Freifläche Versorgung Heideheck 65 m² Grundbuch von Herren-Sulzbach Miteigentumsanteil verbunden mit Sondereigentum Lfd.Nr. 3 ME-Anteil 11/1000 Blatt 726 BV 4 Gemarkung Herren-Sulzbach Flur 7, Fl.St.Nr. 154 Landwirtschaftsfläche, Im Wingert 2.605 m²",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "6251.pdf",
+        "source_signature": "v2:2978358:1791011047",
+        "pages": 53,
+        "text_chars": 100020,
+        "summary": "Martina Deichl Immobilien-Betriebswirtin (Dipl. E.I.A.) Gutachterin für Immobilienwertermittlung (Dipl. E.I.A.) Zertifizierte Wertermittlerin von Immobilien (IHK) Mitglied der Gutachterausschüsse der Landkreise Neunkirchen und Saarlouis sowie der Landeshauptstadt Saarbrücken August-Macke-Str.",
+        "facts": {
+          "baujahr": "1985",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "147"
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 51
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4176",
@@ -4021,7 +4246,60 @@
       "land_registry": "Homberg Blatt 8552",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "367018.pdf",
+        "source_signature": "v2:1049358:1791011037",
+        "pages": 33,
+        "text_chars": 62447,
+        "summary": "142 47057 Duisburg Tel.: 0203 374033 E-Mail: info@sv-wegmann.de www.sv-wegmann.de Steuernummer: 109-5221/0200 Commerzbank AG Duisburg IBAN DE07 3508 0070 0200 4902 00 BIC DEUTDEDB350 Lars Wegmann – Bismarckstr. 142 - 47057 Duisburg Amtsgericht Duisburg Zwangsversteigerung Postfach 10 01 10 47001 Duisburg Datum: 11. Februar 2025 AZ: 651 K 61-24 G U T A C H T E N über den (sanierungsunbeeinflussten) Verkehrswert (Marktwert) i.",
+        "facts": {
+          "baujahr": "1969",
+          "wohnflaeche_m2": "68",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 6
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168217",
@@ -4202,7 +4480,65 @@
       "land_registry": "Wesel Blatt 11144, Wesel Blatt 11145",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377827.pdf",
+        "source_signature": "v2:1120546:1791011039",
+        "pages": 43,
+        "text_chars": 79559,
+        "summary": "(FH) Stefan Klein Öffentlich-rechtlich zertifizierter Sachverständiger für die Be- wertung von bebauten und unbebauten Grundstücken, Mieten und Pachten, Zertifikat-Nr. Z2002-01-12 Immobiliengutachter CIS HypZert (F) DIN EN ISO/IEC 17024, Zertifikat-Nr. im Wohnungsgrundbuch von Wesel, Blatt 11144 eingetragenen 100,67/1.000 Miteigentumsan- teils an dem mit zwei Mehrfamilienhäusern und einem Hinterhaus bebauten Grundstück, verbun- den mit dem Sondereigentum an der Wohnung im DG links des Hauses „Beguinenstr.",
+        "facts": {
+          "baujahr": "1971",
+          "wohnflaeche_m2": "72.00",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 16
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49152",
@@ -4394,7 +4730,12 @@
       "land_registry": "Amtsgericht Hof, Döbra, Blatt 1206 Eingetragen im Grundbuch des Amtsgerichts Hof von Döbra lfd.Nr. Gemarkung Flurstück Wirtschaftsart u. Lage Anschrift Hektar Blatt 1 Döbra 143 Ackerland Berggüter 1,2019 1206 2 Döbra 144 Ackerland, Wald Berggüter 1,4280 1206 3 Döbra 147 Ackerland Berggüter 0,3750 1206 4 Döbra 149 Ackerland Berggüter 0,3074 1206 5 Döbra 151 Ackerland, Wald Berggüter 0,8780 1206 6 Döbra 313 Wald Höhe 0,2960 1206 7 Döbra 313/2 Wald Höhe 0,5320 1206 8 Döbra 404 Wald Türkengrund 0,2350 1206 9 Döbra 406 Wald Türkengrund 0,2420 1206 10 Döbra 408 Wald Türkengrund 0,8550 1206 11 Döbra 409 Wald Türkengrund 0,3680 1206 12 Döbra 410 Wald Türkengrund 0,3240 1206 13 Döbra 412 Wald Türkengrund 0,7700 1206 14 Döbra 187 Landwirtschaftsfläche Kleinteile 1,9605 1206",
       "detail_error": "Aktenzeichen der Detailseite fehlt oder passt nicht",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source_file": "126853.pdf",
+        "error": "PDF enthält zu wenig extrahierbaren Text"
+      }
     },
     {
       "id": "he-55105",
@@ -4595,7 +4936,60 @@
       "land_registry": "Bockenheim Blatt 11654",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134068.pdf",
+        "source_signature": "v2:1531137:1791011034",
+        "pages": 74,
+        "text_chars": 117930,
+        "summary": "Das Gutachten wurde in einer Ausfertigung erstellt. Dokument unterschrieben von: Franziska Rost- Wolf am: 02.02.2026 12:56 Ort: Frankfurt am FRANZISKA ROST-WOLF Dipl.-Ing. 1963 Erbbauzeit Bis 31.12.2068 Erbbauzins Der jährliche Erbbauzins beträgt für die Wohnung laut Grundbuch 223,98 € (10,00 €/m²).",
+        "facts": {
+          "baujahr": "1963",
+          "wohnflaeche_m2": "25.69",
+          "nutzflaeche_m2": "2.51",
+          "grundstueck_m2": "3733"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 23
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 38
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 9
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "he-55119",
@@ -4886,7 +5280,65 @@
       "land_registry": "Allmenrod Blatt 213 Lfd.Nr. Gemarkung Flur Flurstück Wirtschaftsart und Lage Größe m² 10 Allmenrod 22 24 Gebäude- und Freifläche, Talstraße 35 983",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "134466.pdf",
+        "source_signature": "v2:2315266:1791011034",
+        "pages": 53,
+        "text_chars": 58019,
+        "summary": "Allgemeine Angaben Grundbuch von Allmenrod, Blatt 213 des Amtsgerichtes Alsfeld Ifd. 10, Gemarkung Allmenrod, Flur 22, Flurstück 24, Gebäude- und Freifläche, Talstraße 35, Größe 983 m2 Amt für Bodenmanagement Fulda inG^KH inGEniEURKAmmER _ HESSEn _ Dipl. Jens Maurer (FH) Bergwiesenstraße 1 • 35325 Mücke/Wettsaasen Tel.",
+        "facts": {
+          "baujahr": "1930",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167378",
@@ -5045,7 +5497,65 @@
       "land_registry": "Zieverich Blatt 1356",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "375111.pdf",
+        "source_signature": "v2:1372102:1791011037",
+        "pages": 25,
+        "text_chars": 36481,
+        "summary": "Otten, Nieckchen & Wykowski Sachverständigen GbR Dipl. Deckblatt): 24 Anzahl der Seiten Anlagen: 6 Gutachten: 32 K4/25 - Gutenbergstraße XX. 50127 Bergheiin-Zieverich Bei dem vorliegenden Gutachten handelt es sich um eine anonymisierte, in einigen Teilen gekürzte Internetversion.",
+        "facts": {
+          "baujahr": "1974",
+          "wohnflaeche_m2": "57.90",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 2
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 7
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168215",
@@ -5192,7 +5702,65 @@
       "land_registry": "Kamen Blatt 490, Kamen Blatt 490",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377822.pdf",
+        "source_signature": "v2:1237189:1791011039",
+        "pages": 24,
+        "text_chars": 66752,
+        "summary": "Aktenzeichen: 014 K 009/23 Objekt: Weststraße 90, 59174 Kamen BAUDENKMAL tlw. unterkellertes Wohn-/Geschäftshaus mit einem Gewerbebereich im Erdgeschoss (z. Leerstand, vormals Gaststätte) sowie Wohnungen/einzelne Zimmer/Räume in den Obergeschossen und dem Dachgeschoss Baujahr: ist mir nicht bekannt; geschätzt ca.",
+        "facts": {
+          "baujahr": "1949",
+          "wohnflaeche_m2": "63",
+          "nutzflaeche_m2": "600",
+          "grundstueck_m2": "365.00"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 3
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 8
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 10
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 22
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 14
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 8
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168601",
@@ -5395,7 +5963,60 @@
       "land_registry": "Plettenberg Blatt 1071, Plettenberg Blatt 1071",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "379081.pdf",
+        "source_signature": "v2:852709:1791011042",
+        "pages": 38,
+        "text_chars": 56015,
+        "summary": "A R C H I T E K T I N U R S U L A T R I M P O P P L A N U N G U N D B A U M A N A G E M E N T D I P L . M A R K U S T R O M P E T T E R V O N D E R S I H K Z U H A G E N Ö F F E N T L I C H B E S T E L L T E R U N D V E R E I D I G T E R S A C H V E R S T Ä N D I G E R F Ü R S C H Ä D E N A N G E B Ä U D E N S T A A T L . A N E R K A N N T E R E N E R G I E B E R A T E R D I P L .",
+        "facts": {
+          "baujahr": "1957",
+          "wohnflaeche_m2": "132",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "599.00"
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 6
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 20
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-3647",
@@ -6055,7 +6676,60 @@
       "land_registry": "Stadt Charlottenburg Blatt 41476",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "66745.pdf",
+        "source_signature": "v2:1140519:1791011030",
+        "pages": 36,
+        "text_chars": 61963,
+        "summary": "Steffen Bachmann zertifizierter Sachverständiger für die Bewertung von Grundstücken & Standardimmobilien EN ISO / IEC 17024 Gutachten Nr. 27627/25 über den Verkehrswert (Marktwert) für das Teileigentum Halemweg 2, 4, 6, 8, 10, 12, Heilmannring 50, 52, 54 - Garage Nr. 73 - in 13627 Berlin-Charlottenburg Wertermittlungs-/Qualitätsstichtag: 07.",
+        "facts": {
+          "baujahr": "1978",
+          "wohnflaeche_m2": "14.42",
+          "nutzflaeche_m2": "14.42",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 3
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "br-7319",
@@ -6265,7 +6939,45 @@
       "land_registry": "Amtsgericht Landau a.d. Isar von Niederviehbach Blatt 1973",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126028.pdf",
+        "source_signature": "v2:1814333:1791011031",
+        "pages": 80,
+        "text_chars": 128291,
+        "summary": "Auftrag und Bewertungsstichtag des Gutachtens 2 2. Verwendete Literatur und Informationsquellen 5 4. Beschreibung der Grundstücke und der Holzbestände 35 II.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 12
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167843",
@@ -6494,7 +7206,55 @@
       "land_registry": "Barmen Blatt 20844",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376638.pdf",
+        "source_signature": "v2:958927:1791011038",
+        "pages": 33,
+        "text_chars": 37128,
+        "summary": "73 bezeichnet Geschäftsnummer: 400 K 76/25 Art der Liegenschaft: Garage in einem Garagenhof Verkehrswert: 7.500,00 Euro Dieses Gutachten besteht aus insgesamt 33 Seiten. In dieser Internetversion des Gutachtens befinden sich keine Anlagen (Teilungserklärung, Amtsauskünfte etc.). Das Originalgutachten kann nach vorheriger telefonischer Anmeldung in der Geschäftsstelle des Amtsgerichts eingesehen werden.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "3399"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 20
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 7
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 2
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-167845",
@@ -6723,7 +7483,60 @@
       "land_registry": "Ronsdorf Blatt 4776",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "376644.pdf",
+        "source_signature": "v2:690784:1791011038",
+        "pages": 34,
+        "text_chars": 45558,
+        "summary": "7 bezeichnet Geschäftsnummer: 400 K 77/25 Art der Liegenschaft: Eigentumswohnung Verkehrswert: 62.000,00 Euro Dieses Gutachten besteht aus insgesamt 34 Seiten. In dieser Internetversion des Gutachtens befinden sich keine Anlagen (Teilungserklärung, Amtsauskünfte etc.). Das Originalgutachten kann nach vorheriger telefonischer Anmeldung in der Geschäftsstelle des Amtsgerichts eingesehen werden.",
+        "facts": {
+          "baujahr": "1973",
+          "wohnflaeche_m2": "41",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "1066"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 13
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168005",
@@ -6904,7 +7717,65 @@
       "land_registry": "Hamminkeln Blatt 4350, Hamminkeln Blatt 4351",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377153.pdf",
+        "source_signature": "v2:1958645:1791011038",
+        "pages": 52,
+        "text_chars": 85206,
+        "summary": "K E R S T I N S C H I C K Sachverständige für Immobilienbewertung KSN Ingenieurgesellschaft Unternehmergesellschaft (haftungsbeschränkt) Schloßstr. 44 47627 Kevelaer T +49 2825 93 96 476 Ausfertigung Nr 1: Dieses Gutachten besteht aus insgesamt 57 Seiten. Hierin sind 36 Seiten Schriftteil und 8 Anlagen mit insgesamt 21 Seiten und 4 Fotos enthalten.",
+        "facts": {
+          "baujahr": "1987",
+          "wohnflaeche_m2": "199",
+          "nutzflaeche_m2": "42",
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "moisture",
+            "label": "Feuchtigkeit / Schimmel",
+            "mentions": 1
+          },
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 3
+          },
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 6
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 9
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 21
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 9
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168045",
@@ -7145,7 +8016,60 @@
       "land_registry": "Kirchhoven Blatt 1829",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "377274.pdf",
+        "source_signature": "v2:2458013:1791011038",
+        "pages": 46,
+        "text_chars": 90258,
+        "summary": "Gutachten über den Verkehrswert (Marktwert) i.S.d. Der Verkehrswert des Grundstücks wird zum Wertermittlungsstichtag 12.01.2023 unter Berücksichtigung der im Text formulierten Vorgaben ermittelt mit rund 258.000,00 EUR Es wurde keine Innenbesichtigung durchgeführt. Allgemeine Angaben .........................................................................................",
+        "facts": {
+          "baujahr": "1973",
+          "wohnflaeche_m2": "107",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": "374"
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 11
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 51
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 6
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168600",
@@ -7407,7 +8331,24 @@
       "land_registry": "Gronau Blatt 11256",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "379078.pdf",
+        "source_signature": "v2:1987728:1791011042",
+        "pages": 20,
+        "text_chars": 3331,
+        "summary": "Name, Vorname Eigentümer aus datenschutzrechtlichen Gründen hier nicht genannt ggfls. Architekt AKNW 36698 Sachverständiger für die Bewertung von bebauten und unbebauten Grundstücken Kreuzkamp 82 48683 Ahaus Telefon (0 25 61) 4 11 67 Mobil 0170-9467981 reinhard.horst@gmx.de Sparkasse Westmünsterland BLZ 401 545 30 Konto 40 652 067 Steuer-Nr.",
+        "facts": {
+          "baujahr": null,
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "rp-4101",
@@ -7842,7 +8783,60 @@
       "land_registry": null,
       "detail_error": "Aktenzeichen der Detailseite fehlt oder passt nicht",
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "126815.pdf",
+        "source_signature": "v2:1696122:1791011032",
+        "pages": 27,
+        "text_chars": 43828,
+        "summary": "W A L T E R Z I E G E R V O N D E R I N D U S T R I E - U N D H A N D E L S K A M M E R Ö F F E N T L I C H B E S T E L L T E R U N D V E R E I D I G T E R SA CHVE RS TÄNDIGER FÜR DIE B EWERTUNG VON BEBAU TEN UND UNB EBAU TEN GRUND STÜCKEN ARCHITEKT DIPL.ING. WIRTSCH.ING (FH) REGIERUNGSBAUMEISTER Chartered Surveyor MRICS Mitglied im Bundesverband der Immobilien-Investment S a c h v e r s t ä n d i g e n V E R K E H R S W E R T G U T A C H T E N Gericht Amtsgericht Augsburg Geschäfts-Nr. K 154/24 Verfahren Zwangsversteigerungsverfahren Wertermittlungsobjekte Adresse: 86937 Scheuring, Gartenstr.",
+        "facts": {
+          "baujahr": "1960",
+          "wohnflaeche_m2": null,
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "renovation",
+            "label": "Sanierungs- / Modernisierungsbedarf",
+            "mentions": 1
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 1
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 1
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "nw-168378",
@@ -8083,7 +9077,60 @@
       "land_registry": "Hoengen Blatt 4025, Hoengen Blatt 4025",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "smart_analysis": {
+        "generated_at": "2026-10-03T07:14:31+00:00",
+        "source": "lokal extrahierter Gutachtentext",
+        "source_file": "378334.pdf",
+        "source_signature": "v2:2135203:1791011040",
+        "pages": 51,
+        "text_chars": 103919,
+        "summary": "Gutachten über die Verkehrswerte (Marktwerte) i.S.d. Die Verkehrswerte der Grundstücke werden zum Wertermittlungsstichtag 19.11.2025 unter Berücksichtigung der im Text formulierten Vorgaben wie folgt ermittelt Flurstück 180 (bebautes Grundstück) rd. 3 1.1 Angaben zum Auftrag und zur Auftragsabwicklung .......................................................",
+        "facts": {
+          "baujahr": "1930",
+          "wohnflaeche_m2": "124",
+          "nutzflaeche_m2": null,
+          "grundstueck_m2": null
+        },
+        "signals": [
+          {
+            "code": "rights",
+            "label": "Rechte / Belastungen erwähnt",
+            "mentions": 4
+          },
+          {
+            "code": "occupancy",
+            "label": "Nutzung / Vermietung erwähnt",
+            "mentions": 2
+          },
+          {
+            "code": "energy",
+            "label": "Energie / Heizung erwähnt",
+            "mentions": 12
+          },
+          {
+            "code": "damage",
+            "label": "Schäden / Mängel erwähnt",
+            "mentions": 37
+          },
+          {
+            "code": "heritage",
+            "label": "Denkmalschutz erwähnt",
+            "mentions": 3
+          },
+          {
+            "code": "contamination",
+            "label": "Altlasten erwähnt",
+            "mentions": 5
+          },
+          {
+            "code": "flood",
+            "label": "Hochwasser / Starkregen erwähnt",
+            "mentions": 9
+          }
+        ],
+        "disclaimer": "Automatisierte Textauswertung. Maßgeblich sind Gutachten, Bekanntmachung, Grundbuch und Terminbedingungen."
+      }
     },
     {
       "id": "by-49121",
@@ -132537,7 +133584,14 @@
           "cached_bytes": 596791,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:49+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "00084d3a7e12ebe88e071eb0199c0afc480f6b55fbeb1f57847452fa63419491",
+            "source_signature": "0dcffe7a62dc72d8831bda848a69604c35a2d42d0d82ce635a58ddd11185bdfd",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:26+00:00",
+            "attempts": 1
+          }
         },
         {
           "type": "expose",
@@ -132612,6 +133666,66 @@
             "unique_bins": 212
           },
           "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=133644&zvg_id=54978"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-133645-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/he-54978/gutachten-photo-133645-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/he-54978/gutachten-photo-133645-01.jpg",
+          "preview_path": "media/he-54978/gutachten-photo-133645-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/he-54978/gutachten-photo-133645-01.jpg",
+          "cached_bytes": 47796,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "133645",
+          "generated_from_type": "gutachten",
+          "source_page": 34,
+          "generated_at": "2026-10-03T07:14:26+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1144.85,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 34,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0696,
+            "mid_ratio": 0.7306,
+            "color_ratio": 0.4594,
+            "variance": 5495.8,
+            "unique_bins": 231
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=133645&zvg_id=54978"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-133645-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/he-54978/gutachten-photo-133645-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/he-54978/gutachten-photo-133645-02.jpg",
+          "preview_path": "media/he-54978/gutachten-photo-133645-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/he-54978/gutachten-photo-133645-02.jpg",
+          "cached_bytes": 78792,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "133645",
+          "generated_from_type": "gutachten",
+          "source_page": 1,
+          "generated_at": "2026-10-03T07:14:26+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1081.62,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 1,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0521,
+            "mid_ratio": 0.6759,
+            "color_ratio": 0.1882,
+            "variance": 5357.5,
+            "unique_bins": 140
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=133645&zvg_id=54978"
         }
       ],
       "score": null,
@@ -132647,7 +133761,9 @@
       "land_registry": "Nauborn Blatt 4127",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:26+00:00",
+      "report_photo_source_file_id": "133645"
     },
     {
       "id": "ni-13187",
@@ -132702,7 +133818,74 @@
           "cached_bytes": 2933540,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:51+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "95ed380a3a23e1574c727dfdd46c182208962be4ec5624870f2d4441aabb76d3",
+            "source_signature": "5903bac7bc31182d638805234a4c95fc175cc569689674cc1803a4de20ab175e",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:27+00:00",
+            "attempts": 1
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-32448-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/ni-13187/gutachten-photo-32448-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/ni-13187/gutachten-photo-32448-01.jpg",
+          "preview_path": "media/ni-13187/gutachten-photo-32448-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/ni-13187/gutachten-photo-32448-01.jpg",
+          "cached_bytes": 502969,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "32448",
+          "generated_from_type": "gutachten",
+          "source_page": 18,
+          "generated_at": "2026-10-03T07:14:27+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1378.6,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 18,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0172,
+            "mid_ratio": 0.7428,
+            "color_ratio": 0.3731,
+            "variance": 4683.6,
+            "unique_bins": 464
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32448&zvg_id=13187"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-32448-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/ni-13187/gutachten-photo-32448-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/ni-13187/gutachten-photo-32448-02.jpg",
+          "preview_path": "media/ni-13187/gutachten-photo-32448-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/ni-13187/gutachten-photo-32448-02.jpg",
+          "cached_bytes": 280087,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "32448",
+          "generated_from_type": "gutachten",
+          "source_page": 19,
+          "generated_at": "2026-10-03T07:14:27+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1318.71,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 19,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0078,
+            "mid_ratio": 0.8391,
+            "color_ratio": 0.3936,
+            "variance": 3667.7,
+            "unique_bins": 432
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=ni&file_id=32448&zvg_id=13187"
         }
       ],
       "score": null,
@@ -132738,7 +133921,9 @@
       "land_registry": "PEWSUM Blatt 543",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:27+00:00",
+      "report_photo_source_file_id": "32448"
     },
     {
       "id": "by-49235",
@@ -132793,7 +133978,14 @@
           "cached_bytes": 3026387,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:52+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "d80ba1085dd75977017688e9dfc10801543e53aecfb12cf1ead225d8e2b0c088",
+            "source_signature": "5f9f5f02cbbe74001cc49a020b6dee4c1ab0934876fa327544eed2606c34c991",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:27+00:00",
+            "attempts": 1
+          }
         },
         {
           "type": "foto",
@@ -132843,7 +134035,104 @@
           "cached_bytes": 2856344,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:53+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "035cc52ad6f71d907654987eb45b6ad48975c659af12f97541e560e942d9f012",
+            "source_signature": "034c491c1337cfd8943620acf40d15227c0cdb19821c7a9a00feda1124fd990d",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:27+00:00",
+            "attempts": 1
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127172-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/by-49235/gutachten-photo-127172-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49235/gutachten-photo-127172-01.jpg",
+          "preview_path": "media/by-49235/gutachten-photo-127172-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49235/gutachten-photo-127172-01.jpg",
+          "cached_bytes": 70956,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127172",
+          "generated_from_type": "gutachten",
+          "source_page": 1,
+          "generated_at": "2026-10-03T07:14:27+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1090.21,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 1,
+          "photo_quality_metrics": {
+            "white_ratio": 0.1913,
+            "mid_ratio": 0.6363,
+            "color_ratio": 0.3767,
+            "variance": 6340.3,
+            "unique_bins": 190
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127172&zvg_id=49235"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127173-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/by-49235/gutachten-photo-127173-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49235/gutachten-photo-127173-01.jpg",
+          "preview_path": "media/by-49235/gutachten-photo-127173-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49235/gutachten-photo-127173-01.jpg",
+          "cached_bytes": 127599,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127173",
+          "generated_from_type": "gutachten",
+          "source_page": 7,
+          "generated_at": "2026-10-03T07:14:27+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1839.45,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 7,
+          "photo_quality_metrics": {
+            "white_ratio": 0.1811,
+            "mid_ratio": 0.5687,
+            "color_ratio": 0.5787,
+            "variance": 3882.7,
+            "unique_bins": 1126
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127173&zvg_id=49235"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127173-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/by-49235/gutachten-photo-127173-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49235/gutachten-photo-127173-02.jpg",
+          "preview_path": "media/by-49235/gutachten-photo-127173-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49235/gutachten-photo-127173-02.jpg",
+          "cached_bytes": 49677,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127173",
+          "generated_from_type": "gutachten",
+          "source_page": 8,
+          "generated_at": "2026-10-03T07:14:27+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1240.69,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 8,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0063,
+            "mid_ratio": 0.6837,
+            "color_ratio": 0.9386,
+            "variance": 606.2,
+            "unique_bins": 534
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127173&zvg_id=49235"
         }
       ],
       "score": null,
@@ -132879,7 +134168,9 @@
       "land_registry": null,
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:27+00:00",
+      "report_photo_source_file_id": "127173"
     },
     {
       "id": "nw-168619",
@@ -132948,7 +134239,14 @@
           "cached_bytes": 91973,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:54+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "dc7323598a85fc6a33754129438202a3069f33ff473c65447667fbd976df6bf4",
+            "source_signature": "797a90a173a86a2576608df99202d49d74beadcd02e9d6adee82ed6aa8304aea",
+            "status": "no_photos",
+            "checked_at": "2026-10-03T07:14:27+00:00",
+            "attempts": 1
+          }
         }
       ],
       "score": null,
@@ -132986,7 +134284,8 @@
       "land_registry": "Dremmen Blatt 4364, Dremmen Blatt 4364",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "sn-41075",
@@ -133041,7 +134340,14 @@
           "cached_bytes": 2874960,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:55+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "f1bf48ab8f0b90129fbc1cb4259aa8544667e5da1fabb24785400ff72f056f92",
+            "source_signature": "e25940e4985285822397453ec5da910aaaaf50fc47e537298dc6b761fe2009b5",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:28+00:00",
+            "attempts": 1
+          }
         },
         {
           "type": "foto",
@@ -133078,6 +134384,66 @@
           "photo_quality_pass": false,
           "photo_quality_mode": "rejected-document-like-pdf",
           "preview_error": "Kein belastbares Objektfoto erkannt"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-109550-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/sn-41075/gutachten-photo-109550-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41075/gutachten-photo-109550-01.jpg",
+          "preview_path": "media/sn-41075/gutachten-photo-109550-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41075/gutachten-photo-109550-01.jpg",
+          "cached_bytes": 60481,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "109550",
+          "generated_from_type": "gutachten",
+          "source_page": 45,
+          "generated_at": "2026-10-03T07:14:28+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1107.82,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 45,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0,
+            "mid_ratio": 0.8799,
+            "color_ratio": 0.3524,
+            "variance": 3470.2,
+            "unique_bins": 255
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109550&zvg_id=41075"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-109550-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/sn-41075/gutachten-photo-109550-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41075/gutachten-photo-109550-02.jpg",
+          "preview_path": "media/sn-41075/gutachten-photo-109550-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41075/gutachten-photo-109550-02.jpg",
+          "cached_bytes": 65824,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "109550",
+          "generated_from_type": "gutachten",
+          "source_page": 45,
+          "generated_at": "2026-10-03T07:14:28+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1103.06,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 45,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0,
+            "mid_ratio": 0.7791,
+            "color_ratio": 0.2378,
+            "variance": 3998.7,
+            "unique_bins": 244
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109550&zvg_id=41075"
         }
       ],
       "score": null,
@@ -133113,7 +134479,9 @@
       "land_registry": "siehe amtliche Bekanntmachung",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:28+00:00",
+      "report_photo_source_file_id": "109550"
     },
     {
       "id": "by-49076",
@@ -133180,7 +134548,74 @@
           "cached_bytes": 1010933,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:57+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "45f82bed795c7d87b41659b6f6b776b71d1ae5efeca95351b02990f75c8042b1",
+            "source_signature": "f65f6de0cd1f326c467199b1f4f8d829861e915ab276b2cbb0d09595433e5f21",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:28+00:00",
+            "attempts": 1
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-126561-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/by-49076/gutachten-photo-126561-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49076/gutachten-photo-126561-01.jpg",
+          "preview_path": "media/by-49076/gutachten-photo-126561-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49076/gutachten-photo-126561-01.jpg",
+          "cached_bytes": 66749,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "126561",
+          "generated_from_type": "gutachten",
+          "source_page": 14,
+          "generated_at": "2026-10-03T07:14:28+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1420.06,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 14,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0,
+            "mid_ratio": 0.8791,
+            "color_ratio": 0.8276,
+            "variance": 3289.2,
+            "unique_bins": 616
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126561&zvg_id=49076"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-126561-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/by-49076/gutachten-photo-126561-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49076/gutachten-photo-126561-02.jpg",
+          "preview_path": "media/by-49076/gutachten-photo-126561-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49076/gutachten-photo-126561-02.jpg",
+          "cached_bytes": 33188,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "126561",
+          "generated_from_type": "gutachten",
+          "source_page": 45,
+          "generated_at": "2026-10-03T07:14:28+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1250.22,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 45,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0002,
+            "mid_ratio": 0.9168,
+            "color_ratio": 0.6937,
+            "variance": 3295.4,
+            "unique_bins": 449
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=126561&zvg_id=49076"
         }
       ],
       "score": null,
@@ -133216,7 +134651,9 @@
       "land_registry": "Gemarkung Ingolstadt Blatt 36318",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:28+00:00",
+      "report_photo_source_file_id": "126561"
     },
     {
       "id": "by-49236",
@@ -133271,7 +134708,14 @@
           "cached_bytes": 3105697,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:52:58+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "d9cb2294c104e46dd032cc54b75a731151b9972252f3be2e329dc18a63a78658",
+            "source_signature": "0faa42c2821674e91a5e9eb8e6465ec46dc3ccfca0508cf875ea9297c2c334f4",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:29+00:00",
+            "attempts": 1
+          }
         },
         {
           "type": "foto",
@@ -133308,6 +134752,66 @@
           "photo_quality_pass": false,
           "photo_quality_mode": "rejected-document-like-pdf",
           "preview_error": "Kein belastbares Objektfoto erkannt"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127171-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/by-49236/gutachten-photo-127171-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49236/gutachten-photo-127171-01.jpg",
+          "preview_path": "media/by-49236/gutachten-photo-127171-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49236/gutachten-photo-127171-01.jpg",
+          "cached_bytes": 72136,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127171",
+          "generated_from_type": "gutachten",
+          "source_page": 43,
+          "generated_at": "2026-10-03T07:14:29+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1267.15,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 43,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0002,
+            "mid_ratio": 0.8064,
+            "color_ratio": 0.6443,
+            "variance": 2985.6,
+            "unique_bins": 476
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127171&zvg_id=49236"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127171-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/by-49236/gutachten-photo-127171-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49236/gutachten-photo-127171-02.jpg",
+          "preview_path": "media/by-49236/gutachten-photo-127171-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49236/gutachten-photo-127171-02.jpg",
+          "cached_bytes": 77871,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127171",
+          "generated_from_type": "gutachten",
+          "source_page": 41,
+          "generated_at": "2026-10-03T07:14:29+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1244.07,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 41,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0179,
+            "mid_ratio": 0.8249,
+            "color_ratio": 0.2444,
+            "variance": 3668.5,
+            "unique_bins": 443
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127171&zvg_id=49236"
         }
       ],
       "score": null,
@@ -133343,7 +134847,9 @@
       "land_registry": null,
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:29+00:00",
+      "report_photo_source_file_id": "127171"
     },
     {
       "id": "sn-41076",
@@ -133398,7 +134904,14 @@
           "cached_bytes": 3025881,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:53:00+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "de06493e634846811fd4ba164c11a5704d4b90fabed7661e0c93cddbdf0db685",
+            "source_signature": "28d3c0b1bf6bb3928efafac8a4b369d40ca858b48ad8ffe423d6d5589abdda3b",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:29+00:00",
+            "attempts": 1
+          }
         },
         {
           "type": "foto",
@@ -133435,6 +134948,66 @@
           "photo_quality_pass": false,
           "photo_quality_mode": "rejected-document-like-pdf",
           "preview_error": "Kein belastbares Objektfoto erkannt"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-109554-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/sn-41076/gutachten-photo-109554-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41076/gutachten-photo-109554-01.jpg",
+          "preview_path": "media/sn-41076/gutachten-photo-109554-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41076/gutachten-photo-109554-01.jpg",
+          "cached_bytes": 60481,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "109554",
+          "generated_from_type": "gutachten",
+          "source_page": 45,
+          "generated_at": "2026-10-03T07:14:29+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1107.82,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 45,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0,
+            "mid_ratio": 0.8799,
+            "color_ratio": 0.3524,
+            "variance": 3470.2,
+            "unique_bins": 255
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109554&zvg_id=41076"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-109554-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/sn-41076/gutachten-photo-109554-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41076/gutachten-photo-109554-02.jpg",
+          "preview_path": "media/sn-41076/gutachten-photo-109554-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/sn-41076/gutachten-photo-109554-02.jpg",
+          "cached_bytes": 65824,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "109554",
+          "generated_from_type": "gutachten",
+          "source_page": 45,
+          "generated_at": "2026-10-03T07:14:29+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1103.06,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 45,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0,
+            "mid_ratio": 0.7791,
+            "color_ratio": 0.2378,
+            "variance": 3998.7,
+            "unique_bins": 244
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=sn&file_id=109554&zvg_id=41076"
         }
       ],
       "score": null,
@@ -133470,7 +135043,9 @@
       "land_registry": "siehe amtliche Bekanntmachung",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:29+00:00",
+      "report_photo_source_file_id": "109554"
     },
     {
       "id": "mv-official-11754749ec670c68",
@@ -133646,7 +135221,14 @@
           "cached_bytes": 365597,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:53:01+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "46e17ef5d1e1e402b29cfae6c241ba14a0029e68ebc05aa19ca78c6aad4a4ef6",
+            "source_signature": "babd84ea0fa1abec198dc61ee726e3ca887dbaad092da52f71e7c2af42804fdc",
+            "status": "no_photos",
+            "checked_at": "2026-10-03T07:14:29+00:00",
+            "attempts": 1
+          }
         }
       ],
       "score": null,
@@ -133682,7 +135264,8 @@
       "land_registry": "Eingetragen im Grundbuch des Amtsgerichts Lichtenfels von Wallersberg Gemarkung Flurstück Wirtschaftsart u. Lage Anschrift Hektar Blatt Wallersberg 627 Gebäude- und Freifläche In Frankenberg 0,1101 603 Wallersberg ist ein Dorf mit 49 Einwohnern. Es gehört als eigener Stadtteil zur Stadt Weismain im oberfränkischen Landkreis Lichtenfels, im Norden des Freistaates Bayern.",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "bw-official-745576fa6e33783c",
@@ -133818,7 +135401,74 @@
           "cached_bytes": 1997527,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:53:02+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "ebe891e72bfd3c1a1cee66385c7f114db7e99fda61afe311aefe4671ebcd278e",
+            "source_signature": "3f49d637f17f10e15f917479975b5dab9fc203ff8230dc3f7d9ab506c0b9d3ab",
+            "status": "photos",
+            "checked_at": "2026-10-03T07:14:30+00:00",
+            "attempts": 1
+          }
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127437-1",
+          "name": "Objektfoto aus Gutachten 1",
+          "cached_path": "media/by-49304/gutachten-photo-127437-01.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49304/gutachten-photo-127437-01.jpg",
+          "preview_path": "media/by-49304/gutachten-photo-127437-01.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49304/gutachten-photo-127437-01.jpg",
+          "cached_bytes": 83465,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127437",
+          "generated_from_type": "gutachten",
+          "source_page": 29,
+          "generated_at": "2026-10-03T07:14:30+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1297.42,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 29,
+          "photo_quality_metrics": {
+            "white_ratio": 0.001,
+            "mid_ratio": 0.5575,
+            "color_ratio": 0.5988,
+            "variance": 4242.7,
+            "unique_bins": 477
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127437&zvg_id=49304"
+        },
+        {
+          "type": "foto",
+          "file_id": "report-photo-127437-2",
+          "name": "Objektfoto aus Gutachten 2",
+          "cached_path": "media/by-49304/gutachten-photo-127437-02.jpg",
+          "cached_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49304/gutachten-photo-127437-02.jpg",
+          "preview_path": "media/by-49304/gutachten-photo-127437-02.jpg",
+          "preview_url": "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/media/by-49304/gutachten-photo-127437-02.jpg",
+          "cached_bytes": 63197,
+          "content_type": "image/jpeg",
+          "preview_content_type": "image/jpeg",
+          "photo_source": "gutachten",
+          "generated_from_file_id": "127437",
+          "generated_from_type": "gutachten",
+          "source_page": 29,
+          "generated_at": "2026-10-03T07:14:30+00:00",
+          "photo_validation_version": 3,
+          "photo_quality_pass": true,
+          "photo_quality_score": 1201.96,
+          "photo_quality_mode": "gutachten-embedded-image",
+          "photo_quality_page": 29,
+          "photo_quality_metrics": {
+            "white_ratio": 0.0132,
+            "mid_ratio": 0.4986,
+            "color_ratio": 0.4705,
+            "variance": 5834.6,
+            "unique_bins": 312
+          },
+          "generated_from_url": "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=by&file_id=127437&zvg_id=49304"
         }
       ],
       "score": null,
@@ -133854,7 +135504,9 @@
       "land_registry": "Eingetragen im Grundbuch des Amtsgerichts Starnberg von Gauting, Blatt 8310",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_extracted_at": "2026-10-03T07:14:30+00:00",
+      "report_photo_source_file_id": "127437"
     },
     {
       "id": "bw-8627",
@@ -134260,7 +135912,14 @@
           "cached_bytes": 2814382,
           "content_type": "application/pdf",
           "cached_at": "2026-09-23T00:53:04+00:00",
-          "cache_status": "ok"
+          "cache_status": "ok",
+          "report_photo_check": {
+            "signature": "453a321c923400889318de9bf3a20422d3750aa2a8acdea366d873d24df088c6",
+            "source_signature": "27a2ff457415892d1bc5c85e933f05fc3dbf7e109fb8c363b4739576648000ad",
+            "status": "no_photos",
+            "checked_at": "2026-10-03T07:14:30+00:00",
+            "attempts": 1
+          }
         }
       ],
       "score": null,
@@ -134296,7 +135955,8 @@
       "land_registry": "Amtsgericht Kaufbeuren, Gemarkung Kaufbeuren, Blatt 24140 143,10/1000 Miteigentumsanteil verbunden mit dem Sondereigentum an Raumeinheit Nr. 2, Sondernutzungsrecht: Nutzungsrecht an der unbebauten Fläche vor der Garage Nr. 2, Stellplatznutzungsrecht; Gartenanteilsnutzungsrecht; jeweils ausschließliche Nutzungsrechte Amtsgericht Kaufbeuren, Gemarkung Kaufbeuren, Blatt 24141 121,18/1000 Miteigentumsanteil verbunden mit dem Sondereigentum an Raumeinheit Nr. 3, Sondernutzungsrecht: Nutzungsrecht an der unbebauten Fläche vor der Garage Nr. 3, Stellplatznutzungsrecht; Gartenanteilsnutzungsrecht; jeweils ausschließliche Nutzungsrechte Amtsgericht Kaufbeuren, Gemarkung Kaufbeuren, Blatt 24818 155,23/1000 Miteigentumsanteil verbunden mit dem Sondereigentum an Raumeinheit Nr. 6, Sondernutzungsrecht: alleiniges Nutzungsrecht von Stellplatz- und unbebauten Flächen Amtsgericht Kaufbeuren, Gemarkung Kaufbeuren, Blatt 24143 206/1000 Miteigentumsanteil verbunden mit dem Sondereigentum an Raumeinheit Nr. 5, Sondernutzungsrecht: alleiniges Nutzungsrecht von Stellplatz- und unbebauten Flächen jeweils an FlNr. 2834/2, Äußere Buchleuthenstraße 62, 87600 Kaufbeuren, Gebäude- und Freifläche zu 0,2762 ha",
       "detail_error": null,
       "history": [],
-      "first_seen_at": "2026-09-18T19:53:18+00:00"
+      "first_seen_at": "2026-09-18T19:53:18+00:00",
+      "report_photo_error": "Keine geeigneten eingebetteten Objektbilder erkannt"
     },
     {
       "id": "by-49034",

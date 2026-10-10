@@ -15,11 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Datensatz dieser Revision laden
+      - name: Datensatz des bestaetigten Fehlerfalls laden
         shell: bash
         run: |
+          # Same immutable data as diagnosis run 38081304522, not changing main.
           curl -fL --retry 2 --max-time 60 \
-            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/data/auctions.json" \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/f9b0f51d508572ab2757791ac1b19c06110b6b2c/data/auctions.json" \
             -o auctions.json
 
       - name: Transport testen - keine Importaktionen
@@ -36,6 +37,10 @@ jobs:
           ACTION = 'zvgpro_transport_probe_20261010'
           ENDPOINT = 'https://zvgpro.de/api/github-sync.php'
           LIMIT = 128 * 1024
+          MAX_PROBES = 64
+          # Exact HTML response observed in the first non-importing diagnosis.
+          BLOCKED_SHA256 = 'd452c21413341d93aa8d178d637d88c93362dd817e06f6afc2f036a78d88d08b'
+          DATASET_SHA256 = '54f71daa08158013d05340292ae90639b13bbcab0a625109f59520963235e9e2'
 
           def encode(payload):
               return json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
@@ -84,7 +89,7 @@ jobs:
                   # No exception text or raw responses: they may contain secrets.
                   print(json.dumps({'test': label, 'utc': timestamp, 'bytes': len(body),
                                     'network_error': type(error).__name__}), flush=True)
-                  return False
+                  raise RuntimeError('Netzwerkfehler; keine weiteren Diagnoseanfragen.') from None
               try:
                   result = json.loads(raw)
               except (ValueError, UnicodeDecodeError):
@@ -102,7 +107,134 @@ jobs:
                                 'response_prefix_sha256': hashlib.sha256(raw).hexdigest()}), flush=True)
               if status in (401, 403):
                   raise RuntimeError('Zugriff abgelehnt; Diagnose gestoppt. Keine weiteren Anfragen.')
-              return reached_php
+              if reached_php:
+                  return True
+              if status == 400 and response_kind == 'html' and hashlib.sha256(raw).hexdigest() == BLOCKED_SHA256:
+                  return False
+              # Never interpret rate limits, server faults, changed application
+              # responses or redirects as a content-specific rejection.
+              raise RuntimeError('Nicht eindeutig zuordenbare Antwort; Diagnose sicher gestoppt.')
+
+          class ProbeBudget:
+              def __init__(self, opener, token):
+                  self.opener, self.token = opener, token
+                  self.used, self.cache = 0, {}
+
+              def send(self, label, body, fresh=False):
+                  digest = hashlib.sha256(body).hexdigest()
+                  if not fresh and digest in self.cache:
+                      return self.cache[digest]
+                  if self.used >= MAX_PROBES:
+                      raise RuntimeError('Diagnosebudget erreicht; keine weiteren Anfragen und kein Import.')
+                  self.used += 1
+                  answer = probe(label, body, self.opener, self.token)
+                  if fresh and digest in self.cache and self.cache[digest] != answer:
+                      raise RuntimeError('Widersprüchliche Antworten auf identische Daten; kein Feldbefund möglich.')
+                  self.cache[digest] = answer
+                  return answer
+
+          def minimize(items, fails):
+              # Delta debugging: retain exact original values, never encode or
+              # rewrite them to get an import past a possible security filter.
+              current = list(items)
+              if fails([]):
+                  return []
+              pieces = 2
+              while len(current) >= 2:
+                  groups = [current[i * len(current) // pieces:(i + 1) * len(current) // pieces]
+                            for i in range(pieces)]
+                  reduced = None
+                  for group in groups:
+                      if fails(group):
+                          reduced = group
+                          break
+                  if reduced is None and pieces > 2:
+                      for group in groups:
+                          complement = [item for item in current if item not in group]
+                          if fails(complement):
+                              reduced = complement
+                              break
+                  if reduced is not None:
+                      current, pieces = reduced, 2
+                      continue
+                  if pieces == len(current):
+                      break
+                  pieces = min(len(current), pieces * 2)
+              return current
+
+          def isolate(real_data, budget):
+              original = json.loads(real_data)
+              objects = original['objects']
+
+              def body_for(selected):
+                  return encode(dict(original, objects=selected))
+
+              def fails(label, body):
+                  return not budget.send(label, body)
+
+              indices = minimize(range(len(objects)), lambda selected:
+                                 fails('objekt-teilmenge', body_for([objects[i] for i in selected])))
+              if not indices:
+                  raise RuntimeError('Bereits die leere Objekthülle wird abgewiesen; kein bestimmtes Objekt isolierbar.')
+              print('ISOLATION_OBJEKTE ' + json.dumps({'source_indices': indices}), flush=True)
+              if len(indices) > 1:
+                  candidate = body_for([objects[i] for i in indices])
+                  paths = [['objects', i] for i in indices]
+                  kind = 'object_combination'
+              else:
+                  source_index = indices[0]
+                  value = objects[source_index]
+                  path = ['objects', source_index]
+                  build = lambda replacement: body_for([replacement])
+                  # Narrow dictionaries/lists one level at a time. String values
+                  # are not changed and are never printed into public job logs.
+                  for depth in range(16):
+                      if isinstance(value, dict) and value:
+                          keys = minimize(list(value), lambda chosen:
+                                          fails('feld-teilmenge', build({k: value[k] for k in chosen})))
+                          if not keys:
+                              candidate, paths, kind = build({}), [path], 'empty_container'
+                              break
+                          selected = {k: value[k] for k in keys}
+                          candidate, paths, kind = build(selected), [path + [k] for k in keys], 'field_combination'
+                          print('ISOLATION_PFADE ' + json.dumps(paths, ensure_ascii=True), flush=True)
+                          if len(keys) != 1:
+                              break
+                          key, parent = keys[0], build
+                          build = lambda replacement, key=key, parent=parent: parent({key: replacement})
+                          value, path = value[key], path + [key]
+                      elif isinstance(value, list) and value:
+                          positions = minimize(range(len(value)), lambda chosen:
+                                               fails('listen-teilmenge', build([value[i] for i in chosen])))
+                          if not positions:
+                              candidate, paths, kind = build([]), [path], 'empty_container'
+                              break
+                          candidate = build([value[i] for i in positions])
+                          paths, kind = [path + [i] for i in positions], 'list_combination'
+                          print('ISOLATION_PFADE ' + json.dumps(paths, ensure_ascii=True), flush=True)
+                          if len(positions) != 1:
+                              break
+                          index, parent = positions[0], build
+                          build = lambda replacement, parent=parent: parent([replacement])
+                          value, path = value[index], path + [index]
+                      else:
+                          candidate, paths, kind = build(value), [path], 'single_value'
+                          break
+                  else:
+                      candidate, paths, kind = build(value), [path], 'depth_limit'
+
+              # Confirm repeatability plus a working control, independent of cache.
+              if not budget.send('abschluss-kontrolle', encode({'action': ACTION}), fresh=True):
+                  raise RuntimeError('Kontrollanfrage fehlgeschlagen; Befund nicht belastbar.')
+              if budget.send('minimalfall-bestaetigung', candidate, fresh=True):
+                  raise RuntimeError('Ablehnung nicht reproduzierbar; kein belastbarer Feldbefund.')
+              print('ISOLATION_ERGEBNIS ' + json.dumps({
+                  'kind': kind, 'source_indices': indices, 'paths': paths,
+                  'candidate_bytes': len(candidate),
+                  'candidate_sha256': hashlib.sha256(candidate).hexdigest(),
+                  'requests': budget.used,
+                  'notice': 'Reproduzierbarer Diagnosefall, keine bewiesene Filterregel, kein Import-Fix.'
+              }, ensure_ascii=True), flush=True)
 
           def main():
               token = os.environ.get('ZVGPRO_DB_SYNC_TOKEN', '').strip()
@@ -110,6 +242,8 @@ jobs:
                   raise RuntimeError('GitHub Secret ZVGPRO_DB_SYNC_TOKEN fehlt.')
               with open('auctions.json', 'rb') as source:
                   raw = source.read()
+              if hashlib.sha256(raw).hexdigest() != DATASET_SHA256:
+                  raise RuntimeError('Diagnosedatensatz stimmt nicht mit dem bestätigten Fehlerfall überein.')
               data = json.loads(raw)
               rows = data.get('results', []) if isinstance(data, dict) else data
               if not isinstance(rows, list) or not rows:
@@ -118,12 +252,18 @@ jobs:
               print('Nur Transportdiagnose: kein Import, keine Sperränderung. Ein grüner Diagnoselauf bestätigt NICHT den Sync.')
               print('Dataset SHA256:', hashlib.sha256(raw).hexdigest(), 'Objekte:', len(rows))
               opener = urllib.request.build_opener(NoRedirect())
+              budget = ProbeBudget(opener, token)
               tests = [('minimal', encode({'action': ACTION}))]
               tests += [(f'ascii-{size}', padded_body(size)) for size in (1024, 16384, 65536, LIMIT)]
               tests += [('erste-objekte-ohne-import', real_data)]
               for label, body in tests:
-                  if not probe(label, body, opener, token):
-                      print('Abweichende Antwort; Diagnose endet hier. Keine Wiederholung und kein Import.', flush=True)
+                  if not budget.send(label, body):
+                      if label == 'erste-objekte-ohne-import':
+                          print('Bekannte inhaltsabhängige Ablehnung; Objekt/Feld-Eingrenzung ohne Import.', flush=True)
+                          isolate(real_data, budget)
+                          print('Diagnose abgeschlossen. Der normale Import ist weiterhin NICHT als repariert bestätigt.')
+                          return
+                      print('Kontrollanfrage abgewiesen; keine Eingrenzung und kein Import.', flush=True)
                       raise SystemExit(1)
               print('Alle Testanfragen erreichten die erwartete PHP-Antwort. Die Importfunktion wurde NICHT getestet.')
 

@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: zvgpro-mariadb-sync
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -76,7 +80,8 @@ jobs:
           endpoint = 'https://zvgpro.de/api/github-sync.php'
           token = os.environ['ZVGPRO_DB_SYNC_TOKEN'].strip()
 
-          raw = open('auctions.json', 'rb').read()
+          with open('auctions.json', 'rb') as source:
+              raw = source.read()
           dataset_hash = hashlib.sha256(raw).hexdigest()
           data = json.loads(raw)
           rows = data.get('results', data) if isinstance(data, dict) else data
@@ -84,8 +89,35 @@ jobs:
               raise RuntimeError(f'Ungueltiger Datenbestand: {len(rows) if isinstance(rows, list) else 0} Verfahren')
           generated_at = data.get('meta', {}).get('generated_at') if isinstance(data, dict) else None
 
+          def encode(payload):
+              return json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+
+          def make_batches(rows, run_id, max_bytes=128 * 1024, max_items=75):
+              # Bound the complete UTF-8 request, not just the number of objects.
+              # Keep every source field and preserve ordering/absolute offsets.
+              batches = []
+              offset = 0
+              while offset < len(rows):
+                  batch = []
+                  size = len(encode({'action': 'batch', 'run_id': run_id, 'offset': offset, 'objects': []}))
+                  for row in rows[offset:offset + max_items]:
+                      added = len(encode(row)) + (1 if batch else 0)
+                      if size + added > max_bytes:
+                          if not batch:
+                              raise RuntimeError(f'Einzelnes Verfahren an Position {offset} überschreitet das Paketlimit von {max_bytes} Bytes. Import nicht gestartet; keine Daten gekürzt.')
+                          break
+                      batch.append(row)
+                      size += added
+                  batches.append((offset, batch))
+                  offset += len(batch)
+              return batches
+
+          # Validate all objects before opening a server-side import.
+          # Reserve ample digits for the actual run ID in the later envelopes.
+          make_batches(rows, 99999999999999999999)
+
           def post(payload, attempts=3):
-              body = json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+              body = encode(payload)
               last = None
               for attempt in range(1, attempts + 1):
                   req = urllib.request.Request(
@@ -108,7 +140,10 @@ jobs:
                       return result
                   except urllib.error.HTTPError as e:
                       detail = e.read().decode('utf-8', 'replace')[:2000]
-                      last = RuntimeError(f'HTTP {e.code}: {detail}')
+                      last = RuntimeError(f'HTTP {e.code}, Aktion {payload.get("action")}, Offset {payload.get("offset", "-")}, Paket {len(body)} Bytes: {detail}')
+                      # Repeating an invalid/unauthorized request cannot repair it.
+                      if 400 <= e.code < 500 and e.code not in (408, 429):
+                          raise last
                   except Exception as e:
                       last = e
                   if attempt < attempts:
@@ -121,14 +156,17 @@ jobs:
               raise SystemExit(0)
 
           run_id = int(begin['run_id'])
-          batch_size = 75
-          total_batches = (len(rows) + batch_size - 1) // batch_size
-          print(f'Sync-Run {run_id}: {len(rows)} Verfahren in {total_batches} Batches.')
+          batches = make_batches(rows, run_id)
+          total_batches = len(batches)
+          print(f'Sync-Run {run_id}: {len(rows)} Verfahren in {total_batches} Batches, maximal 128 KiB pro Paket.', flush=True)
 
-          for n, offset in enumerate(range(0, len(rows), batch_size), 1):
-              result = post({'action': 'batch', 'run_id': run_id, 'offset': offset, 'objects': rows[offset:offset + batch_size]})
+          for n, (offset, batch) in enumerate(batches, 1):
+              result = post({'action': 'batch', 'run_id': run_id, 'offset': offset, 'objects': batch})
+              expected = offset + len(batch)
+              if int(result.get('processed', -1)) != expected:
+                  raise RuntimeError(f'Server bestätigt {result.get("processed")} statt {expected} Verfahren. Import wird nicht abgeschlossen.')
               if n == 1 or n % 10 == 0 or n == total_batches:
-                  print(f'Batch {n}/{total_batches}: {result.get("processed", 0)}/{len(rows)} verarbeitet.')
+                  print(f'Batch {n}/{total_batches}: {result.get("processed", 0)}/{len(rows)} verarbeitet.', flush=True)
 
           try:
               final = post({'action': 'finalize', 'run_id': run_id}, attempts=1)
@@ -151,3 +189,4 @@ jobs:
               'deactivated': final.get('deactivated'),
           }, ensure_ascii=False))
           PY
+

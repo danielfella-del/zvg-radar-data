@@ -1,0 +1,132 @@
+name: ZVGPro Sync-Diagnose (ohne Import)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zvgpro-sync-diagnose
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Datensatz dieser Revision laden
+        shell: bash
+        run: |
+          curl -fL --retry 2 --max-time 60 \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/data/auctions.json" \
+            -o auctions.json
+
+      - name: Transport testen - keine Importaktionen
+        env:
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import datetime, hashlib, json, os, urllib.error, urllib.request
+
+          # The reviewed github-sync.php returns a JSON 400 for an unknown
+          # action, after auth/JSON parsing and BEFORE any import/metadata write.
+          # Never use ping/begin/batch/finalize here; do not change server locks.
+          ACTION = 'zvgpro_transport_probe_20261010'
+          ENDPOINT = 'https://zvgpro.de/api/github-sync.php'
+          LIMIT = 128 * 1024
+
+          def encode(payload):
+              return json.dumps(payload, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+
+          def padded_body(size):
+              payload = {'action': ACTION, 'padding': ''}
+              overhead = len(encode(payload))
+              if size < overhead:
+                  raise ValueError('Testpaket zu klein')
+              payload['padding'] = 'a' * (size - overhead)
+              return encode(payload)
+
+          def data_body(rows):
+              payload = {'action': ACTION, 'run_id': 0, 'offset': 0, 'objects': []}
+              for row in rows[:75]:
+                  candidate = dict(payload, objects=payload['objects'] + [row])
+                  if len(encode(candidate)) > LIMIT:
+                      break
+                  payload = candidate
+              if not payload['objects']:
+                  raise RuntimeError('Kein vollständiges Objekt passt ins Testpaket; keine Daten gekürzt.')
+              return encode(payload)
+
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+
+          def probe(label, body, opener, token):
+              if json.loads(body).get('action') != ACTION or len(body) > LIMIT:
+                  raise RuntimeError('Unsicheres Testpaket verworfen')
+              req = urllib.request.Request(ENDPOINT, data=body, method='POST', headers={
+                  'Authorization': 'Bearer ' + token,
+                  'X-ZVGPro-Sync-Token': token,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'User-Agent': 'ZVGPro-GitHub-Sync/8.9.58',
+              })
+              timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+              try:
+                  with opener.open(req, timeout=25) as response:
+                      status, headers, raw = response.status, response.headers, response.read(4096)
+              except urllib.error.HTTPError as error:
+                  status, headers, raw = error.code, error.headers, error.read(4096)
+                  error.close()
+              except Exception as error:
+                  # No exception text or raw responses: they may contain secrets.
+                  print(json.dumps({'test': label, 'utc': timestamp, 'bytes': len(body),
+                                    'network_error': type(error).__name__}), flush=True)
+                  return False
+              try:
+                  result = json.loads(raw)
+              except (ValueError, UnicodeDecodeError):
+                  result = None
+              reached_php = (status == 400 and isinstance(result, dict)
+                             and result.get('ok') is False
+                             and result.get('error') == 'Unbekannte Aktion.')
+              content_type = headers.get('Content-Type', '').split(';')[0].strip().lower()
+              response_kind = ('json' if isinstance(result, (dict, list)) else
+                               'html' if b'<html' in raw.lower() or b'<!doctype html' in raw.lower() else 'other')
+              print(json.dumps({'test': label, 'utc': timestamp, 'bytes': len(body),
+                                'http': status, 'response': response_kind,
+                                'json_content_type': content_type == 'application/json',
+                                'expected_php_rejection': reached_php,
+                                'response_prefix_sha256': hashlib.sha256(raw).hexdigest()}), flush=True)
+              if status in (401, 403):
+                  raise RuntimeError('Zugriff abgelehnt; Diagnose gestoppt. Keine weiteren Anfragen.')
+              return reached_php
+
+          def main():
+              token = os.environ.get('ZVGPRO_DB_SYNC_TOKEN', '').strip()
+              if not token:
+                  raise RuntimeError('GitHub Secret ZVGPRO_DB_SYNC_TOKEN fehlt.')
+              with open('auctions.json', 'rb') as source:
+                  raw = source.read()
+              data = json.loads(raw)
+              rows = data.get('results', []) if isinstance(data, dict) else data
+              if not isinstance(rows, list) or not rows:
+                  raise RuntimeError('Kein gültiger Datensatz; Diagnose gestoppt.')
+              real_data = data_body(rows)
+              print('Nur Transportdiagnose: kein Import, keine Sperränderung. Ein grüner Diagnoselauf bestätigt NICHT den Sync.')
+              print('Dataset SHA256:', hashlib.sha256(raw).hexdigest(), 'Objekte:', len(rows))
+              opener = urllib.request.build_opener(NoRedirect())
+              tests = [('minimal', encode({'action': ACTION}))]
+              tests += [(f'ascii-{size}', padded_body(size)) for size in (1024, 16384, 65536, LIMIT)]
+              tests += [('erste-objekte-ohne-import', real_data)]
+              for label, body in tests:
+                  if not probe(label, body, opener, token):
+                      print('Abweichende Antwort; Diagnose endet hier. Keine Wiederholung und kein Import.', flush=True)
+                      raise SystemExit(1)
+              print('Alle Testanfragen erreichten die erwartete PHP-Antwort. Die Importfunktion wurde NICHT getestet.')
+
+          if __name__ == '__main__':
+              main()
+          PY

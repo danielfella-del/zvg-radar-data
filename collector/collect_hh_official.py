@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse,requests,re
+import argparse,re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin,urlparse
-from official_notice_common import clean,pdf_text,split_case_chunks,make_record,dump
+from official_notice_common import clean
+from hh_mv_notices import collect_issues,session
 
 INDEX='https://www.luewu.de/amtlicher_anzeiger_hamburg/'
 
@@ -20,7 +21,8 @@ def discover_issue_pages(session,max_pages=6,max_issues=40):
             if re.search(r'Ausgabe\s+Nr\.\s*\d+',label,re.I) and '/aanz/' in href:
                 if href not in out: out.append(href); found+=1
                 if len(out)>=max_issues: return out
-        if found==0 and page>2: break
+        if found==0 and page>1:
+            raise RuntimeError('HH: Ausgaben-Paginierung liefert keine weiteren Ausgaben')
     return out
 
 def issue_pdf(session,url):
@@ -39,7 +41,11 @@ def issue_pdf(session,url):
         q=session.get(href,timeout=40); q.raise_for_status()
         if 'pdf' in (q.headers.get('content-type') or '').lower() or q.content[:4]==b'%PDF':
             return q.url,q.content
-    return None,None
+    raise RuntimeError('Keine PDF-Datei auf der Ausgabenseite gefunden')
+
+def download_issue(url):
+    with session() as client:
+        return issue_pdf(client,url)
 
 def main():
     ap=argparse.ArgumentParser()
@@ -48,31 +54,12 @@ def main():
     ap.add_argument('--max-pages',type=int,default=6)
     a=ap.parse_args()
 
-    s=requests.Session()
-    s.headers.update({'User-Agent':'ZVGProOfficialSourceCollector/1.2 (+officially linked public notices; low-rate fetch)'})
-    issues=discover_issue_pages(s,a.max_pages,a.max_issues)
-    recs=[]; errs=[]; pdfs=0
-    for page in issues:
-        try:
-            pdf_url,content=issue_pdf(s,page)
-            if not content: continue
-            pdfs+=1
-            text=pdf_text(content)
-            if 'Zwangsversteiger' not in text: continue
-            for case,chunk in split_case_chunks(text):
-                if 'versteiger' not in chunk.lower(): continue
-                rec=make_record('hh','hh-amtlicher-anzeiger',pdf_url or page,case,chunk,publication='Amtlicher Anzeiger Hamburg')
-                if rec:
-                    rec['description']=None
-                    recs.append(rec)
-        except Exception as e:
-            if len(errs)<20: errs.append({'url':page,'error':str(e)})
-    dump(a.output,INDEX,recs,{
-      'issues_discovered':len(issues),
-      'pdfs_scanned':pdfs,
-      'errors':errs,
-      'note':'Es werden nur minimale Falldaten aus den online bereitgestellten Ausgaben des Amtlichen Anzeigers extrahiert.'
-    })
+    with session() as s:
+        issues=discover_issue_pages(s,a.max_pages,a.max_issues)
+    if not issues:
+        raise RuntimeError('HH: keine amtlichen Anzeiger gefunden; bisherigen Datenbestand behalten')
+    collect_issues('hh',INDEX,issues,download_issue,a.output)
 
 if __name__=='__main__':
     main()
+

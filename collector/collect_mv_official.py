@@ -1,31 +1,89 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse,re,requests
+
+import argparse
+import json
+import re
+from urllib.parse import urljoin, urlparse
+
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-from official_notice_common import clean,pdf_text,split_case_chunks,make_record,dump
-INDEX='https://www.regierung-mv.de/Landesregierung/jm/service_justizministerium/verkuendungsblaetter/amtsblaetter'
+
+from hh_mv_notices import collect_issues, issue_key, session
+from official_notice_common import clean
+
+INDEX = 'https://www.mecklenburg-vorpommern.de/landesregierung/jm/amtsblaetter'
+
+
+def discover_pdfs(html, base_url=INDEX):
+    """Read both visible links and the site's embedded 'Mehr anzeigen' data."""
+    soup = BeautifulSoup(html, 'html.parser')
+    links = []
+
+    def add(url, label):
+        url = urljoin(base_url, url)
+        if ('amtlicher anzeiger' in clean(label.replace('_', ' ')).lower()
+                and urlparse(url).hostname in {'www.mecklenburg-vorpommern.de', 'mecklenburg-vorpommern.de'}
+                and issue_key('mv', url) and url not in links):
+            links.append(url)
+
+    for link in soup.find_all('a', href=True):
+        add(link['href'], link.get_text(' ', strip=True))
+    visible_count = len(links)
+
+    def walk(value):
+        if isinstance(value, dict):
+            document = value.get('field_media_document')
+            if isinstance(document, dict):
+                add((document.get('uri') or {}).get('url', ''), value.get('name', ''))
+            for child in value.values():
+                walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                walk(child)
+
+    # Parse JSON only; never execute JavaScript from the source page.
+    parts = []
+    for script in soup.find_all('script'):
+        match = re.fullmatch(r'self\.__next_f\.push\((.*)\)\s*;?', script.get_text(), re.S)
+        if not match:
+            continue
+        try:
+            payload = json.loads(match[1])
+        except ValueError:
+            continue
+        if isinstance(payload, list) and len(payload) > 1 and isinstance(payload[1], str):
+            parts.append(payload[1])
+    for line in ''.join(parts).splitlines():
+        try:
+            walk(json.loads(line.split(':', 1)[1]))
+        except (ValueError, IndexError):
+            continue
+    if soup.select_one('button.link-list__show-more') and len(links) <= visible_count:
+        raise RuntimeError('MV: ausgeblendete Ausgaben konnten nicht vollständig gelesen werden')
+    return links
+
+
+def download_pdf(url):
+    with session() as client:
+        response = client.get(url, timeout=(10, 30))
+        response.raise_for_status()
+        return response.url, response.content
+
 
 def main():
- ap=argparse.ArgumentParser(); ap.add_argument('--output',default='data/supplemental_mv.json'); ap.add_argument('--max-issues',type=int,default=32); a=ap.parse_args()
- s=requests.Session(); s.headers.update({'User-Agent':'ZVGProOfficialSourceCollector/1.1 (+public official notices; low-rate fetch)'})
- r=s.get(INDEX,timeout=60); r.raise_for_status(); soup=BeautifulSoup(r.text,'html.parser')
- links=[]
- for x in soup.find_all('a',href=True):
-  txt=clean(x.get_text(' ',strip=True)); u=urljoin(r.url,x['href'])
-  if 'amtlicher anzeiger' in txt.lower() and ('.pdf' in u.lower() or 'publicationFile' in u):
-   if u not in links: links.append(u)
- links=links[:a.max_issues]
- recs=[]; errs=[]
- for u in links:
-  try:
-   q=s.get(u,timeout=60); q.raise_for_status(); text=pdf_text(q.content)
-   if 'Zwangsversteiger' not in text: continue
-   for case,chunk in split_case_chunks(text):
-    if 'versteiger' not in chunk.lower(): continue
-    rec=make_record('mv','mv-amtlicher-anzeiger',u,case,chunk,publication='Amtlicher Anzeiger Mecklenburg-Vorpommern')
-    if rec: recs.append(rec)
-  except Exception as e:
-   if len(errs)<20: errs.append({'url':u,'error':str(e)})
- dump(a.output,INDEX,recs,{'issues_scanned':len(links),'errors':errs,'note':'Faktische Eckdaten aus amtlichen Bekanntmachungen.'})
-if __name__=='__main__': main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--output', default='data/supplemental_mv.json')
+    parser.add_argument('--max-issues', type=int, default=52)
+    args = parser.parse_args()
+    with session() as client:
+        response = client.get(INDEX, timeout=(10, 30))
+        response.raise_for_status()
+        links = discover_pdfs(response.text, response.url)
+    if not links:
+        raise RuntimeError('MV: keine amtlichen Anzeiger gefunden; bisherigen Datenbestand behalten')
+    collect_issues('mv', INDEX, links[:args.max_issues], download_pdf, args.output)
+
+
+if __name__ == '__main__':
+    main()
+

@@ -27,3 +27,8 @@ assert parse_german_date(parts[0][1])=='2027-11-05T10:00'
 assert parse_german_date(parts[1][1])=='2027-12-03T09:00'
 
 print('official notice parser tests: OK')
+
+# Also run the isolated HH/MV regressions in the existing workflow test step.
+from test_hh_mv_notices import run_tests
+run_tests()
+

@@ -13,6 +13,8 @@ bash scripts/test-offline.sh
 
 Die Entwicklungsprüfungen verwenden vorhandene Fixtures und benötigen keine Produktionszugänge. Python 3.12 entspricht den GitHub-Workflows.
 
+Die [Offline-Health-Baseline](docs/DATA-HEALTH-BASELINE.md) dokumentiert die reproduzierbaren Prüfschritte, den tatsächlich ausgeführten Testumfang, Ergebnisse und Grenzen gegenüber dem Live-Betrieb.
+
 ## Datenfeed
 
 https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/data/auctions.json

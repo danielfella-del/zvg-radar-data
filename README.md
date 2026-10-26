@@ -4,7 +4,7 @@ Dieses Repository sammelt öffentlich veröffentlichte Zwangsversteigerungstermi
 
 ## Mit Codex weiterarbeiten
 
-Die Projektregeln stehen in [AGENTS.md](AGENTS.md). Einrichtung, Betriebsablauf und der noch fehlende vollständige Website-Quellcode sind in [docs/CODEX-UEBERGABE.md](docs/CODEX-UEBERGABE.md) beschrieben.
+Die Projektregeln stehen in [AGENTS.md](AGENTS.md). Produktziel, Gestaltung und Datenregeln sind zusätzlich in [PROJECT.md](PROJECT.md), [DESIGN.md](DESIGN.md) und [DATA.md](DATA.md) festgehalten. Einrichtung, Betriebsablauf und der noch fehlende vollständige Website-Quellcode sind in [docs/CODEX-UEBERGABE.md](docs/CODEX-UEBERGABE.md) beschrieben.
 
 ```bash
 bash scripts/setup-dev.sh

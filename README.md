@@ -13,6 +13,8 @@ bash scripts/test-offline.sh
 
 Die Entwicklungsprüfungen verwenden vorhandene Fixtures und benötigen keine Produktionszugänge. Python 3.12 entspricht den GitHub-Workflows.
 
+Die [Vorbereitung eines privaten Repositorys](docs/PRIVATES-REPOSITORY.md) beschreibt den authentifizierten Sync-Download, die getrennten Website-Abhängigkeiten und die erforderliche Abnahme vor einer Sichtbarkeitsänderung.
+
 ## Datenfeed
 
 https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/data/auctions.json

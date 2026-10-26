@@ -18,14 +18,21 @@ jobs:
     timeout-minutes: 25
     steps:
       - name: Datensatz und Sync-Client aus demselben Commit laden
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /data/auctions.json
+            /.github/scripts/sync-zvgpro-db.py
+
+      - name: Unveränderlichen Snapshot für den Sync bereitstellen
         shell: bash
         run: |
-          curl -fL --retry 3 --retry-delay 2 \
-            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/data/auctions.json" \
-            -o auctions.json
-          curl -fL --retry 3 --retry-delay 2 \
-            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/.github/scripts/sync-zvgpro-db.py" \
-            -o sync-zvgpro-db.py
+          cp data/auctions.json auctions.json
+          cp .github/scripts/sync-zvgpro-db.py sync-zvgpro-db.py
           test -s auctions.json
           test -s sync-zvgpro-db.py
 

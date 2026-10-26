@@ -41,3 +41,50 @@ Nicht `unittest discover` allein als vollständigen Testlauf verwenden: Mehrere 
 ## Abschluss einer Änderung
 
 Beschreibe konkret, was geändert wurde, warum, welche passenden Prüfungen bestanden wurden und was nicht geprüft werden konnte. Keine Produktionsprüfung behaupten, wenn nur lokale Tests gelaufen sind.
+
+
+## Projektsteuerung und Rollen
+
+Zusätzlich sind `PROJECT.md`, `DESIGN.md` und `DATA.md` verbindliche Referenzen.
+
+### Product / Architecture
+- Scope klein und konkret halten.
+- Bestehende Verträge und produktive Stabilität schützen.
+- Schwer rückgängig zu machende Änderungen begründen.
+
+### Data / Pipeline
+- Quellen, Parser, Historienerhalt, Sync-Verträge und Datenqualität prüfen.
+- Nie Quellfehler durch pauschales Löschen lösen.
+
+### Code / QA
+- passende Offline-Tests ausführen.
+- Regressionen, Fehlerfälle und Security prüfen.
+- Produktionsprüfung nicht behaupten, wenn nur lokal getestet wurde.
+
+### Visual / UX
+Sobald die private Website-Codebasis verfügbar ist, größere Frontendänderungen zusätzlich gegen `DESIGN.md` prüfen:
+- Mobil
+- Tablet
+- Desktop
+- Karte
+- Overlays
+- Typografie
+- Buttons
+- CI/Logo
+- amtlich vs. Orientierung
+
+## GitHub-/Codex-Workflow
+
+- Anforderungen als GitHub-Issue konkretisieren.
+- Für größere Arbeiten eigener Branch.
+- Codex setzt um und führt passende Tests aus.
+- Änderung per Pull Request gegen den Zielbranch.
+- PR beschreibt: Änderung, Grund, Tests, nicht geprüfte Punkte.
+- Vor Merge bei UI-Arbeiten Code- **und** visuelles Review.
+- Deployment auf Strato ist ein eigener Schritt und erfolgt nicht automatisch durch reine Entwicklungsarbeit.
+
+## Repository-Grenze
+
+Dieses Repository bleibt die öffentliche Datenpipeline.
+
+Der vollständige Website-Code von `zvgpro.de` gehört in ein separates **privates Website-Repository**. Niemals Zugangsdaten, private Laufzeitdaten, Datenbankexporte oder produktive Secrets in dieses öffentliche Repository übernehmen.

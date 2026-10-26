@@ -1,8 +1,12 @@
 """Authenticated, lossless JSON sync. No third-party packages required."""
+import errno
 import hashlib
+import http.client
 import json
 import os
 import signal
+import socket
+import ssl
 import sys
 import time
 import urllib.error
@@ -97,6 +101,40 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None  # Never forward either authentication header to a redirect.
 
 
+def failure_category(error):
+    """Classify only exception types/numeric codes, never remote text or URLs."""
+    reason = error.reason if isinstance(error, urllib.error.URLError) else error
+    if isinstance(reason, ssl.SSLCertVerificationError):
+        category, field, code = 'tls_certificate', 'verify_code', getattr(reason, 'verify_code', None)
+    elif isinstance(reason, ssl.SSLError):
+        category, field, code = 'tls_error', 'errno', reason.errno
+    elif isinstance(reason, socket.gaierror):
+        category, field, code = 'name_resolution', 'errno', reason.errno
+    elif isinstance(reason, TimeoutError):
+        category, field, code = 'timeout', 'errno', reason.errno
+    elif isinstance(reason, http.client.IncompleteRead):
+        category, field, code = 'incomplete_response', '', None
+    elif isinstance(reason, http.client.HTTPException):
+        category, field, code = 'http_transport', '', None
+    elif isinstance(reason, OSError):
+        category = {errno.ECONNRESET: 'connection_reset', errno.ECONNREFUSED: 'connection_refused',
+                    errno.ETIMEDOUT: 'timeout'}.get(reason.errno, 'os_error')
+        field, code = 'errno', reason.errno
+    elif isinstance(reason, ValueError):
+        category, field, code = 'invalid_response', '', None
+    else:
+        category, field, code = 'url_error', '', None
+    return category + (f' {field}={code}' if type(code) is int else '')
+
+
+def response_int(reply, field, default=-1):
+    try:
+        return int(reply.get(field, default))
+    except (TypeError, ValueError, OverflowError):
+        # int() exceptions can echo a server-supplied string, including secrets.
+        raise RuntimeError(f'Ungültiger numerischer Serverwert ({field}); kein Abschluss.') from None
+
+
 def make_post(token):
     opener = urllib.request.build_opener(NoRedirect())
 
@@ -104,6 +142,10 @@ def make_post(token):
         body = encode(payload)
         if not fits(payload):
             raise RuntimeError('Paket überschreitet das Transportlimit.')
+        action = payload.get('action')
+        if action not in ('ping', 'begin', 'batch', 'object_part', 'object_commit', 'finalize', 'status', 'abort'):
+            action = 'unknown'
+        offset = payload.get('offset') if type(payload.get('offset')) is int else '-'
         for attempt in range(1, attempts + 1):
             req = urllib.request.Request('https://zvgpro.de/api/github-sync.php', data=body, method='POST', headers={
                 'Authorization': 'Bearer ' + token, 'X-ZVGPro-Sync-Token': token,
@@ -117,22 +159,25 @@ def make_post(token):
                     raise RuntimeError('Server hat das Paket nicht bestätigt.')
                 return result
             except urllib.error.HTTPError as e:
-                # Do not dump response bodies, object contents, or secrets to logs.
-                detail = ''
+                # Do not read error bodies: even JSON "error" can contain secrets,
+                # object data, forged log commands, or raise IncompleteRead itself.
                 try:
-                    reply = json.loads(e.read(8192))
-                    if isinstance(reply, dict):
-                        detail = str(reply.get('error', ''))[:500].replace(token, '[redacted]')
-                except (ValueError, UnicodeError):
-                    detail = 'Keine JSON-Antwort (Transport/Hosting prüfen).'
-                error = RuntimeError(f'HTTP {e.code}, Aktion {payload.get("action")}, Offset {payload.get("offset", "-")}, {len(body)} Bytes/{values(payload)} Werte. {detail}')
-                if e.code < 500 and e.code not in (408, 429):
-                    raise error from None
-            except (urllib.error.URLError, TimeoutError, OSError, ValueError) as e:
-                error = RuntimeError(f'Keine gültige Antwort für {payload.get("action")}: {type(e).__name__}')
+                    e.close()
+                except (OSError, http.client.IncompleteRead):
+                    pass
+                category = f'http_error HTTP={e.code}'
+                retry = not (e.code < 500 and e.code not in (408, 429))
+            except (urllib.error.URLError, TimeoutError, OSError, ValueError, http.client.IncompleteRead) as e:
+                category, retry = failure_category(e), True
+            error = RuntimeError(f'Sync-Anfrage fehlgeschlagen: Aktion {action}, Offset {offset}, '
+                                 f'Versuch {attempt}/{attempts}, Kategorie {category}, '
+                                 f'{len(body)} Bytes/{values(payload)} Werte.')
+            print(str(error), file=sys.stderr, flush=True)
+            if not retry:
+                raise error from None
             if attempt < attempts:
                 time.sleep(attempt * 3)
-        raise error
+        raise error from None
     return post
 
 
@@ -154,14 +199,16 @@ def run(raw, post):
     generated_at = data.get('meta', {}).get('generated_at') if isinstance(data, dict) else None
     begin = post(dict(action='begin', total=len(rows), dataset_hash=dataset_hash, generated_at=generated_at))
     if begin.get('not_modified'):
-        if int(begin.get('count', -1)) != len(rows):
+        if response_int(begin, 'count') != len(rows):
             raise RuntimeError('Datensatz-Hash stimmt, aber die Objektanzahl weicht ab.')
         print(f'Bereits aktuell: {len(rows)} Verfahren.')
         return begin
-    run_id = int(begin['run_id'])
+    run_id = response_int(begin, 'run_id')
+    if run_id < 1:
+        raise RuntimeError('Ungültige Lauf-ID; kein Abschluss oder Abbruch eines unbekannten Laufs.')
     try:
-        processed = int(begin.get('processed', 0))
-        if int(begin.get('total', -1)) != len(rows) or not 0 <= processed <= len(rows):
+        processed = response_int(begin, 'processed', 0)
+        if response_int(begin, 'total') != len(rows) or not 0 <= processed <= len(rows):
             raise RuntimeError('Ungültiger Fortsetzungsstatus; kein Abschluss.')
         packets = plan(rows, run_id, processed)
         print(f'Sync {run_id}: Fortsetzung bei {processed}/{len(rows)}, {len(packets)} Pakete.', flush=True)
@@ -170,32 +217,47 @@ def run(raw, post):
             action = packet['action']
             if action == 'object_part':
                 expected_hash = hashlib.sha256(encode(packet)).hexdigest()
-                if reply.get('received_sha256') != expected_hash or int(reply.get('part_index', -1)) != packet['part_index']:
+                if reply.get('received_sha256') != expected_hash or response_int(reply, 'part_index') != packet['part_index']:
                     raise RuntimeError('Objektteil nicht unverändert bestätigt; kein Abschluss.')
             else:
                 processed = packet['offset'] + (len(packet['objects']) if action == 'batch' else 1)
-            if int(reply.get('processed', -1)) != processed:
-                raise RuntimeError(f'Server bestätigt {reply.get("processed")} statt {processed} Verfahren; kein Abschluss.')
+            confirmed = response_int(reply, 'processed')
+            if confirmed != processed:
+                raise RuntimeError(f'Server bestätigt {confirmed} statt {processed} Verfahren; kein Abschluss.')
             if n == 1 or n % 25 == 0 or n == len(packets):
                 print(f'Paket {n}/{len(packets)}: {processed}/{len(rows)} verarbeitet.', flush=True)
+        recovered = False
         try:
             final = post(dict(action='finalize', run_id=run_id))
         except Exception:
             # Read-only receipt, never begin a second import for recovery.
             status = post(dict(action='status', run_id=run_id, dataset_hash=dataset_hash))
-            if not status.get('completed'):
+            if status.get('completed') is not True:
                 raise
-            final = status['result']
-            print('Abschlussantwort verloren; abgeschlossener Import über Beleg bestätigt.')
-        if not final.get('ok') or int(final.get('count', -1)) != len(rows):
+            final = status.get('result')
+            recovered = True
+        if (not isinstance(final, dict) or not final.get('ok') or
+                response_int(final, 'run_id') != run_id or response_int(final, 'count') != len(rows)):
             raise RuntimeError('Abschluss wurde nicht mit vollständiger Objektanzahl bestätigt.')
-        print('DB-Sync abgeschlossen:', json.dumps({k: final.get(k) for k in ('count', 'inserted', 'updated', 'unchanged', 'deactivated')}, ensure_ascii=False))
+        if recovered:
+            print('Abschlussantwort verloren; abgeschlossener Import über Beleg bestätigt.')
+        print('DB-Sync abgeschlossen:', json.dumps({k: final.get(k) if type(final.get(k)) is int else None
+              for k in ('count', 'inserted', 'updated', 'unchanged', 'deactivated')}, ensure_ascii=False))
         return final
     except BaseException:
         # Only this run + this snapshot may be released. Never deactivate data here.
         try:
-            post(dict(action='abort', run_id=run_id, dataset_hash=dataset_hash))
-            print(f'Lauf {run_id}: Abbruchbehandlung bestätigt. Bereits vorhandene Objekte bleiben erhalten.', flush=True)
+            abort = post(dict(action='abort', run_id=run_id, dataset_hash=dataset_hash))
+            if abort.get('ok') and abort.get('aborted') is True and abort.get('run_id') == run_id:
+                print(f'Lauf {run_id}: Abbruch bestätigt. Bereits vorhandene Objekte bleiben erhalten.', flush=True)
+            elif abort.get('ok') and abort.get('already_completed') is True:
+                print(f'Lauf {run_id}: laut Server bereits abgeschlossen; kein Abbruch ausgeführt.', flush=True)
+            elif abort.get('ok') and abort.get('not_active') is True:
+                print(f'Lauf {run_id}: laut Server nicht mehr aktiv; keine fremde Sperre aufgehoben.', flush=True)
+            elif abort.get('ok') and abort.get('not_running') is True:
+                print(f'Lauf {run_id}: laut Server nicht mehr laufend; kein Abbruch ausgeführt.', flush=True)
+            else:
+                raise RuntimeError('Abbruchstatus nicht bestätigt.')
         except Exception:
             print(f'::warning::Lauf {run_id}: Abbruch konnte nicht bestätigt werden; keine fremde Sperre aufgehoben.', flush=True)
         raise

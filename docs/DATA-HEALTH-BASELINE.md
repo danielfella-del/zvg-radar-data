@@ -1,5 +1,9 @@
 # Datenpipeline: Offline-Health-Baseline
 
+> Historischer Bericht vom 26.10.2026. Der datierte Nachtrag vom 27.10.2026 am
+> Ende beschreibt den erweiterten Stand nach PR #9 und die separate Live-Abnahme.
+> Die damaligen fünf Skripte/18 `unittest`-Fälle sind nicht der heutige Prüfumfang.
+
 Stand: 26. Oktober 2026, UTC. Bezug: [Issue #2](https://github.com/danielfella-del/zvg-radar-data/issues/2).
 
 **Ergebnis: Die lokale Entwicklungs- und Offline-Testumgebung ist nutzbar.**
@@ -134,3 +138,74 @@ oder Strato-Bereitstellungen gestartet. Die folgenden Ebenen bleiben ungeprüft:
 Für spätere Sync-Arbeit sind zusätzlich isolierte Tests mit einer simulierten
 `post`-Funktion erforderlich. Ein Live-Test ist ein gesonderter Auftrag. Diese
 Baseline ändert weder Zeitpläne noch öffentliche Datenformate oder Datenbestände.
+
+## Nachtrag vom 27.10.2026: erweiterter Stand nach PR #9
+
+Dieser Nachtrag erhält die oben dokumentierte Baseline vom 26.10. unverändert
+als historischen Befund. Er beruht auf lesender Prüfung der tatsächlichen
+Dateien und vorhandener Protokolle. **Für diesen Dokumentationsauftrag wurden
+weder Setup noch Tests oder Produktionsläufe erneut ausgeführt.**
+
+[PR #9](https://github.com/danielfella-del/zvg-radar-data/pull/9) wurde mit
+Merge-Commit `6a4cd89b101fb2bba3d1bfb78ce45e39177e2cb2` in `main` übernommen.
+Geprüfte Referenz für den folgenden Umfang ist der auch bei der Live-Abnahme
+verwendete Commit `4bfb9f63ea9facb7bae65d74d6a67e8a2d9ef8ec`.
+
+### Heutiger Offline-Prüfumfang am genannten main-Stand
+
+Der [aktuelle Wrapper](https://github.com/danielfella-del/zvg-radar-data/blob/4bfb9f63ea9facb7bae65d74d6a67e8a2d9ef8ec/scripts/test-offline.sh)
+startet nach der Syntaxprüfung **sechs Testskripte**:
+
+| Skript | Tatsächlicher Umfang |
+| --- | --- |
+| `tests/test_parser.py` | Portalparser-Skript mit Assertions |
+| `tests/test_detail_parser.py` | Detailparser-Skript einschließlich Ablehnungsfällen |
+| `tests/test_state_coverage.py` | Assertions zur Konfiguration aller 16 Bundesländer |
+| `tests/test_official_notice_parsers.py` | Gemeinsame Parser-Assertions und eingebundene elf HH/MV-`unittest`-Fälle |
+| `tests/test_report_photo_queue.py` | Sieben Queue-`unittest`-Fälle |
+| `tests/test_sync_client.py` | 23 Sync-`unittest`-Fälle mit synthetischen Snapshots und Mock-Transport |
+
+Damit sind es **41 `unittest`-Fälle (11 + 7 + 23) plus Skript-Assertions**.
+Die Zählung wurde anhand der Testdefinitionen und der HH/MV-Einbindung geprüft;
+HH/MV wird weiterhin nicht doppelt ausgeführt oder gezählt. Die 23 Sync-Fälle
+decken unter anderem Retries und `IncompleteRead`, verlorene Antworten,
+Abort-/Finalize-Belege, Hash-Ablehnung sowie Secret- und Redirect-Schutz ab.
+Die bereits erfolgten Offline-Prüfungen und das unabhängige Review dieses Fixes
+sind in PR #9 dokumentiert; dies ist kein neuer Testlauf vom 27.10.
+
+Die Reproduktionsanleitung oben bleibt vollständig offline in Bezug auf die
+Produktionssysteme: Paketinstallation für das Setup, danach lokale Tests ohne
+Produktionszugänge. Für den erweiterten Umfang muss eine Arbeitskopie von `main`
+nach PR #9 bzw. des angegebenen Referenzcommits verwendet werden. Der ältere
+Codebaum dieses reinen Dokumentationsbranches enthält noch den historischen
+Wrapper; dieser PR übernimmt daraus keine Produktcode- oder Workflow-Änderungen.
+Die Versionsliste oben bleibt die beobachtete Installation vom 26.10. und ist
+keine neu gemessene Installation oder Lockdatei.
+
+### Separate, bereits erfolgte Live-Abnahme
+
+Nach ausdrücklicher Nutzerfreigabe wurde ein frischer `workflow_dispatch` auf
+`main` gestartet, kein alter Re-run:
+
+- [Workflow-Lauf 40478078762](https://github.com/danielfella-del/zvg-radar-data/actions/runs/40478078762),
+  Job `122101177355`.
+- Run-Commit: `4bfb9f63ea9facb7bae65d74d6a67e8a2d9ef8ec`.
+- Exakt geprüfter Sync-Client-Blob: `cc74f388fa2c9cf3f1d8bdbb776efe0c6da1eee6`.
+- Erfolgreicher Abschluss am **27.10.2026 um 10:09:17 Uhr Europe/Berlin**:
+  **3.639 Verfahren, 412 Pakete, 0 eingefügt, 26 aktualisiert,
+  3.613 unverändert, 0 deaktiviert**.
+- Der [Abnahmekommentar unter PR #9](https://github.com/danielfella-del/zvg-radar-data/pull/9#issuecomment-6437934972)
+  und das vorhandene Job-Log bestätigen diesen Lauf. Für diesen Nachtrag wurden
+  sie nur gelesen; es wurde kein weiterer Lauf ausgelöst.
+
+Damit ist der vormals offene produktive Abschluss **für genau diesen Snapshot
+und diesen Sync-Client** bestätigt. Die historische Ursache des `URLError` bleibt
+unbekannt. Ein erfolgreicher Lauf beweist weder allgemeine Störungsfreiheit noch
+die Erreichbarkeit und Vollständigkeit aller amtlichen Quellen. Ebenso wenig
+sind dadurch vollständige Medien-/Enrichment-Läufe, Website-Darstellung,
+Login, Zahlung, E-Mail oder SEO abgenommen. Der Lauf belegt auch keine Funktion
+der separat in PR #7 vorbereiteten Abrufe für ein privates Repository.
+
+Die Live-Abnahme bleibt ein eigener Nachweis und wird nicht Teil der
+Offline-Reproduktionsanleitung. Für diesen Dokumentationsabschluss ist kein
+weiterer Produktionslauf erforderlich.

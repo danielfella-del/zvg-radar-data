@@ -4,7 +4,7 @@ Dieses Repository sammelt öffentlich veröffentlichte Zwangsversteigerungstermi
 
 ## Mit Codex weiterarbeiten
 
-Die Projektregeln stehen in [AGENTS.md](AGENTS.md). Produktziel, Gestaltung und Datenregeln sind zusätzlich in [PROJECT.md](PROJECT.md), [DESIGN.md](DESIGN.md) und [DATA.md](DATA.md) festgehalten. Einrichtung, Betriebsablauf und der noch fehlende vollständige Website-Quellcode sind in [docs/CODEX-UEBERGABE.md](docs/CODEX-UEBERGABE.md) beschrieben.
+Die Projektregeln stehen in [AGENTS.md](AGENTS.md). Produktziel, Gestaltung und Datenregeln sind zusätzlich in [PROJECT.md](PROJECT.md), [DESIGN.md](DESIGN.md) und [DATA.md](DATA.md) festgehalten. Einrichtung, Betriebsablauf und die Anforderungen an die getrennte Website-Übernahme sind in [docs/CODEX-UEBERGABE.md](docs/CODEX-UEBERGABE.md) beschrieben.
 
 ```bash
 bash scripts/setup-dev.sh
@@ -12,6 +12,8 @@ bash scripts/test-offline.sh
 ```
 
 Die Entwicklungsprüfungen verwenden vorhandene Fixtures und benötigen keine Produktionszugänge. Python 3.12 entspricht den GitHub-Workflows.
+
+Die [Offline-Health-Baseline](docs/DATA-HEALTH-BASELINE.md) erhält den historischen Bericht vom 26.10.2026 und ergänzt einen datierten Nachtrag vom 27.10. zum erweiterten Umfang nach PR #9 (sechs Skripte, 41 `unittest`-Fälle plus Skript-Assertions) sowie zur getrennten Live-Abnahme. Die Reproduktionsanleitung bleibt offline.
 
 ## Datenfeed
 

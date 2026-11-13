@@ -11,6 +11,7 @@ fi
 "$zvg_python" -m compileall -q collector tests .github/scripts/sync-zvgpro-db.py
 for zvg_test in \
   tests/test_parser.py \
+  tests/test_market_value_total.py \
   tests/test_detail_parser.py \
   tests/test_state_coverage.py \
   tests/test_official_notice_parsers.py \

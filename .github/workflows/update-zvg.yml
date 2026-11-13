@@ -37,7 +37,11 @@ jobs:
         run: |
           python tests/test_parser.py
           python tests/test_detail_parser.py
+          python tests/test_detail_queue.py
           python tests/test_state_coverage.py
+          python tests/test_bw_structured.py
+          python tests/test_sh_official.py
+          python tests/test_sh_merge.py
           python tests/test_official_notice_parsers.py
 
       - name: Alten Stand für Historie sichern
@@ -48,7 +52,7 @@ jobs:
 
       - name: Baden-Württemberg aus amtlichen Gerichtsseiten ergänzen
         continue-on-error: true
-        run: timeout 3m python collector/collect_bw_official.py --output data/supplemental_bw.json
+        run: timeout 3m python collector/collect_bw_official.py --output data/supplemental_bw.json --previous /tmp/auctions-before.json
 
       - name: Hamburg aus Amtlichem Anzeiger ergänzen
         continue-on-error: true
@@ -60,7 +64,7 @@ jobs:
 
       - name: Schleswig-Holstein aus amtlichen Anzeigen ergänzen
         continue-on-error: true
-        run: timeout 3m python collector/collect_sh_official.py --output data/supplemental_sh.json
+        run: timeout 3m python collector/collect_sh_official.py --output data/supplemental_sh.json --previous /tmp/auctions-before.json
 
       - name: Zusatzquellen dedupliziert zusammenführen
         run: |

@@ -9,6 +9,15 @@ def ncase(x): return re.sub(r"[^0-9a-z]+","",clean(x))
 def date_day(x): return str(x or "")[:10]
 
 def key(r):
+    # One court case can contain several separate pool objects/lots. Their
+    # verified external IDs, and legacy review records, must stay distinct.
+    if r.get('state_code')=='bw' and r.get('source_adapter')=='bw-immobilienpool-court-linked':
+        if r.get('source_data_status')=='unverified':return ('bw-review',str(r.get('id')))
+        if r.get('source_external_id'):return ('bw-pool',str(r['source_external_id']))
+    # SH source issues may contain the same case number in different notices.
+    # The collector already preserves verified IDs and isolates ambiguity.
+    if r.get('state_code')=='sh' and r.get('source_adapter')=='sh-schlha-teil-b':
+        return ('sh-notice',str(r.get('id')))
     state=clean(r.get("state_code")); court=clean(r.get("court")); case=ncase(r.get("file_number")); day=date_day(r.get("auction_date"))
     if case and day: return ("case",state,court,case,day)
     return ("fallback",state,clean(r.get("postcode")),clean(r.get("city")),day,str(r.get("market_value") or ""))
@@ -80,6 +89,21 @@ def main():
         if not q.exists(): continue
         s=json.loads(q.read_text(encoding="utf-8"))
         rows,sr,removed=reconcile_checked_notices(rows,s)
+        if (s.get('meta') or {}).get('state_code')=='bw' and (s.get('meta') or {}).get('source_parser_version')==2:
+            # The BW collector carries failed sources and review records from
+            # --previous. Replace only same-ID, same-adapter records here so
+            # verified changed dates/values are not blocked by merge_one's
+            # "fill missing only" rule. All other states/providers remain.
+            incoming_ids={r.get('id') for r in sr if isinstance(r,dict) and r.get('state_code')=='bw' and r.get('source_adapter')=='bw-immobilienpool-court-linked'}
+            if len(incoming_ids)!=len(sr) or None in incoming_ids:raise ValueError('Ungültige BW-Zusatzquelle')
+            rows=[r for r in rows if not (r.get('state_code')=='bw' and r.get('source_adapter')=='bw-immobilienpool-court-linked' and r.get('id') in incoming_ids)]
+        if (s.get('meta') or {}).get('state_code')=='sh' and (s.get('meta') or {}).get('source_parser_version')==2:
+            # Only the source-bound SH collector may replace its same-ID rows.
+            # Its output includes untouched failed sources and quarantined IDs;
+            # main-portal records and other providers are outside this scope.
+            incoming_ids={r.get('id') for r in sr if isinstance(r,dict) and r.get('state_code')=='sh' and r.get('source_adapter')=='sh-schlha-teil-b'}
+            if len(incoming_ids)!=len(sr) or None in incoming_ids:raise ValueError('Ungültige SH-Zusatzquelle')
+            rows=[r for r in rows if not (r.get('state_code')=='sh' and r.get('source_adapter')=='sh-schlha-teil-b' and r.get('id') in incoming_ids)]
         sr=[r for r in sr if isinstance(r,dict)]
         replaced+=removed
         idx={key(r):i for i,r in enumerate(rows)}
@@ -104,4 +128,5 @@ def main():
     print(json.dumps(meta["supplemental_merge"],ensure_ascii=False))
 
 if __name__=="__main__": main()
+
 

@@ -97,6 +97,11 @@ def parse_notices(text, source_url, *, keep_past=False):
         body = chunk[intro_end.end():chunk.rfind('(')]
         values = find_market_values(body)
         postcode, city = infer_plz_city(body)
+        # The shared helper stops at periods. "25365 Kl. Offenseth-..."
+        # therefore yields only "Kl", which is not a confirmed city name.
+        if city in {'Kl', 'Gr', 'St'} and re.search(
+                rf'\b{re.escape(postcode)}\s+{re.escape(city)}\.', body):
+            city = None
         digest = hashlib.sha256(chunk.encode()).hexdigest()
         identity = '|'.join((source_url, repr(case_identity(case)), court, iso, digest))
         lat, lng = STATE_CENTERS['sh']

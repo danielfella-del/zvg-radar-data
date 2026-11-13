@@ -62,7 +62,7 @@ PERSIST_FIELDS = {
     "auction_type", "land_registry", "auction_venue", "creditor_info",
     "detail_description", "court_url", "geoserver_urls",
     "portal_google_maps_urls", "detail_source_url", "detail_fetched_at",
-    "detail_source_last_updated", "detail_error", "dossier_completeness",
+    "detail_source_last_updated", "detail_error", "detail_attempted_at", "dossier_completeness",
     "detail_attachments", "detail_attachments_authoritative", "attachment_sync_version", "archived_attachments",
 }
 PERSIST_META_FIELDS = {"detail_enrichment", "media_cache"}

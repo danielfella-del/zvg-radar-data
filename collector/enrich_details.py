@@ -7,10 +7,11 @@ import os
 import re
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urljoin, urlparse
+from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
@@ -19,6 +20,9 @@ BASE = "https://www.zvg-portal.de/"
 SEARCH_REFERER = urljoin(BASE, "index.php?button=Suchen")
 SEARCH_URL = urljoin(BASE, "index.php?button=Suchen&all=1")
 ATTACHMENT_SYNC_VERSION = "1.4.8"
+DETAIL_MAX_AGE = timedelta(days=7)
+DETAIL_RETRY_DELAY = timedelta(hours=6)
+PORTAL_STATES = frozenset("bw by be br hb hh he mv ni nw rp sl sn st sh th".split())
 
 DETAIL_FIELDS = [
     "auction_type",
@@ -34,6 +38,7 @@ DETAIL_FIELDS = [
     "detail_fetched_at",
     "detail_source_last_updated",
     "detail_error",
+    "detail_attempted_at",
 ]
 
 def repair_mojibake(text: str) -> str:
@@ -112,12 +117,22 @@ def parse_size_kb(value: str) -> float | None:
     return float(value)
 
 
-def case_identity(value: str) -> tuple[int, int, int] | None:
-    m = re.search(r"(\d+)\s*K\s*(\d+)\s*/\s*(\d{2,4})", clean(value), re.I)
+def case_identity(value: str) -> tuple[str | None, int, int] | None:
+    # Courts also publish K 18/2026, 0005 a K 17/2025 and 0001 K K 12/2025.
+    # List views can omit the department; number and year remain mandatory.
+    m = re.search(r"(?<!\w)(?:(\d+)\s*([a-jl-z])?\s*)?K\s*(?:K\s*)?(\d+)\s*/\s*(\d{2,4})(?!\d)", clean(value), re.I)
     if not m:
         return None
-    court, number, year = map(int, m.groups())
-    return court, number, year + 2000 if year < 100 else year
+    department, suffix, number, year = m.groups()
+    department = str(int(department)) + (suffix or "").casefold() if department else None
+    number, year = int(number), int(year)
+    return department, number, year + 2000 if year < 100 else year
+
+
+def case_matches(actual: tuple[str | None, int, int] | None, expected: str) -> bool:
+    wanted = case_identity(expected)
+    return bool(actual and wanted and actual[1:] == wanted[1:]
+                and (wanted[0] is None or actual[0] == wanted[0]))
 
 
 def attachment_from_anchor(label: str, anchor, land: str, zvg_id: str, row_text: str) -> dict[str, Any] | None:
@@ -131,6 +146,8 @@ def attachment_from_anchor(label: str, anchor, land: str, zvg_id: str, row_text:
     name = clean(anchor.get_text(" ", strip=True)) or clean(label)
     if not file_id:
         return None
+    if not re.fullmatch(r"[0-9]+", file_id):
+        raise RuntimeError("Ungültige amtliche Anhangs-ID; Anlagen bleiben erhalten")
     adjacent = []
     for sibling in anchor.next_siblings:
         if getattr(sibling, "name", None) == "a":
@@ -160,13 +177,17 @@ def attachment_from_anchor(label: str, anchor, land: str, zvg_id: str, row_text:
 def parse_detail_html(content: bytes, land: str, zvg_id: str, expected_case: str = "") -> dict[str, Any]:
     html = decode_document(content)
     if len(html.strip()) < 30 and "error" in html.lower():
-        raise RuntimeError("ZVG-Portal verlangt einen gültigen Referer")
+        raise RuntimeError("ZVG-Portal lieferte keine Detailseite (error)")
+    if not re.search(r"</html\s*>", html, re.I):
+        raise RuntimeError("Unvollständige amtliche HTML-Antwort; Anlagen bleiben erhalten")
     soup = BeautifulSoup(html, "html.parser")
     scope = soup.find("table", id="anzeige")
     if scope is None:
         raise RuntimeError("Keine vollständige amtliche Detailtabelle; Anlagen bleiben erhalten")
-    actual_case = case_identity(scope.get_text(" ", strip=True))
-    if not actual_case or (expected_case and actual_case != case_identity(expected_case)):
+    # The case belongs to the heading, never a reference in a description or PDF.
+    heading = scope.find("tr")
+    actual_case = case_identity(heading.get_text(" ", strip=True) if heading else "")
+    if not actual_case or (expected_case and not case_matches(actual_case, expected_case)):
         raise RuntimeError("Aktenzeichen der Detailseite fehlt oder passt nicht")
     labels = {label_key(label) for label, _ in row_map(soup)}
     if not {"art der versteigerung", "objekt/lage"}.issubset(labels):
@@ -325,18 +346,91 @@ def detail_has_content(detail: dict[str, Any]) -> bool:
     )
     return any(detail.get(k) for k in scalar_keys) or bool(detail.get("geoserver_urls")) or bool(detail.get("detail_attachments"))
 
-def should_fetch(record: dict[str, Any]) -> bool:
-    if not record.get("zvg_id") or not record.get("state_code"):
+def portal_identity_valid(record: dict[str, Any]) -> bool:
+    land = str(record.get("state_code") or "")
+    zvg_id = str(record.get("zvg_id") or "")
+    if land not in PORTAL_STATES or not re.fullmatch(r"[0-9]+", zvg_id):
+        return False
+    source = str(record.get("source_url") or "")
+    if source:
+        try:
+            parsed = urlparse(source)
+            query = parse_qs(parsed.query)
+            if (parsed.scheme not in {"http", "https"}
+                    or parsed.hostname not in {"zvg-portal.de", "www.zvg-portal.de"}
+                    or parsed.path != "/index.php"
+                    or query.get("button") != ["showZvg"]
+                    or query.get("land_abk") != [land]
+                    or query.get("zvg_id") != [zvg_id]):
+                return False
+        except ValueError:
+            return False
+    return True
+
+
+def detail_timestamp(value: Any, now: datetime) -> datetime | None:
+    try:
+        stamp = datetime.fromisoformat(str(value or "").replace("Z", "+00:00"))
+        stamp = stamp.replace(tzinfo=timezone.utc) if stamp.tzinfo is None else stamp.astimezone(timezone.utc)
+        # A corrupt future timestamp must not postpone an object indefinitely.
+        return stamp if stamp <= now + timedelta(minutes=5) else None
+    except (ValueError, TypeError):
+        return None
+
+
+def active_portal_record(record: dict[str, Any], now: datetime) -> bool:
+    if not portal_identity_valid(record):
         return False
     if record.get("cancelled"):
+        return False
+    try:
+        auction_day = datetime.fromisoformat(str(record.get("auction_date") or "")[:10]).date()
+        if auction_day < now.astimezone(ZoneInfo("Europe/Berlin")).date():
+            return False
+    except ValueError:
+        pass  # Unknown dates are not proof that a procedure has ended.
+    return True
+
+
+def should_fetch(record: dict[str, Any], now: datetime | None = None) -> bool:
+    now = now or datetime.now(timezone.utc)
+    if not active_portal_record(record, now):
+        return False
+    attempted = detail_timestamp(record.get("detail_attempted_at"), now)
+    if record.get("detail_error") and attempted and now - attempted < DETAIL_RETRY_DELAY:
         return False
     if record.get("attachment_sync_version") != ATTACHMENT_SYNC_VERSION:
         return True
     if record.get("detail_error"):
         return True
-    if not record.get("detail_fetched_at"):
+    fetched = detail_timestamp(record.get("detail_fetched_at"), now)
+    if fetched is None:
         return True
-    return record.get("detail_source_last_updated") != record.get("last_updated")
+    return (record.get("detail_source_last_updated") != record.get("last_updated")
+            or now - fetched >= DETAIL_MAX_AGE)
+
+
+def select_candidates(records: list[dict[str, Any]], now: datetime,
+                      object_ids: list[str] | None = None) -> list[dict[str, Any]]:
+    requested = set(object_ids or [])
+    if requested:
+        candidates = [r for r in records if str(r.get("id")) in requested]
+        if {str(r.get("id")) for r in candidates} != requested:
+            raise RuntimeError("Mindestens eine angeforderte Objekt-ID fehlt im Datenbestand")
+        if any(not portal_identity_valid(r) for r in candidates):
+            raise RuntimeError("Angeforderte Objekt-ID hat keine gültige amtliche Portalzuordnung")
+    else:
+        candidates = [r for r in records if should_fetch(r, now)]
+    # Old errors previously occupied the first slots of every hourly run.
+    # Every attempted record now moves behind records not attempted recently,
+    # including those in other states and those with later auction dates.
+    oldest = datetime.min.replace(tzinfo=timezone.utc)
+    candidates.sort(key=lambda r: (
+        detail_timestamp(r.get("detail_attempted_at"), now)
+        or detail_timestamp(r.get("detail_fetched_at"), now) or oldest,
+        str(r.get("auction_date") or "9999"), str(r.get("id") or ""),
+    ))
+    return candidates
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -352,8 +446,8 @@ def main() -> int:
     if not isinstance(records, list):
         raise RuntimeError("results ist keine Liste")
 
-    candidates = [r for r in records if (not args.object_id or str(r.get("id")) in args.object_id) and (bool(args.object_id) or should_fetch(r))]
-    candidates.sort(key=lambda r: (str(r.get("auction_date") or "9999"), str(r.get("last_updated") or ""), str(r.get("id") or "")))
+    now = datetime.now(timezone.utc)
+    candidates = select_candidates(records, now, args.object_id)
     selected = candidates[: max(0, args.limit)]
 
     session = requests.Session()
@@ -367,14 +461,22 @@ def main() -> int:
     fetched = 0
     errors = 0
     primed_states: set[str] = set()
+    failed_states: dict[str, str] = {}
     error_samples: list[dict[str, str]] = []
     for idx, record in enumerate(selected):
         land = str(record.get("state_code"))
         zvg_id = str(record.get("zvg_id"))
         url = canonical_detail_url(land, zvg_id)
+        record["detail_attempted_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
         try:
+            if land in failed_states:
+                raise RuntimeError(failed_states[land])
             if land not in primed_states:
-                prime_state_session(session, land)
+                try:
+                    prime_state_session(session, land)
+                except Exception as exc:
+                    failed_states[land] = str(exc)
+                    raise
                 primed_states.add(land)
             resp = session.get(url, headers={"Referer": SEARCH_REFERER}, timeout=45)
             resp.raise_for_status()
@@ -409,6 +511,7 @@ def main() -> int:
     with_photos = sum(1 for r in records if any(a.get("type") == "foto" for a in r.get("attachments") or []))
     meta = payload.setdefault("meta", {})
     meta["detail_enrichment"] = {
+        "queue_policy": "1.4.23",
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "fetched_this_run": fetched,
         "errors_this_run": errors,
@@ -419,6 +522,10 @@ def main() -> int:
         "limit_per_run": args.limit,
         "primed_states": sorted(primed_states),
         "error_samples": error_samples,
+        "active_errors_total": sum(1 for r in records if active_portal_record(r, now) and r.get("detail_error")),
+        "retry_deferred": sum(1 for r in records if active_portal_record(r, now) and r.get("detail_error") and not should_fetch(r, now)),
+        "refresh_max_age_hours": int(DETAIL_MAX_AGE.total_seconds() // 3600),
+        "retry_delay_hours": int(DETAIL_RETRY_DELAY.total_seconds() // 3600),
     }
 
     tmp = path.with_suffix(path.suffix + ".tmp")

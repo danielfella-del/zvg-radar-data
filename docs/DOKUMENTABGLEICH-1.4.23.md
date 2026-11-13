@@ -99,13 +99,13 @@ Bundesländerabdeckung sowie folgende synthetische Regressionen:
 - 28 Portal-Warteschlangen-, Identitäts- und Erhaltungstests;
 - 46 BW-Tests für getrennte Objekte, Pagination, stabile IDs, Quellenfehler,
   getrennte Gutachtenverfügbarkeit und Checkpoints;
-- 25 SH-Tests für Spalten, Fallgrenzen, Alt-ID-Erhalt und Abbruchsicherung;
+- 26 SH-Tests für Spalten, Fallgrenzen, Alt-ID-Erhalt und Abbruchsicherung;
 - 6 Tests des tatsächlichen SH-Merges mit temporären JSON-Dateien;
 - 11 bestehende HH/MV-Tests;
 - 7 bestehende Reportfoto-Warteschlangentests;
 - 23 bestehende Sync-Client-Tests.
 
-Alle 146 unittest-Fälle sowie die Parser-Smokes und Länderprüfung bestanden
+Alle 147 unittest-Fälle sowie die Parser-Smokes und Länderprüfung bestanden
 am kombinierten Stand. Diese Prüfungen verwenden temporäre Testdaten und simulierte Netzwerkantworten.
 Es werden keine Live-Workflows, Produktionsimporte, Mails oder Medienläufe
 ausgeführt.

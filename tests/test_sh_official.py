@@ -51,6 +51,14 @@ class SHTests(unittest.TestCase):
         row = parsed(notice(extra='Das Grundbuch liegt beim Amtsgericht Nachbarstadt.'))[0]
         self.assertEqual(row['court'], 'Itzehoe')
 
+    def test_abbreviated_city_fragment_is_not_published_as_city(self):
+        for printed in ('25365 Kl. Offenseth-Sparrieshoop.', '24800 Gr. Beispielort.', '24800 St. Beispielort.'):
+            with self.subTest(printed=printed):
+                row = parsed(notice().replace('24800 Objektstadt.', printed))[0]
+                self.assertEqual(row['postcode'], printed[:5])
+                self.assertIsNone(row['city'])
+        self.assertEqual(parsed()[0]['city'], 'Objektstadt')
+
     def test_body_phrase_does_not_start_a_second_notice(self):
         row = parsed(notice(extra='Der Erwerb im Wege der Zwangsvollstreckung, durch den Insolvenzverwalter.'))[0]
         self.assertEqual(row['file_number'], '28 K 14/26')

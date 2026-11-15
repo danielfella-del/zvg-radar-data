@@ -111,6 +111,36 @@ def parse_money_values(raw: str) -> list[int]:
 
 def parse_money(raw: str) -> int | None:
     values = parse_money_values(raw)
+    # A portal value cell can contain individual lots followed by their explicit
+    # total. Count that total once only when both the label and the arithmetic
+    # establish it. Keep the raw market_values list as published evidence and
+    # leave ambiguous/multiple totals on the existing parsing path.
+    text = clean(raw)
+    total_labels = list(re.finditer(
+        r"\b(?:Gesamtwert|Gesamtverkehrswert|Verkehrswert\s+insgesamt)\b", text, re.I
+    ))
+    money = r"(?<![\d.,])(\d{1,3}(?:\.\d{3})+|\d+),(\d{2})(?!\d)"
+    amounts = list(re.finditer(money, text))
+    ambiguous = re.search(r"\b(?:Teilwert\w*|Zwischensumme\w*|Teilsumme\w*)\b", text, re.I)
+    negative = any(re.search(r"(?:[-−–]\s*|\bminus\s*)$", text[:m.start()], re.I)
+                   for m in amounts)
+    if len(total_labels) == 1 and len(amounts) >= 3 and not ambiguous and not negative:
+        label = total_labels[0]
+        declared = re.match(
+            r"\s*[:=]?\s*(" + money + r")\s*(?:€|EUR\b|Euro\b)",
+            text[label.end():], re.I,
+        )
+        total = amounts[-1]
+        # The total must follow every component, with no further money amount.
+        # Scope qualifiers (e.g. 'Gesamtwert der Gruppe A') do not qualify.
+        if (declared and label.end() + declared.start(1) == total.start()
+                and all(m.end() <= label.start() for m in amounts[:-1])
+                and all(re.match(r"\s*(?:€|EUR\b|Euro\b)", text[m.end():], re.I)
+                        for m in amounts)):
+            cents = [int(m.group(1).replace(".", "")) * 100 + int(m.group(2))
+                     for m in amounts]
+            if all(v > 0 for v in cents) and sum(cents[:-1]) == cents[-1]:
+                return (cents[-1] + 50) // 100
     return sum(values) if values else None
 
 def parse_portal_date(raw: str) -> str | None:
@@ -262,7 +292,7 @@ def parse_chunk(chunk: BeautifulSoup, state: str) -> dict[str, Any] | None:
     value_cell = first_value_after_label(chunk, r"^Verkehrswert in")
     if value_cell:
         market_values = parse_money_values(text_of(value_cell))
-        value = sum(market_values) if market_values else None
+        value = parse_money(text_of(value_cell))
 
     auction_date = None
     if not cancelled:

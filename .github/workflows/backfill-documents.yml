@@ -1,0 +1,79 @@
+name: ZVG Dokumente gezielt nachpflegen
+
+on:
+  workflow_dispatch:
+    inputs:
+      object_ids:
+        description: 'Objekt-IDs, getrennt durch Leerzeichen oder Komma (maximal 1000)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zvg-data-writer
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Aktuellen Hauptstand nach Freigabe der Schreibsperre laden
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          sparse-checkout: |
+            collector
+            tests
+            scripts
+            .github
+            data/auctions.json
+          sparse-checkout-cone-mode: false
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: collector/requirements.txt
+
+      - name: Abhängigkeiten installieren
+        run: pip install -r collector/requirements.txt
+
+      - name: Bestehende Detailregeln prüfen
+        run: |
+          python tests/test_detail_parser.py
+          python tests/test_detail_queue.py
+          python tests/test_document_backfill.py
+
+      - name: Zielobjekte nachpflegen und Ergebnis protokollieren
+        env:
+          ZVG_BACKFILL_IDS: ${{ inputs.object_ids }}
+        run: python .github/scripts/backfill-documents.py
+
+      - name: Geprüfte Daten speichern
+        id: save
+        shell: bash
+        run: |
+          if ! git diff --quiet -- data/auctions.json; then
+            git config user.name "zvg-radar-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/auctions.json
+            git commit -m "ZVG-Dokumente gezielt nachgepflegt"
+            # Kein automatisches Rebase großer Datenbestände: bei einem
+            # unerwarteten konkurrierenden Commit muss neu abgeglichen werden.
+            git push origin HEAD:main
+          fi
+          echo "Daten-Commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Anschließend einen NEUEN MariaDB-Sync auf main starten und die Live-Ausgabe prüfen.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Ergebnis und vollständiges Fehlerprotokoll aufbewahren
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dokumentnachpflege-${{ github.run_id }}
+          path: diagnostics/document-backfill/
+          if-no-files-found: warn
+          retention-days: 30

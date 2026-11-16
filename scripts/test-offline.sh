@@ -13,6 +13,7 @@ for zvg_test in \
   tests/test_parser.py \
   tests/test_detail_parser.py \
   tests/test_detail_queue.py \
+  tests/test_document_backfill.py \
   tests/test_state_coverage.py \
   tests/test_bw_structured.py \
   tests/test_sh_official.py \

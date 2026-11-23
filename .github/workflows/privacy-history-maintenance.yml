@@ -1,0 +1,79 @@
+name: Approved privacy history maintenance
+
+on:
+  workflow_dispatch:
+    inputs:
+      approved_refs_sha256:
+        description: SHA256 of the reviewed canonical advertised ref snapshot
+        required: true
+        type: string
+      approved_manifest_sha256:
+        description: SHA256 of the reviewed uncompressed hash-only JSON manifest
+        required: true
+        type: string
+      operation:
+        description: Preflight leaves writers paused; apply pushes only after all checks
+        required: true
+        default: preflight
+        type: choice
+        options:
+          - preflight
+          - apply
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: approved-privacy-history-maintenance
+  cancel-in-progress: false
+
+jobs:
+  maintenance:
+    if: github.repository == 'danielfella-del/zvg-radar-data' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Check out only reviewed maintenance code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: |
+            .github/privacy-maintenance
+            collector/publication_policy.py
+          sparse-checkout-cone-mode: false
+      - name: Install pinned history tool
+        run: |
+          python3 -m venv "$RUNNER_TEMP/privacy-tools"
+          "$RUNNER_TEMP/privacy-tools/bin/pip" install --disable-pip-version-check git-filter-repo==2.47.0
+      - name: Validate, rewrite and verify approved refs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          APPROVED_REFS_SHA256: ${{ inputs.approved_refs_sha256 }}
+          APPROVED_MANIFEST_SHA256: ${{ inputs.approved_manifest_sha256 }}
+          MAINTENANCE_OPERATION: ${{ inputs.operation }}
+        run: |
+          "$RUNNER_TEMP/privacy-tools/bin/python" .github/privacy-maintenance/run_history_cleanup.py
+      - name: Save technical evidence only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: privacy-maintenance-evidence-${{ github.run_id }}
+          path: ${{ runner.temp }}/privacy-maintenance/evidence/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Remove temporary repository and working data
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          root = pathlib.Path(os.environ['RUNNER_TEMP']) / 'privacy-maintenance'
+          for name in ('source.git', 'manifest.json', 'audit.jsonl'):
+              path = root / name
+              if path.is_dir():
+                  shutil.rmtree(path)
+              elif path.exists():
+                  path.unlink()
+          PY

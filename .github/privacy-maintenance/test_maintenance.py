@@ -100,7 +100,7 @@ class GuardTests(unittest.TestCase):
             "20": {"path": ".github/workflows/20.yml", "state": "disabled_manually"},
         }}))
         self.api = FakeAPI()
-        self.job = m.Maintenance(self.code, self.root / "work", "synthetic-token", 99, OLD, "apply", "a" * 64, "b" * 64, self.api)
+        self.job = m.Maintenance(self.code, self.root / "work", "synthetic-token", 99, OLD, "apply", "a" * 64, "b" * 64, self.api, push_token="synthetic-push-token")
         self.before = {"refs/heads/main": OLD, "refs/tags/v1": OTHER, "refs/pull/1/head": OLD}
         self.after = {"refs/heads/main": NEW, "refs/tags/v1": OTHER, "refs/pull/1/head": NEW}
         self.job.measure_push_pack = lambda **kwargs: {
@@ -938,6 +938,137 @@ class StagedPushIntegration(unittest.TestCase):
             self.assertEqual(git("rev-parse", original, cwd=remote), oid)
 
 
+class PushTokenTests(unittest.TestCase):
+    setUp = GuardTests.setUp
+    tearDown = GuardTests.tearDown
+
+    def token_job(self, dedicated, *, mode="apply"):
+        return m.Maintenance(self.code, self.root / "token-work", "ordinary-api-token", 99,
+                             OLD, mode, "a" * 64, "b" * 64, push_token=dedicated)
+
+    def test_alternate_token_is_only_stage_and_final_push_authentication(self):
+        alternate = "synthetic-dedicated-secret"
+        with patch.dict(os.environ, {"PRIVACY_MAINTENANCE_PUSH_TOKEN": alternate, "GIT_TRACE": "1"}):
+            job = self.token_job(alternate)
+        result = subprocess.CompletedProcess(["git"], 0, b"ok", b"")
+        stage = m.STAGE_REF_PREFIX + "99-0"
+        commands = [["clone", "--mirror", m.REMOTE, "synthetic.git"],
+                    ["ls-remote", "--refs", m.REMOTE],
+                    ["filter-repo", "--version"],
+                    ["push", "--atomic", "--porcelain", f"--force-with-lease={stage}:", m.REMOTE, f"{NEW}:{stage}"],
+                    m.final_push_arguments(self.before, self.after, {stage: NEW}),
+                    ["ls-remote", "--refs", m.REMOTE]]
+        expected_api = base64.b64encode(b"x-access-token:ordinary-api-token").decode()
+        expected_push = base64.b64encode(("x-access-token:" + alternate).encode()).decode()
+        with patch.object(m.subprocess, "run", return_value=result) as run:
+            for command in commands:
+                job.git(command)
+                env = run.call_args.kwargs["env"]
+                expected = expected_push if command[0] == "push" else expected_api
+                self.assertEqual(env["GIT_CONFIG_VALUE_0"], "AUTHORIZATION: basic " + expected)
+                self.assertNotIn("PRIVACY_MAINTENANCE_PUSH_TOKEN", env)
+                self.assertNotIn("GIT_TRACE", env)
+                self.assertEqual(env["GIT_CONFIG_VALUE_5"], "false")
+                self.assertNotIn(alternate, json.dumps(env))
+                self.assertNotIn(alternate, json.dumps(run.call_args.args))
+                self.assertNotIn(expected_push, json.dumps(run.call_args.args))
+                if command[0] != "push":
+                    self.assertNotIn(expected_push, json.dumps(env))
+        self.assertEqual(job.api.token, "ordinary-api-token")
+
+    def test_offline_pack_measurement_never_receives_dedicated_credential(self):
+        alternate = "synthetic-dedicated-secret"
+        self.job = self.token_job(alternate)
+        TransportMeasurementTests.real_repository(self)
+        expected_push = base64.b64encode(("x-access-token:" + alternate).encode()).decode()
+        original = m.subprocess.Popen
+        observed = []
+        def launch(*args, **kwargs):
+            observed.append(kwargs["env"])
+            return original(*args, **kwargs)
+        with patch.object(m.subprocess, "Popen", side_effect=launch):
+            self.job.measure_push_pack()
+        self.assertTrue(observed)
+        for env in observed:
+            self.assertNotIn(alternate, json.dumps(env))
+            self.assertNotIn(expected_push, json.dumps(env))
+            self.assertNotIn("PRIVACY_MAINTENANCE_PUSH_TOKEN", env)
+
+    def test_missing_apply_token_halts_before_pause_clone_or_any_api_call(self):
+        for supplied in (None, ""):
+            with self.subTest(supplied=supplied):
+                job = self.token_job(supplied)
+                job.api = FakeAPI()
+                job.load_manifest = lambda: None
+                job.precheck_approved_refs = lambda: self.fail("missing credential must be checked first")
+                job.clone = lambda: self.fail("missing credential must not clone")
+                self.assertEqual(job.execute(), 1)
+                self.assertEqual(job.state["error_code"], "dedicated_push_token_required")
+                self.assertEqual(job.api.calls, [])
+                self.assertEqual(job.api.states[10], "active")
+                self.assertFalse(job.state["dedicated_push_token_present"])
+                with patch.object(m.subprocess, "run") as run:
+                    with self.assertRaisesRegex(m.Halt, "dedicated_push_token_required"):
+                        job.git(m.push_arguments(self.before, self.after))
+                    run.assert_not_called()
+
+    def test_preflight_without_token_remains_available_and_cannot_push(self):
+        job = self.token_job(None, mode="preflight")
+        job.check_push_authorization()
+        job.before, job.after = self.before, self.after
+        job.verify_paused = lambda: None
+        job.pending_runs = lambda: {}
+        job.remote_refs = lambda: self.before
+        job.measure_push_pack = lambda **kw: {"complete": True, "bytes": 20 * m.PUSH_PACK_LIMIT}
+        job.publish()
+        self.assertFalse(job.state["publication_journal"])
+        self.assertFalse(job.state["restore_complete"])
+        with patch.object(m.subprocess, "run") as run:
+            with self.assertRaisesRegex(m.Halt, "push_requires_apply"):
+                job.git(m.push_arguments(self.before, self.after))
+            run.assert_not_called()
+
+    def test_presence_boolean_does_not_claim_verified_permissions(self):
+        job = self.token_job("synthetic-dedicated-secret")
+        job.check_push_authorization()
+        self.assertTrue(job.state["dedicated_push_token_present"])
+        self.assertFalse(job.state["push_verified"])
+        self.assertNotIn("permission_verified", job.state)
+
+    def test_token_and_encoded_header_never_enter_report_or_stdout(self):
+        import contextlib
+        import io
+        alternate = "synthetic-dedicated-secret"
+        encoded = base64.b64encode(("x-access-token:" + alternate).encode()).decode()
+        capture = io.StringIO()
+        with contextlib.redirect_stdout(capture):
+            job = self.token_job(alternate)
+            result = subprocess.CompletedProcess(["git"], 128, alternate.encode(),
+                ("fatal: Authentication failed " + alternate + " AUTHORIZATION: basic " + encoded).encode())
+            with patch.object(m.subprocess, "run", return_value=result):
+                with self.assertRaisesRegex(m.Halt, "git_operation_failed_128"):
+                    job.git(m.push_arguments(self.before, self.after))
+        report = (job.evidence / "state.json").read_text()
+        self.assertEqual(job.state["push_diagnostics"]["observed_signals"], ["authentication_failed"])
+        for sensitive in (alternate, encoded, "AUTHORIZATION", "ordinary-api-token"):
+            self.assertNotIn(sensitive, report)
+            self.assertNotIn(sensitive, capture.getvalue())
+
+    def test_main_consumes_secret_without_changing_api_token(self):
+        env = {"GITHUB_REPOSITORY": m.REPOSITORY, "GITHUB_EVENT_NAME": "workflow_dispatch",
+               "GITHUB_REF": "refs/heads/main", "GITHUB_TOKEN": "ordinary-api-token",
+               "PRIVACY_MAINTENANCE_PUSH_TOKEN": "synthetic-dedicated-secret", "RUNNER_TEMP": str(self.root),
+               "GITHUB_RUN_ID": "99", "GITHUB_SHA": OLD, "MAINTENANCE_OPERATION": "preflight",
+               "APPROVED_REFS_SHA256": "a" * 64, "APPROVED_MANIFEST_SHA256": "b" * 64}
+        with patch.dict(os.environ, env), patch.object(m, "Maintenance") as maintenance:
+            maintenance.return_value.execute.return_value = 0
+            self.assertEqual(m.main(), 0)
+            self.assertNotIn("PRIVACY_MAINTENANCE_PUSH_TOKEN", os.environ)
+            self.assertEqual(os.environ["GITHUB_TOKEN"], "ordinary-api-token")
+            self.assertEqual(maintenance.call_args.args[2], "ordinary-api-token")
+            self.assertEqual(maintenance.call_args.kwargs["push_token"], "synthetic-dedicated-secret")
+
+
 class PartialMirrorIntegration(unittest.TestCase):
     def test_real_callback_manifest_and_all_commit_validation(self):
         tool = Path(os.environ.get("FILTER_REPO_BIN", "/nonexistent"))
@@ -989,7 +1120,7 @@ class PartialMirrorIntegration(unittest.TestCase):
             shutil.copy2(helper_path, code / helper_path.name)
             shutil.copy2(helper_path.parent / "history-file-callback.py", code / "history-file-callback.py")
             work = root / "work"
-            job = m.Maintenance(code, work, "test-token", 99, before_main, "apply", "a" * 64, "b" * 64, FakeAPI())
+            job = m.Maintenance(code, work, "test-token", 99, before_main, "apply", "a" * 64, "b" * 64, FakeAPI(), push_token="synthetic-push-token")
             job.env["PATH"] = str(tool.parent) + os.pathsep + env["PATH"]
             git("clone", "--mirror", remote.as_uri(), str(job.repo))
             job.before = job.local_refs()

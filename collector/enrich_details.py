@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload, withdrawn_record, withdrawn_id
 
 import argparse
 import json
@@ -379,7 +380,7 @@ def detail_timestamp(value: Any, now: datetime) -> datetime | None:
 
 
 def active_portal_record(record: dict[str, Any], now: datetime) -> bool:
-    if not portal_identity_valid(record):
+    if withdrawn_record(record) or not portal_identity_valid(record):
         return False
     if record.get("cancelled"):
         return False
@@ -412,6 +413,9 @@ def should_fetch(record: dict[str, Any], now: datetime | None = None) -> bool:
 
 def select_candidates(records: list[dict[str, Any]], now: datetime,
                       object_ids: list[str] | None = None) -> list[dict[str, Any]]:
+    if any(withdrawn_id(oid) for oid in (object_ids or [])):
+        raise RuntimeError("Zurückgezogenes Verfahren darf nicht nachgepflegt werden")
+    records = [r for r in records if not withdrawn_record(r)]
     requested = set(object_ids or [])
     if requested:
         candidates = [r for r in records if str(r.get("id")) in requested]
@@ -441,7 +445,7 @@ def main() -> int:
     args = ap.parse_args()
 
     path = Path(args.data)
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload = sanitize_payload(json.loads(path.read_text(encoding="utf-8")))
     records = payload.get("results", [])
     if not isinstance(records, list):
         raise RuntimeError("results ist keine Liste")

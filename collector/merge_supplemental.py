@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload
 import argparse,json,re
 from datetime import datetime,timezone
 from pathlib import Path
@@ -81,13 +82,13 @@ def reconcile_checked_notices(rows, supplement):
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument("--data",default="data/auctions.json"); ap.add_argument("--supplement",action="append",default=[]); a=ap.parse_args()
-    p=Path(a.data); data=json.loads(p.read_text(encoding="utf-8")); rows=[r for r in data.get("results",[]) if isinstance(r,dict)]
+    p=Path(a.data); data=sanitize_payload(json.loads(p.read_text(encoding="utf-8"))); rows=[r for r in data.get("results",[]) if isinstance(r,dict)]
     idx={key(r):i for i,r in enumerate(rows)}
     added=updated=replaced=0; by_source={}; official_status={}
     for spath in a.supplement:
         q=Path(spath)
         if not q.exists(): continue
-        s=json.loads(q.read_text(encoding="utf-8"))
+        s=sanitize_payload(json.loads(q.read_text(encoding="utf-8")))
         rows,sr,removed=reconcile_checked_notices(rows,s)
         if (s.get('meta') or {}).get('state_code')=='bw' and (s.get('meta') or {}).get('source_parser_version')==2:
             # The BW collector carries failed sources and review records from

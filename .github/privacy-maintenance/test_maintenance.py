@@ -103,7 +103,10 @@ class GuardTests(unittest.TestCase):
         self.job = m.Maintenance(self.code, self.root / "work", "synthetic-token", 99, OLD, "apply", "a" * 64, "b" * 64, self.api)
         self.before = {"refs/heads/main": OLD, "refs/tags/v1": OTHER, "refs/pull/1/head": OLD}
         self.after = {"refs/heads/main": NEW, "refs/tags/v1": OTHER, "refs/pull/1/head": NEW}
-        self.job.measure_push_pack = lambda: None
+        self.job.measure_push_pack = lambda **kwargs: {
+            "bytes": 0, "complete": True,
+            "target_oids": sorted(set(m.owned_refs(self.job.after).values())),
+            "expected_remote_refs_sha256": m.refs_digest(self.job.expected_staged_snapshot())}
         self.job.manifest = {"blob_ids": [OTHER], "json_blobs": {OLD: {"new_sha": NEW, "mode": "fast", "changed": True}}}
 
     def tearDown(self):
@@ -437,11 +440,12 @@ class TransportMeasurementTests(unittest.TestCase):
         self.assertEqual(report["http_statuses"], [])
         self.assertEqual(report["curl_codes"], [])
 
-    def test_pack_revision_input_has_only_owned_new_tips_and_all_old_exclusions(self):
+    def test_pack_revision_input_has_only_owned_tips_and_owned_exclusions(self):
         before = dict(self.before, **{"refs/pull/2/head": "4" * 40})
         after = dict(self.after, **{"refs/pull/2/head": "5" * 40})
         lines = m.pack_revisions(before, after).decode().splitlines()
-        self.assertEqual(set(lines), {NEW, OTHER, "^" + OLD, "^" + OTHER, "^" + "4" * 40})
+        self.assertEqual(set(lines), {NEW, OTHER, "^" + OLD, "^" + OTHER})
+        self.assertNotIn("^" + "4" * 40, lines)
         self.assertNotIn("5" * 40, lines)
         with self.assertRaisesRegex(m.Halt, "invalid_pack_revision"):
             m.pack_revisions(before, dict(after, **{"refs/heads/main": "private-invalid"}))
@@ -466,6 +470,72 @@ class TransportMeasurementTests(unittest.TestCase):
         self.job.after = {"refs/heads/main": new, "refs/pull/1/head": new}
         return git
 
+    def test_full_traversal_is_identical_for_measurement_and_push(self):
+        env = m.auth_environment("synthetic-token")
+        self.assertEqual(env["GIT_CONFIG_COUNT"], "6")
+        self.assertEqual(env["GIT_CONFIG_KEY_5"], "pack.useSparse")
+        self.assertEqual(env["GIT_CONFIG_VALUE_5"], "false")
+        result = subprocess.CompletedProcess(["git"], 0, b"", b"")
+        with patch.object(m.subprocess, "run", return_value=result) as run:
+            self.job.git(m.push_arguments(self.before, self.after))
+        self.assertEqual(run.call_args.kwargs["env"]["GIT_CONFIG_VALUE_5"], "false")
+        self.real_repository()
+        original = m.subprocess.Popen
+        observed = []
+        def launch(*args, **kwargs):
+            observed.append(kwargs["env"])
+            return original(*args, **kwargs)
+        with patch.object(m.subprocess, "Popen", side_effect=launch):
+            m.Maintenance.measure_push_pack(self.job)
+        self.assertTrue(observed)
+        self.assertTrue(all(env["GIT_CONFIG_VALUE_5"] == "false" for env in observed))
+        record = self.job.state["push_pack_measurement"]
+        self.assertTrue(record["full_object_traversal"])
+        self.assertEqual(record["exclusion_basis"], "reviewed_old_owned_and_verified_current_stage_refs")
+
+    def test_full_traversal_remains_conservative_for_historical_binary(self):
+        # Recreate a history rewrite with a large unchanged blob present only in
+        # historical trees. Full traversal can still resend it despite old history
+        # already being reachable remotely. All data here is synthetic.
+        self.job.repo.mkdir()
+        env = dict(self.job.env, GIT_AUTHOR_NAME="Synthetic", GIT_AUTHOR_EMAIL="test@example.invalid",
+                   GIT_COMMITTER_NAME="Synthetic", GIT_COMMITTER_EMAIL="test@example.invalid")
+        def git(*args, input=None, override=None):
+            return subprocess.check_output(["git", *args], cwd=self.job.repo, env=override or env,
+                                           input=input, stderr=subprocess.DEVNULL)
+        git("init", "-b", "main")
+        (self.job.repo / "base.txt").write_text("shared base")
+        git("add", ".")
+        git("commit", "-qm", "Synthetic common root")
+        common = git("rev-parse", "HEAD").decode().strip()
+        shared = os.urandom(1024 * 1024)
+        for label in ("original", "rewritten"):
+            if label == "rewritten":
+                git("checkout", "-qb", "rewritten", common)
+            (self.job.repo / "historic.bin").write_bytes(shared)
+            (self.job.repo / "data.json").write_text('{"synthetic":"' + label + ' one"}')
+            git("add", ".")
+            git("commit", "-qm", "Synthetic historical object " + label)
+            (self.job.repo / "historic.bin").unlink()
+            (self.job.repo / "data.json").write_text('{"synthetic":"' + label + ' two"}')
+            git("add", "-A")
+            git("commit", "-qm", "Synthetic current " + label)
+            if label == "original":
+                old = git("rev-parse", "HEAD").decode().strip()
+            else:
+                new = git("rev-parse", "HEAD").decode().strip()
+        self.job.before, self.job.after = {"refs/heads/main": old}, {"refs/heads/main": new}
+        revisions = m.pack_revisions(self.job.before, self.job.after)
+        args = ("pack-objects", "--revs", "--stdout", "--thin", "--delta-base-offset", "--quiet")
+        full = git(*args, input=revisions)
+        sparse = git(*args, input=revisions, override=dict(env, GIT_CONFIG_VALUE_5="true"))
+        self.assertGreater(len(full), 1024 * 1024)
+        self.assertGreaterEqual(len(sparse), len(full))
+        self.assertLessEqual(int.from_bytes(full[8:12], "big"), int.from_bytes(sparse[8:12], "big"))
+        m.Maintenance.measure_push_pack(self.job)
+        self.assertEqual(self.job.state["push_pack_measurement"]["bytes"], len(full))
+        self.assertEqual(list((self.job.repo / ".git/objects/pack").iterdir()), [])
+
     def test_real_pack_stream_count_matches_reference_without_saved_pack(self):
         git = self.real_repository()
         m.Maintenance.measure_push_pack(self.job)
@@ -481,16 +551,16 @@ class TransportMeasurementTests(unittest.TestCase):
         self.assertEqual(list((self.job.repo / ".git/objects/pack").iterdir()), [])
         self.assertNotIn("sanitized new data", (self.job.evidence / "state.json").read_text())
 
-    def test_oversize_measured_pack_halts_without_push(self):
+    def test_oversize_measurement_limit_halts_without_push(self):
         self.real_repository()
-        self.job.measure_push_pack = lambda: m.Maintenance.measure_push_pack(self.job)
+        self.job.measure_push_pack = lambda **kwargs: m.Maintenance.measure_push_pack(self.job, **kwargs)
         self.job.verify_paused = lambda: None
         self.job.pending_runs = lambda: {}
         self.job.remote_refs = lambda: self.job.before
         self.job.git = lambda *args, **kwargs: self.fail("oversized pack must not push")
         with patch.object(m, "PUSH_PACK_LIMIT", 1):
             with self.assertRaisesRegex(m.Halt, "estimated_push_pack_exceeds_limit"):
-                self.job.publish()
+                self.job.measure_push_pack()
         self.assertTrue(self.job.state["push_pack_measurement"]["complete"])
         self.assertFalse(self.job.state["push_verified"])
         self.assertFalse(self.job.state["restore_complete"])
@@ -524,7 +594,7 @@ class TransportMeasurementTests(unittest.TestCase):
     def test_preflight_measures_but_never_pushes(self):
         self.real_repository()
         self.job.mode = "preflight"
-        self.job.measure_push_pack = lambda: m.Maintenance.measure_push_pack(self.job)
+        self.job.measure_push_pack = lambda **kwargs: m.Maintenance.measure_push_pack(self.job, **kwargs)
         self.job.verify_paused = lambda: None
         self.job.pending_runs = lambda: {}
         self.job.remote_refs = lambda: self.job.before
@@ -571,6 +641,301 @@ class TransportMeasurementTests(unittest.TestCase):
         self.job.git = lambda *args, **kwargs: self.fail("changed refs must block push")
         with self.assertRaisesRegex(m.Halt, "remote_refs_changed_before_push"):
             self.job.publish()
+
+
+class StagingGuardTests(unittest.TestCase):
+    setUp = GuardTests.setUp
+    tearDown = GuardTests.tearDown
+
+    def ready(self):
+        self.job.before, self.job.after = self.before, self.after
+        self.job.verify_paused = lambda: None
+        self.job.pending_runs = lambda: {}
+        self.job.verified_commit_ids = {NEW, OTHER}
+        return m.STAGE_REF_PREFIX + "99-0"
+
+    def measurement(self, *, target=NEW, size=10):
+        return {"complete": True, "bytes": size, "target_oids": [target],
+                "expected_remote_refs_sha256": m.refs_digest(self.job.expected_staged_snapshot())}
+
+    def test_prior_stage_ref_blocks_before_pause_even_with_matching_approval(self):
+        observed = dict(self.before, **{m.STAGE_REF_PREFIX + "98-0": OTHER})
+        self.job.load_manifest = lambda: None
+        self.job.remote_refs = lambda: observed
+        self.job.refs_hash = m.refs_digest(observed)
+        self.assertEqual(self.job.execute(), 1)
+        self.assertEqual(self.job.state["error_code"], "staging_recovery_required")
+        self.assertEqual(self.api.calls, [])
+
+    def test_preflight_oversize_cannot_stage_or_restore(self):
+        self.ready()
+        self.job.mode = "preflight"
+        self.job.remote_refs = lambda: self.before
+        self.job.measure_push_pack = lambda **kw: {"complete": True, "bytes": m.PUSH_PACK_LIMIT * 4}
+        self.job.git = lambda *a, **kw: self.fail("preflight may not write")
+        self.job.publish()
+        self.assertFalse(self.job.stages)
+        self.assertFalse(self.job.state["publication_journal"])
+        self.assertFalse(self.job.state["restore_complete"])
+
+    def test_measured_revision_excludes_only_current_stages_and_owned_baseline(self):
+        stages = {m.STAGE_REF_PREFIX + "99-0": "4" * 40,
+                  m.STAGE_REF_PREFIX + "99-1": "5" * 40}
+        before = dict(self.before, **{"refs/pull/2/head": "6" * 40})
+        after = dict(self.after, **{"refs/pull/2/head": "7" * 40})
+        lines = set(m.pack_revisions(before, after, stages, [NEW]).decode().splitlines())
+        self.assertEqual(lines, {NEW, "^" + OLD, "^" + OTHER, "^" + "4" * 40, "^" + "5" * 40})
+
+    def test_final_arguments_keep_original_leases_and_delete_every_stage(self):
+        stages = {m.STAGE_REF_PREFIX + "99-0": "4" * 40, m.STAGE_REF_PREFIX + "99-1": "5" * 40}
+        args = m.final_push_arguments(self.before, self.after, stages)
+        self.assertIn("--atomic", args)
+        for ref, oid in m.owned_refs(self.before).items():
+            self.assertIn(f"--force-with-lease={ref}:{oid}", args)
+            self.assertIn(f"{self.after[ref]}:{ref}", args)
+        for ref, oid in stages.items():
+            self.assertIn(f"--force-with-lease={ref}:{oid}", args)
+            self.assertIn(":" + ref, args)
+        self.assertFalse(any("refs/pull/" in value for value in args))
+
+    def test_unverified_stage_commit_or_oversize_measurement_cannot_write(self):
+        ref = self.ready()
+        self.job.git = lambda *a, **kw: self.fail("invalid stage may not write")
+        with self.assertRaisesRegex(m.Halt, "unverified_staging_commit"):
+            self.job.stage_checkpoint(ref, OLD, self.measurement())
+        with self.assertRaisesRegex(m.Halt, "estimated_stage_pack_exceeds_limit"):
+            self.job.stage_checkpoint(ref, NEW, self.measurement(size=m.STAGE_PACK_LIMIT))
+        self.assertFalse(self.job.state["publication_journal"])
+
+    def test_ancestor_failure_blocks_stage_before_write(self):
+        ref = self.ready()
+        self.job.stages[ref] = OTHER
+        def git(args, **kw):
+            self.assertEqual(args, ["merge-base", "--is-ancestor", OTHER, NEW])
+            raise m.Halt("git_operation_failed_1")
+        self.job.git = git
+        with self.assertRaisesRegex(m.Halt, "staging_checkpoint_not_descendant"):
+            self.job.stage_checkpoint(ref, NEW, self.measurement())
+        self.assertEqual(self.job.stages, {ref: OTHER})
+
+    def test_wrong_target_or_stale_snapshot_measurement_blocks_stage(self):
+        ref = self.ready()
+        self.job.git = lambda *a, **kw: self.fail("unbound measurement may not write")
+        with self.assertRaisesRegex(m.Halt, "stage_measurement_target_or_snapshot_mismatch"):
+            self.job.stage_checkpoint(ref, NEW, self.measurement(target=OTHER))
+        measurement = self.measurement()
+        self.job.stages[m.STAGE_REF_PREFIX + "99-1"] = OTHER
+        with self.assertRaisesRegex(m.Halt, "stage_measurement_target_or_snapshot_mismatch"):
+            self.job.stage_checkpoint(ref, NEW, measurement)
+        self.assertFalse(self.job.state["publication_journal"])
+
+    def test_final_measurement_must_cover_all_owned_targets_and_current_stages(self):
+        self.ready()
+        self.job.remote_refs = lambda: self.job.expected_staged_snapshot()
+        self.job.git = lambda *a, **kw: self.fail("unbound final measurement may not write")
+        for change in ({"target_oids": [NEW]}, {"expected_remote_refs_sha256": "0" * 64}):
+            measurement = {"bytes": 10, "complete": True,
+                "target_oids": sorted(set(m.owned_refs(self.after).values())),
+                "expected_remote_refs_sha256": m.refs_digest(self.before)}
+            measurement.update(change)
+            self.job.measure_push_pack = lambda **kw: measurement
+            with self.assertRaisesRegex(m.Halt, "final_measurement_target_or_snapshot_mismatch"):
+                self.job.publish()
+        self.assertFalse(self.job.state["publication_journal"])
+
+    def test_pr_ref_race_after_measurement_blocks_stage(self):
+        ref = self.ready()
+        self.job.remote_refs = lambda: dict(self.before, **{"refs/pull/1/head": OTHER})
+        self.job.git = lambda *a, **kw: self.fail("PR race must block stage")
+        with self.assertRaisesRegex(m.Halt, "remote_refs_changed_before_push"):
+            self.job.stage_checkpoint(ref, NEW, self.measurement())
+        self.assertFalse(self.job.state["publication_journal"])
+
+    def test_pending_writer_or_unpaused_workflow_blocks_stage(self):
+        ref = self.ready()
+        self.job.git = lambda *a, **kw: self.fail("writer must block stage")
+        self.job.pending_runs = lambda: {101: {"status": "queued"}}
+        with self.assertRaisesRegex(m.Halt, "new_run_appeared"):
+            self.job.stage_checkpoint(ref, NEW, self.measurement())
+        self.job.pending_runs = lambda: {}
+        self.job.verify_paused = lambda: (_ for _ in ()).throw(m.Halt("workflow_not_paused"))
+        with self.assertRaisesRegex(m.Halt, "workflow_not_paused"):
+            self.job.stage_checkpoint(ref, NEW, self.measurement())
+
+    def test_stage_failure_outcomes_are_proven_and_journalled_before_write(self):
+        for outcome in ("accepted", "unchanged", "divergent", "unreadable"):
+            with self.subTest(outcome=outcome):
+                self.job.stages = {}
+                self.job.state["publication_journal"] = []
+                ref = self.ready()
+                count = 0
+                def remote():
+                    nonlocal count
+                    count += 1
+                    if count == 1 or outcome == "unchanged":
+                        return self.before
+                    if outcome == "unreadable":
+                        raise m.Halt("git_operation_failed_1")
+                    if outcome == "accepted":
+                        return dict(self.before, **{ref: NEW})
+                    return dict(self.before, **{ref: OTHER})
+                self.job.remote_refs = remote
+                def git(args, **kw):
+                    saved = json.loads((self.job.evidence / "state.json").read_text())
+                    entry = saved["publication_journal"][-1]
+                    self.assertEqual(entry["outcome"], "planned")
+                    self.assertEqual(entry["expected_old"], "")
+                    self.assertIn(f"--force-with-lease={ref}:", args)
+                    raise m.Halt("git_operation_failed_1")
+                self.job.git = git
+                if outcome == "accepted":
+                    self.job.stage_checkpoint(ref, NEW, self.measurement())
+                    self.assertEqual(self.job.stages, {ref: NEW})
+                    self.assertEqual(self.job.state["publication_journal"][-1]["outcome"], "accepted_after_transport_error")
+                else:
+                    code = "stage_push_not_accepted" if outcome == "unchanged" else "stage_remote_outcome_unknown"
+                    with self.assertRaisesRegex(m.Halt, code):
+                        self.job.stage_checkpoint(ref, NEW, self.measurement())
+                    self.assertEqual(self.job.state["publication_journal"][-1]["outcome"], outcome)
+                    self.assertFalse(self.job.stages)
+                self.assertFalse(self.job.state["push_verified"])
+                self.assertFalse(self.job.state["restore_complete"])
+
+
+class StagedPushIntegration(unittest.TestCase):
+    setUp = GuardTests.setUp
+    tearDown = GuardTests.tearDown
+
+    def create_histories(self, *, merge_side=False):
+        self.job.repo.mkdir()
+        self.job.env.update({"GIT_AUTHOR_NAME": "Synthetic", "GIT_AUTHOR_EMAIL": "test@example.invalid",
+                             "GIT_COMMITTER_NAME": "Synthetic", "GIT_COMMITTER_EMAIL": "test@example.invalid"})
+        def git(*args, cwd=None, input=None):
+            return subprocess.check_output(["git", *args], cwd=cwd or self.job.repo,
+                env=self.job.env, input=input, stderr=subprocess.DEVNULL).decode().strip()
+        git("init", "-b", "main")
+        (self.job.repo / "old.txt").write_text("synthetic-private-original")
+        git("add", ".")
+        git("commit", "-qm", "Synthetic original")
+        old = git("rev-parse", "HEAD")
+        forbidden = git("rev-parse", "HEAD:old.txt")
+        git("branch", "branch")
+        remote = self.root / "remote.git"
+        git("clone", "--bare", str(self.job.repo), str(remote))
+        git("update-ref", "refs/pull/1/head", old, cwd=remote)
+        self.job.before = {"refs/heads/main": old, "refs/heads/branch": old, "refs/pull/1/head": old}
+        git("checkout", "--orphan", "clean")
+        git("rm", "-rf", ".")
+        (self.job.repo / "base.txt").write_text("synthetic sanitized base")
+        git("add", ".")
+        git("commit", "-qm", "Synthetic sanitized root")
+        base = git("rev-parse", "HEAD")
+        roots = {}
+        for branch in ("main", "branch"):
+            git("checkout", "-B", "clean-" + branch, base)
+            for index in range(6):
+                (self.job.repo / (branch + str(index) + ".bin")).write_bytes(os.urandom(8192))
+                git("add", ".")
+                git("commit", "-qm", "Synthetic sanitized increment")
+            roots[branch] = git("rev-parse", "HEAD")
+        if merge_side:
+            git("checkout", "clean-main")
+            git("merge", "--no-ff", "-qm", "Synthetic side merge", "clean-branch")
+            roots["main"] = git("rev-parse", "HEAD")
+        self.job.after = {"refs/heads/" + branch: oid for branch, oid in roots.items()}
+        self.job.after["refs/pull/1/head"] = roots["main"]
+        self.job.verified_commit_ids = set(git("rev-list", *roots.values()).splitlines())
+        self.job.measure_push_pack = lambda **kw: m.Maintenance.measure_push_pack(self.job, **kw)
+        self.job.verify_paused = lambda: None
+        self.job.pending_runs = lambda: {}
+        return git, remote, forbidden
+
+    def test_divergent_histories_keep_stages_until_atomic_final_publish(self):
+        git, remote, forbidden = self.create_histories()
+        push = self.job.git
+        snapshots, args_seen, selected_measures = [], [], []
+        def checked(args, **kw):
+            if args[0] == "push":
+                before = self.job.remote_refs()
+                self.assertEqual({ref: before[ref] for ref in self.job.before}, self.job.before)
+                entry = self.job.state["publication_journal"][-1]
+                self.assertEqual(entry["outcome"], "planned")
+                self.assertLess(entry["measured_pack_bytes"], 22000)
+                selected_measures.append(entry["measured_pack_bytes"])
+                args_seen.append(args)
+                if entry["kind"] == "stage":
+                    reachable = git("rev-list", "--objects", "--no-object-names", entry["target"]).splitlines()
+                    self.assertNotIn(forbidden, reachable)
+                    if entry["expected_old"]:
+                        git("merge-base", "--is-ancestor", entry["expected_old"], entry["target"])
+            result = push(args, **kw)
+            if args[0] == "push":
+                snapshots.append(self.job.remote_refs())
+            return result
+        self.job.git = checked
+        with patch.object(m, "REMOTE", remote.as_uri()), patch.object(m, "STAGE_PACK_LIMIT", 22000):
+            self.job.publish()
+        journal = self.job.state["publication_journal"]
+        stage_names = {entry["ref"] for entry in journal if entry["kind"] == "stage"}
+        self.assertEqual(len(stage_names), 2)
+        self.assertGreater(len(journal), 4)
+        self.assertEqual(journal[-1]["deleted_stage_ref_count"], 2)
+        for snapshot in snapshots[:-1]:
+            self.assertEqual({ref: snapshot[ref] for ref in self.job.before}, self.job.before)
+        self.assertTrue(stage_names <= set(snapshots[-2]))
+        final = snapshots[-1]
+        self.assertEqual(m.owned_refs(final), m.owned_refs(self.job.after))
+        self.assertEqual(final["refs/pull/1/head"], self.job.before["refs/pull/1/head"])
+        for ref in stage_names:
+            self.assertIn(":" + ref, args_seen[-1])
+            self.assertIn(f"--force-with-lease={ref}:{snapshots[-2][ref]}", args_seen[-1])
+        for ref, oid in m.owned_refs(self.job.before).items():
+            self.assertIn(f"--force-with-lease={ref}:{oid}", args_seen[-1])
+        self.assertEqual(self.job.state["push_pack_measurement"]["stage_ref_count"], 2)
+        self.assertTrue(self.job.state["push_verified"])
+        self.assertTrue(self.job.state["restore_complete"])
+        self.assertFalse(self.job.stages)
+        self.assertNotIn("synthetic-private-original", (self.job.evidence / "state.json").read_text())
+        self.assertFalse(any(path.suffix == ".pack" for path in self.job.evidence.iterdir()))
+
+    def test_large_merge_side_graph_halts_safely_with_originals_unchanged(self):
+        git, remote, forbidden = self.create_histories(merge_side=True)
+        with patch.object(m, "REMOTE", remote.as_uri()), patch.object(m, "STAGE_PACK_LIMIT", 22000):
+            with self.assertRaisesRegex(m.Halt, "stage_minimum_pack_exceeds_limit"):
+                self.job.publish()
+            observed = self.job.remote_refs()
+        self.assertEqual({ref: observed[ref] for ref in self.job.before}, self.job.before)
+        self.assertTrue(self.job.stages)
+        self.assertFalse(self.job.state["push_verified"])
+        self.assertFalse(self.job.state["restore_complete"])
+
+    def test_real_create_collision_keeps_existing_stage(self):
+        git, remote, forbidden = self.create_histories()
+        ref = m.STAGE_REF_PREFIX + "99-0"
+        target = self.job.after["refs/heads/main"]
+        competing = self.job.after["refs/heads/branch"]
+        git("push", remote.as_uri(), f"{competing}:{ref}")
+        args = ["push", "--atomic", "--porcelain", f"--force-with-lease={ref}:",
+                remote.as_uri(), f"{target}:{ref}"]
+        result = subprocess.run(["git", *args], cwd=self.job.repo, env=self.job.env, capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(git("rev-parse", ref, cwd=remote), competing)
+        for original, oid in self.job.before.items():
+            self.assertEqual(git("rev-parse", original, cwd=remote), oid)
+
+    def test_real_stale_stage_delete_lease_blocks_entire_final_atomic_push(self):
+        git, remote, forbidden = self.create_histories()
+        ref = m.STAGE_REF_PREFIX + "99-0"
+        expected = self.job.after["refs/heads/main"]
+        competing = self.job.after["refs/heads/branch"]
+        git("push", remote.as_uri(), f"{competing}:{ref}")
+        with patch.object(m, "REMOTE", remote.as_uri()):
+            args = m.final_push_arguments(self.job.before, self.job.after, {ref: expected})
+        result = subprocess.run(["git", *args], cwd=self.job.repo, env=self.job.env, capture_output=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(git("rev-parse", ref, cwd=remote), competing)
+        for original, oid in self.job.before.items():
+            self.assertEqual(git("rev-parse", original, cwd=remote), oid)
 
 
 class PartialMirrorIntegration(unittest.TestCase):

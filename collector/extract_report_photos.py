@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload, withdrawn_record
 
 import argparse
 import hashlib
@@ -38,7 +39,7 @@ def parse_date(value):
 
 
 def active_record(record: dict, horizon_days: int) -> bool:
-    if record.get("cancelled"):
+    if withdrawn_record(record) or record.get("cancelled"):
         return False
     d = parse_date(record.get("auction_date"))
     if not d:
@@ -325,7 +326,7 @@ def main() -> int:
     data_path = Path(args.data)
     media_root = Path(args.media_dir)
     media_root.mkdir(parents=True, exist_ok=True)
-    payload = json.loads(data_path.read_text(encoding="utf-8"))
+    payload = sanitize_payload(json.loads(data_path.read_text(encoding="utf-8")))
     records = payload.get("results") or []
     priority = {str(x) for x in args.priority_id if x}
     candidates = pending_reports(records, args.horizon_days, priority, datetime.now(timezone.utc))

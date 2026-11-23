@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import importlib.util
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "collector"))
 
 path=Path(__file__).resolve().parents[1]/"collector"/"collect.py"
 spec=importlib.util.spec_from_file_location("collect",path)

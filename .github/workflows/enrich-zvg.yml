@@ -23,6 +23,9 @@ jobs:
           # Resolve main when this serialized job starts, not when it was queued.
           ref: main
 
+      - name: Veröffentlichungsrücknahmen vor der Verarbeitung anwenden
+        run: python3 collector/publication_policy.py --media-dir media
+
       - name: Python einrichten
         uses: actions/setup-python@v5
         with:
@@ -54,6 +57,9 @@ jobs:
         continue-on-error: true
         run: python collector/analyze_documents.py --data data/auctions.json --repo-root . --limit 20
 
+      - name: Veröffentlichungsrücknahmen vor dem Speichern anwenden
+        run: python collector/publication_policy.py --media-dir media
+
       - name: Dossiers und Medien speichern
         shell: bash
         run: |
@@ -72,6 +78,7 @@ jobs:
               echo "::error::Inhaltlicher Git-Konflikt; keine Daten werden überschrieben."
               exit 1
             fi
+            python collector/publication_policy.py --media-dir media --check
             if git push origin HEAD:main; then
               pushed=true
               break

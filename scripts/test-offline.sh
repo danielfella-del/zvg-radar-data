@@ -10,6 +10,7 @@ else
 fi
 "$zvg_python" -m compileall -q collector tests .github/scripts/sync-zvgpro-db.py
 for zvg_test in \
+  tests/test_publication_policy.py \
   tests/test_parser.py \
   tests/test_detail_parser.py \
   tests/test_detail_queue.py \

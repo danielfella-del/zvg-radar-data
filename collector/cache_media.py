@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload, withdrawn_record
 
 import argparse
 import hashlib
@@ -211,7 +212,7 @@ def ensure_photo_preview(a: dict, folder: Path, target: Path, fid: str) -> bool:
         return False
 
 def active_record(r, horizon_days: int) -> bool:
-    if r.get("cancelled"): return False
+    if withdrawn_record(r) or r.get("cancelled"): return False
     d=parse_date(r.get("auction_date"))
     if not d: return True
     now=datetime.now(d.tzinfo or timezone.utc)
@@ -255,7 +256,7 @@ def main():
     data_path=Path(args.data)
     media_root=Path(args.media_dir)
     media_root.mkdir(parents=True,exist_ok=True)
-    payload=json.loads(data_path.read_text(encoding="utf-8"))
+    payload= sanitize_payload(json.loads(data_path.read_text(encoding="utf-8")))
     records=payload.get("results",[])
     by_id={str(r.get("id")):r for r in records if r.get("id")}
 

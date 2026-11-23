@@ -32,6 +32,9 @@ jobs:
             data/auctions.json
           sparse-checkout-cone-mode: false
 
+      - name: Veröffentlichungsrücknahmen vor der Verarbeitung anwenden
+        run: python3 collector/publication_policy.py --media-dir media
+
       - name: Python einrichten
         uses: actions/setup-python@v5
         with:
@@ -53,6 +56,9 @@ jobs:
           ZVG_BACKFILL_IDS: ${{ inputs.object_ids }}
         run: python .github/scripts/backfill-documents.py
 
+      - name: Veröffentlichungsrücknahmen vor dem Speichern anwenden
+        run: python collector/publication_policy.py --media-dir media
+
       - name: Geprüfte Daten speichern
         id: save
         shell: bash
@@ -64,6 +70,7 @@ jobs:
             git commit -m "ZVG-Dokumente gezielt nachgepflegt"
             # Kein automatisches Rebase großer Datenbestände: bei einem
             # unerwarteten konkurrierenden Commit muss neu abgeglichen werden.
+            python collector/publication_policy.py --media-dir media --check
             git push origin HEAD:main
           fi
           echo "Daten-Commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"

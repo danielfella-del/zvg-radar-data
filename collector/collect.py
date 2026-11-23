@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload, withdrawn_record
 
 import argparse
 import hashlib
@@ -486,7 +487,7 @@ def main() -> int:
 
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    existing_payload = load_existing_payload(output)
+    existing_payload = sanitize_payload(load_existing_payload(output))
     existing = existing_payload.get("results", []) if isinstance(existing_payload.get("results", []), list) else []
     previous_by_state: dict[str, list[dict[str, Any]]] = {}
     for r in existing:
@@ -507,7 +508,7 @@ def main() -> int:
 
     for i, code in enumerate(selected):
         try:
-            records = request_state(session, code)
+            records = [r for r in request_state(session, code) if not withdrawn_record(r)]
             all_records.extend(records)
             statuses[code] = {"ok": True, "count": len(records), "quality": quality_stats(records)}
             success_count += 1
@@ -562,6 +563,7 @@ def main() -> int:
     for key in PERSIST_META_FIELDS:
         if key in old_meta:
             payload["meta"][key] = old_meta[key]
+    payload = sanitize_payload(payload)
     tmp = output.with_suffix(output.suffix + ".tmp")
     tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     tmp.replace(output)

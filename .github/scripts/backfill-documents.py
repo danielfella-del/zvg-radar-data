@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'collector'))
 from enrich_details import portal_identity_valid  # noqa: E402
+from publication_policy import sanitize_payload, withdrawn_id  # noqa: E402
 
 
 def target_ids(value: str) -> list[str]:
@@ -27,7 +28,9 @@ def report_ids(record: dict) -> set[str]:
 
 
 def run(data: Path, output: Path, ids: list[str], runner=subprocess.run) -> dict:
-    before = json.loads(data.read_text(encoding='utf-8'))
+    if any(withdrawn_id(oid) for oid in ids):
+        raise ValueError('Zurückgezogenes Verfahren darf nicht nachgepflegt werden')
+    before = sanitize_payload(json.loads(data.read_text(encoding='utf-8')))
     records = before['results']
     index = {r['id']: r for r in records}
     if len(index) != len(records):

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload
 import argparse, json, re
 from datetime import datetime, timezone
 from pathlib import Path
@@ -54,7 +55,7 @@ def resolve_pdf(root:Path,a:dict):
 
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--data',default='data/auctions.json'); ap.add_argument('--repo-root',default='.'); ap.add_argument('--limit',type=int,default=20); a=ap.parse_args()
-    path=Path(a.data); root=Path(a.repo_root); payload=json.loads(path.read_text(encoding='utf-8')); now=datetime.now(timezone.utc).isoformat(timespec='seconds')
+    path=Path(a.data); root=Path(a.repo_root); payload=sanitize_payload(json.loads(path.read_text(encoding='utf-8'))); now=datetime.now(timezone.utc).isoformat(timespec='seconds')
     done=0; errors=0
     for r in payload.get('results',[]):
         if done>=a.limit: break

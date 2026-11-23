@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from publication_policy import sanitize_payload
 import argparse, json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,7 +14,7 @@ TRACK = {
 
 def load(path: Path):
     try:
-        d=json.loads(path.read_text(encoding='utf-8'))
+        d=sanitize_payload(json.loads(path.read_text(encoding='utf-8')))
         return d if isinstance(d,dict) else {'results':d}
     except Exception:
         return {'results':[]}

@@ -21,6 +21,43 @@ REMOTE = "https://github.com/" + REPOSITORY + ".git"
 SHA1 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ZERO = "0" * 40
+DIAGNOSTIC_SCAN_LIMIT = 65536
+
+
+def push_diagnostics(returncode, stdout=b"", stderr=b"", *, timed_out=False):
+    """Return fixed signal names and numbers only, never captured Git text.
+
+    Signals describe observed error messages, not permission to bypass a guard.
+    Scan bounded head/tail windows because server errors often follow progress.
+    """
+    def window(raw):
+        half = DIAGNOSTIC_SCAN_LIMIT // 2
+        return raw if len(raw) <= DIAGNOSTIC_SCAN_LIMIT else raw[:half] + b"\n" + raw[-half:]
+
+    sample = (window(stdout) + b"\n" + window(stderr)).lower()
+    patterns = {
+        "workflow_permission_denied": (
+            b"without `workflows` permission", b"without `workflow` scope",
+            b"without workflows permission", b"without workflow scope"),
+        "pack_size_limit": (b"pack exceeds maximum allowed size",),
+        "file_size_limit": (b"gh001: large files detected",),
+        "repository_rule_rejected": (b"gh006: protected branch update failed", b"gh013: repository rule violations found"),
+        "lease_rejected": (b"(stale info)", b"(fetch first)"),
+        "atomic_push_unsupported": (b"the receiving end does not support --atomic push",),
+        "atomic_push_rejected": (b"atomic push failed", b"atomic push failure"),
+        "authentication_failed": (b"fatal: authentication failed", b"invalid username or token"),
+        "repository_write_denied": (b"write access to repository not granted",),
+        "transport_failed": (b"rpc failed;", b"the remote end hung up unexpectedly", b"fatal: unable to access"),
+        "local_disk_full": (b"no space left on device",),
+        "mirror_refspec_conflict": (b"--mirror can't be combined with refspecs",),
+    }
+    signals = sorted(code for code, needles in patterns.items() if any(n in sample for n in needles))
+    if timed_out:
+        signals.append("process_timeout")
+    return {"returncode": returncode, "timed_out": bool(timed_out),
+            "stdout_bytes": len(stdout), "stderr_bytes": len(stderr),
+            "scan_limit_per_stream": DIAGNOSTIC_SCAN_LIMIT,
+            "observed_signals": signals or ["unclassified"]}
 
 
 class Halt(RuntimeError):
@@ -154,8 +191,16 @@ class Maintenance:
             result = subprocess.run(["git", *args], cwd=cwd or self.repo,
                                     env=self.env, input=input, capture_output=True,
                                     timeout=timeout, check=False)
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired as exc:
+            if args and args[0] == "push":
+                self.state["push_diagnostics"] = push_diagnostics(
+                    None, exc.stdout or b"", exc.stderr or b"", timed_out=True)
+                self.save()
             raise Halt("git_operation_timeout") from None
+        if args and args[0] == "push" and result.returncode != 0:
+            self.state["push_diagnostics"] = push_diagnostics(
+                result.returncode, result.stdout, result.stderr)
+            self.save()
         require(result.returncode == 0, "git_operation_failed_" + str(result.returncode))
         return result.stdout
 

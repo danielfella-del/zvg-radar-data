@@ -103,6 +103,7 @@ class GuardTests(unittest.TestCase):
         self.job = m.Maintenance(self.code, self.root / "work", "synthetic-token", 99, OLD, "apply", "a" * 64, "b" * 64, self.api)
         self.before = {"refs/heads/main": OLD, "refs/tags/v1": OTHER, "refs/pull/1/head": OLD}
         self.after = {"refs/heads/main": NEW, "refs/tags/v1": OTHER, "refs/pull/1/head": NEW}
+        self.job.measure_push_pack = lambda: None
         self.job.manifest = {"blob_ids": [OTHER], "json_blobs": {OLD: {"new_sha": NEW, "mode": "fast", "changed": True}}}
 
     def tearDown(self):
@@ -407,7 +408,7 @@ class PushDiagnosticTests(unittest.TestCase):
         self.job.before, self.job.after = self.before, self.after
         self.job.verify_paused = lambda: None
         self.job.pending_runs = lambda: {}
-        answers = iter([self.before, self.after, self.after])
+        answers = iter([self.before, self.before, self.after, self.after])
         self.job.remote_refs = lambda: next(answers)
         result = subprocess.CompletedProcess(["git"], 1, b"", b"fatal: the remote end hung up unexpectedly")
         with patch.object(m.subprocess, "run", return_value=result):
@@ -416,6 +417,160 @@ class PushDiagnosticTests(unittest.TestCase):
         self.assertTrue(self.job.state["restore_complete"])
         self.assertTrue(self.job.state["push_transport_error_but_remote_verified"])
         self.assertEqual(self.job.state["push_diagnostics"]["observed_signals"], ["transport_failed"])
+
+
+class TransportMeasurementTests(unittest.TestCase):
+    setUp = GuardTests.setUp
+    tearDown = GuardTests.tearDown
+
+    def test_transport_codes_are_bounded_numbers_not_error_text(self):
+        report = m.push_diagnostics(1, b"Done\n", b"error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500\nsend-pack: unexpected disconnect while reading sideband packet\nfatal: the remote end hung up unexpectedly\nprivate-name private-token")
+        self.assertEqual(report["http_statuses"], [500])
+        self.assertEqual(report["curl_codes"], [22])
+        self.assertEqual(report["observed_signals"], ["sideband_disconnected", "transport_failed"])
+        self.assertNotIn("private", json.dumps(report))
+        report = m.push_diagnostics(1, stderr=b"error: RPC failed; curl 92 HTTP/2 stream 0 was not closed cleanly: INTERNAL_ERROR")
+        self.assertEqual(report["curl_codes"], [92])
+        self.assertIn("http2_transport_failed", report["observed_signals"])
+        self.assertEqual(report["http_statuses"], [])
+        report = m.push_diagnostics(1, stderr=b"some arbitrary private HTTP 500 curl 22 text\nerror: RPC failed; HTTP 999 curl 999")
+        self.assertEqual(report["http_statuses"], [])
+        self.assertEqual(report["curl_codes"], [])
+
+    def test_pack_revision_input_has_only_owned_new_tips_and_all_old_exclusions(self):
+        before = dict(self.before, **{"refs/pull/2/head": "4" * 40})
+        after = dict(self.after, **{"refs/pull/2/head": "5" * 40})
+        lines = m.pack_revisions(before, after).decode().splitlines()
+        self.assertEqual(set(lines), {NEW, OTHER, "^" + OLD, "^" + OTHER, "^" + "4" * 40})
+        self.assertNotIn("5" * 40, lines)
+        with self.assertRaisesRegex(m.Halt, "invalid_pack_revision"):
+            m.pack_revisions(before, dict(after, **{"refs/heads/main": "private-invalid"}))
+
+    def real_repository(self):
+        env = os.environ.copy()
+        env.update({"GIT_AUTHOR_NAME": "Synthetic", "GIT_AUTHOR_EMAIL": "test@example.invalid",
+                    "GIT_COMMITTER_NAME": "Synthetic", "GIT_COMMITTER_EMAIL": "test@example.invalid"})
+        def git(*args):
+            return subprocess.check_output(["git", *args], cwd=self.job.repo, env=env, stderr=subprocess.DEVNULL)
+        self.job.repo.mkdir()
+        git("init", "-b", "main")
+        (self.job.repo / "unchanged.txt").write_text("synthetic old data")
+        git("add", ".")
+        git("commit", "-qm", "Synthetic initial")
+        old = git("rev-parse", "HEAD").decode().strip()
+        (self.job.repo / "new.txt").write_text("synthetic sanitized new data")
+        git("add", ".")
+        git("commit", "-qm", "Synthetic new")
+        new = git("rev-parse", "HEAD").decode().strip()
+        self.job.before = {"refs/heads/main": old, "refs/pull/1/head": old}
+        self.job.after = {"refs/heads/main": new, "refs/pull/1/head": new}
+        return git
+
+    def test_real_pack_stream_count_matches_reference_without_saved_pack(self):
+        git = self.real_repository()
+        m.Maintenance.measure_push_pack(self.job)
+        observed = self.job.state["push_pack_measurement"]
+        reference = subprocess.check_output(["git", "pack-objects", "--revs", "--stdout", "--thin", "--delta-base-offset", "--quiet"],
+            cwd=self.job.repo, env=self.job.env, input=m.pack_revisions(self.job.before, self.job.after))
+        self.assertEqual(observed["bytes"], len(reference))
+        self.assertEqual(observed["object_count"], int.from_bytes(reference[8:12], "big"))
+        self.assertTrue(observed["complete"])
+        self.assertTrue(observed["is_offline_estimate"])
+        self.assertTrue(observed["receive_pack_advertisement_unverified"])
+        self.assertEqual(list(self.job.evidence.iterdir()), [self.job.evidence / "state.json"])
+        self.assertEqual(list((self.job.repo / ".git/objects/pack").iterdir()), [])
+        self.assertNotIn("sanitized new data", (self.job.evidence / "state.json").read_text())
+
+    def test_oversize_measured_pack_halts_without_push(self):
+        self.real_repository()
+        self.job.measure_push_pack = lambda: m.Maintenance.measure_push_pack(self.job)
+        self.job.verify_paused = lambda: None
+        self.job.pending_runs = lambda: {}
+        self.job.remote_refs = lambda: self.job.before
+        self.job.git = lambda *args, **kwargs: self.fail("oversized pack must not push")
+        with patch.object(m, "PUSH_PACK_LIMIT", 1):
+            with self.assertRaisesRegex(m.Halt, "estimated_push_pack_exceeds_limit"):
+                self.job.publish()
+        self.assertTrue(self.job.state["push_pack_measurement"]["complete"])
+        self.assertFalse(self.job.state["push_verified"])
+        self.assertFalse(self.job.state["restore_complete"])
+
+    def test_pack_subprocess_failure_reports_no_raw_error(self):
+        self.job.repo.mkdir()
+        self.job.before, self.job.after = self.before, self.after
+        with self.assertRaisesRegex(m.Halt, "push_pack_measurement_failed"):
+            m.Maintenance.measure_push_pack(self.job)
+        report = self.job.state["push_pack_measurement"]
+        self.assertFalse(report["complete"])
+        self.assertNotEqual(report["returncode"], 0)
+        self.assertNotIn("not a git repository", (self.job.evidence / "state.json").read_text())
+
+    def test_pack_timeout_reaps_subprocess_and_does_not_push(self):
+        self.real_repository()
+        processes = []
+        original = m.subprocess.Popen
+        def launch(*args, **kwargs):
+            process = original(*args, **kwargs)
+            processes.append(process)
+            return process
+        with patch.object(m.subprocess, "Popen", side_effect=launch):
+            with self.assertRaisesRegex(m.Halt, "push_pack_measurement_timeout"):
+                m.Maintenance.measure_push_pack(self.job, timeout=0)
+        self.assertTrue(processes)
+        self.assertIsNotNone(processes[0].returncode)
+        self.assertTrue(processes[0].stdout.closed)
+        self.assertFalse(self.job.state["push_pack_measurement"]["complete"])
+
+    def test_preflight_measures_but_never_pushes(self):
+        self.real_repository()
+        self.job.mode = "preflight"
+        self.job.measure_push_pack = lambda: m.Maintenance.measure_push_pack(self.job)
+        self.job.verify_paused = lambda: None
+        self.job.pending_runs = lambda: {}
+        self.job.remote_refs = lambda: self.job.before
+        self.job.git = lambda *args, **kwargs: self.fail("preflight must not push")
+        self.job.publish()
+        self.assertTrue(self.job.state["push_pack_measurement"]["complete"])
+        self.assertFalse(self.job.state["push_verified"])
+
+    def test_new_writer_after_measurement_blocks_push(self):
+        self.job.before, self.job.after = self.before, self.after
+        self.job.verify_paused = lambda: None
+        answers = iter([{}, {101: {"status": "in_progress"}}])
+        self.job.pending_runs = lambda: next(answers)
+        self.job.remote_refs = lambda: self.before
+        self.job.git = lambda *args, **kwargs: self.fail("new writer must block push")
+        with self.assertRaisesRegex(m.Halt, "new_run_appeared"):
+            self.job.publish()
+
+    def test_invalid_initial_refs_block_even_measurement(self):
+        self.job.before, self.job.after = self.before, self.after
+        self.job.verify_paused = lambda: None
+        self.job.pending_runs = lambda: {}
+        self.job.remote_refs = lambda: self.after
+        self.job.measure_push_pack = lambda: self.fail("initial guards must precede sizing")
+        with self.assertRaisesRegex(m.Halt, "remote_refs_changed_before_push"):
+            self.job.publish()
+
+    def test_pack_spawn_error_preserves_fixed_failure_and_no_private_path(self):
+        self.job.before, self.job.after = self.before, self.after
+        with patch.object(m.subprocess, "Popen", side_effect=OSError("private path secret token")):
+            with self.assertRaisesRegex(m.Halt, "push_pack_measurement_io_failure"):
+                m.Maintenance.measure_push_pack(self.job)
+        report = (self.job.evidence / "state.json").read_text()
+        self.assertNotIn("private path", report)
+        self.assertNotIn("secret token", report)
+        self.assertFalse(self.job.state["push_pack_measurement"]["complete"])
+
+    def test_ref_change_during_measurement_blocks_push(self):
+        self.job.before, self.job.after = self.before, self.after
+        self.job.verify_paused = lambda: None
+        self.job.pending_runs = lambda: {}
+        answers = iter([self.before, self.after])
+        self.job.remote_refs = lambda: next(answers)
+        self.job.git = lambda *args, **kwargs: self.fail("changed refs must block push")
+        with self.assertRaisesRegex(m.Halt, "remote_refs_changed_before_push"):
+            self.job.publish()
 
 
 class PartialMirrorIntegration(unittest.TestCase):

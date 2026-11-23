@@ -24,6 +24,8 @@ SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ZERO = "0" * 40
 DIAGNOSTIC_SCAN_LIMIT = 65536
 PUSH_PACK_LIMIT = 2 * 1024 ** 3
+STAGE_PACK_LIMIT = 1536 * 1024 ** 2
+STAGE_REF_PREFIX = "refs/heads/privacy-maintenance-stage-"
 
 
 def push_diagnostics(returncode, stdout=b"", stderr=b"", *, timed_out=False):
@@ -119,27 +121,44 @@ def push_arguments(before, after):
     ] + [REMOTE] + [f"{new[r]}:{r}" for r in sorted(new)]
 
 
-def pack_revisions(before, after):
-    """Estimate new owned history against all reviewed old advertised refs."""
+def pack_revisions(before, after, stage_refs=None, target_oids=None):
+    """Estimate new owned history against reviewed old owned refs only.
+
+    Internal PR refs are not assumed to be advertised to receive-pack.
+    """
     require(owned_refs(before).keys() == owned_refs(after).keys(), "owned_ref_set_changed")
-    positive, negative = set(owned_refs(after).values()), set(before.values())
+    positive = set(owned_refs(after).values() if target_oids is None else target_oids)
+    negative = set(owned_refs(before).values()) | set((stage_refs or {}).values())
     require(positive and negative, "empty_pack_revision_set")
     require(all(SHA1.fullmatch(s) and s != ZERO for s in positive | negative), "invalid_pack_revision")
     return ("".join(s + "\n" for s in sorted(positive)) +
             "".join("^" + s + "\n" for s in sorted(negative))).encode("ascii")
 
 
+def final_push_arguments(before, after, stage_refs):
+    require(not (set(before) & set(stage_refs)), "staging_ref_collides_with_baseline")
+    require(all(r.startswith(STAGE_REF_PREFIX) and SHA1.fullmatch(s) and s != ZERO
+                for r, s in stage_refs.items()), "invalid_staging_refs")
+    args = push_arguments(before, after)
+    index = args.index(REMOTE)
+    return (args[:index] + [f"--force-with-lease={r}:{s}" for r, s in sorted(stage_refs.items())]
+            + args[index:] + [":" + r for r in sorted(stage_refs)])
+
+
 def auth_environment(token):
     env = os.environ.copy()
     env.update({
         "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "never",
-        "GIT_CONFIG_COUNT": "5",
+        "GIT_CONFIG_COUNT": "6",
         "GIT_CONFIG_KEY_0": "http.https://github.com/.extraheader",
         "GIT_CONFIG_VALUE_0": "AUTHORIZATION: basic " + base64.b64encode(("x-access-token:" + token).encode()).decode(),
         "GIT_CONFIG_KEY_1": "gc.auto", "GIT_CONFIG_VALUE_1": "0",
         "GIT_CONFIG_KEY_2": "maintenance.auto", "GIT_CONFIG_VALUE_2": "false",
         "GIT_CONFIG_KEY_3": "pack.windowMemory", "GIT_CONFIG_VALUE_3": "256m",
         "GIT_CONFIG_KEY_4": "pack.threads", "GIT_CONFIG_VALUE_4": "2",
+        # Use identical full traversal for measurement and actual push. This is
+        # conservative; it does not promise to avoid repacking historic blobs.
+        "GIT_CONFIG_KEY_5": "pack.useSparse", "GIT_CONFIG_VALUE_5": "false",
     })
     for key in list(env):
         if key.startswith("GIT_TRACE") or key in {"GIT_CURL_VERBOSE", "GIT_CONFIG_PARAMETERS"}:
@@ -190,13 +209,16 @@ class Maintenance:
         self.api = api or API(token)
         self.run_id, self.sha, self.mode = int(run_id), sha, mode
         self.refs_hash, self.manifest_hash = refs_hash, manifest_hash
+        self.stages = {}
+        self.verified_commit_ids = set()
         self.state = {"version": 1, "repository": REPOSITORY, "run_id": self.run_id,
                       "operation": mode, "phase": "starting", "push_verified": False,
                       "restore_complete": False, "workflow_states_before": {},
                       "resume_after_success": [], "paused_workflow_ids": [],
                       "resumed_workflow_ids": [], "cancel_requested_run_ids": [],
                       "force_cancel_requested_run_ids": [], "force_cancel_conflict_run_ids": [],
-                      "confirmed_stopped_run_ids": []}
+                      "confirmed_stopped_run_ids": [], "stage_refs": {},
+                      "publication_journal": []}
         self.evidence.mkdir(parents=True, exist_ok=True)
         self.save()
 
@@ -289,6 +311,7 @@ class Maintenance:
         # The same checks remain mandatory after pause/drain and again before push.
         self.phase("check_approval_before_pause")
         observed = self.remote_refs()
+        require(not any(r.startswith(STAGE_REF_PREFIX) for r in observed), "staging_recovery_required")
         require(refs_digest(observed) == self.refs_hash, "approved_refs_mismatch")
         require(observed["refs/heads/main"] == self.sha, "workflow_sha_is_not_approved_main")
 
@@ -357,6 +380,7 @@ class Maintenance:
     def clone(self):
         self.phase("snapshot_and_clone")
         self.before = self.remote_refs()
+        require(not any(r.startswith(STAGE_REF_PREFIX) for r in self.before), "staging_recovery_required")
         require(refs_digest(self.before) == self.refs_hash, "approved_refs_mismatch")
         require(self.before["refs/heads/main"] == self.sha, "workflow_sha_is_not_approved_main")
         (self.evidence / "refs-before.tsv").write_bytes(canonical_refs(self.before))
@@ -449,15 +473,23 @@ class Maintenance:
         require(all(re.fullmatch(r"sha256:[0-9a-f]{64}", oid) for oid in lfs_ids), "unexpected_lfs_report_content")
         self.state["orphaned_lfs_object_count"] = len(lfs_ids)
         (self.evidence / "orphaned-lfs-objects.txt").write_text("".join(oid + "\n" for oid in lfs_ids))
+        # Set only after every tree, manifest and reachability check succeeded.
+        self.verified_commit_ids = set(mapping.values())
         self.save()
 
-    def measure_push_pack(self, timeout=3600):
+    def measure_push_pack(self, timeout=3600, *, target_oids=None, enforce_limit=True,
+                          limit_bytes=None):
         self.phase("measure_offline_push_pack")
-        revisions = pack_revisions(self.before, self.after)
+        limit_bytes = PUSH_PACK_LIMIT if limit_bytes is None else limit_bytes
+        revisions = pack_revisions(self.before, self.after, self.stages, target_oids)
         record = {"version": 1, "is_offline_estimate": True,
-                  "excludes_all_old_advertised_refs": True,
+                  "exclusion_basis": "reviewed_old_owned_and_verified_current_stage_refs",
+                  "stage_ref_count": len(self.stages),
+                  "target_oids": sorted(set(owned_refs(self.after).values() if target_oids is None else target_oids)),
+                  "expected_remote_refs_sha256": refs_digest(self.expected_staged_snapshot()),
+                  "full_object_traversal": True,
                   "receive_pack_advertisement_unverified": True,
-                  "limit_bytes": PUSH_PACK_LIMIT, "bytes": 0,
+                  "limit_bytes": limit_bytes, "bytes": 0,
                   "complete": False, "returncode": None}
         self.state["push_pack_measurement"] = record
         self.save()
@@ -504,32 +536,146 @@ class Maintenance:
                 if process.stdin is not None:
                     process.stdin.close()
             self.save()
-        require(record["bytes"] <= PUSH_PACK_LIMIT, "estimated_push_pack_exceeds_limit")
+        if enforce_limit:
+            require(record["bytes"] < limit_bytes, "estimated_push_pack_exceeds_limit")
+        return record
+
+    def expected_staged_snapshot(self):
+        require(not (set(self.before) & set(self.stages)), "staging_ref_collides_with_baseline")
+        return dict(self.before, **self.stages)
+
+    def publication_guards(self):
+        self.phase("prepush_checks")
+        self.verify_paused()
+        require(not self.pending_runs(), "new_run_appeared")
+        require(self.remote_refs() == self.expected_staged_snapshot(), "remote_refs_changed_before_push")
+
+    def stage_checkpoint(self, ref, target, measurement):
+        require(self.mode == "apply", "stage_write_requires_apply")
+        require(ref.startswith(STAGE_REF_PREFIX) and ref not in self.before, "invalid_staging_ref")
+        require(target in self.verified_commit_ids, "unverified_staging_commit")
+        require(measurement["complete"] and measurement["bytes"] < STAGE_PACK_LIMIT,
+                "estimated_stage_pack_exceeds_limit")
+        require(measurement["target_oids"] == [target] and
+                measurement["expected_remote_refs_sha256"] == refs_digest(self.expected_staged_snapshot()),
+                "stage_measurement_target_or_snapshot_mismatch")
+        old = self.stages.get(ref, "")
+        require(old != target, "staging_checkpoint_did_not_advance")
+        if old:
+            try:
+                self.git(["merge-base", "--is-ancestor", old, target])
+            except Halt:
+                raise Halt("staging_checkpoint_not_descendant") from None
+        # Measurements do not authorize a write after a changed ref or new writer.
+        self.publication_guards()
+        before = self.expected_staged_snapshot()
+        after = dict(before, **{ref: target})
+        entry = {"kind": "stage", "ref": ref, "expected_old": old,
+                 "target": target, "measured_pack_bytes": measurement["bytes"],
+                 "outcome": "planned"}
+        self.state["publication_journal"].append(entry)
+        self.save()
+        self.phase("leased_stage_push")
+        failed = False
+        try:
+            self.git(["push", "--atomic", "--porcelain", f"--force-with-lease={ref}:{old}",
+                      REMOTE, f"{target}:{ref}"], timeout=3600)
+        except Halt:
+            failed = True
+        try:
+            observed = self.remote_refs()
+        except Halt:
+            entry["outcome"] = "unreadable"
+            self.save()
+            raise Halt("stage_remote_outcome_unknown") from None
+        if observed != after:
+            entry["outcome"] = "unchanged" if observed == before else "divergent"
+            self.save()
+            raise Halt("stage_push_not_accepted" if observed == before else "stage_remote_outcome_unknown")
+        self.stages[ref] = target
+        self.state["stage_refs"] = dict(self.stages)
+        entry["outcome"] = "accepted_after_transport_error" if failed else "accepted"
+        (self.evidence / "refs-staged-verified.tsv").write_bytes(canonical_refs(observed))
+        self.save()
+
+    def stage_branch_history(self, branch, target, index):
+        require(branch.startswith("refs/heads/"), "staging_requires_branch_targets")
+        require(target in self.verified_commit_ids, "unverified_staging_commit")
+        ref = STAGE_REF_PREFIX + str(self.run_id) + "-" + str(index)
+        chain = self.git(["rev-list", "--first-parent", "--reverse", target]).decode("ascii").splitlines()
+        require(chain and chain[-1] == target and len(chain) == len(set(chain)), "invalid_staging_chain")
+        require(set(chain) <= self.verified_commit_ids, "unverified_staging_commit")
+        cursor = -1
+        while cursor + 1 < len(chain):
+            candidate = len(chain) - 1
+            while True:
+                measurement = self.measure_push_pack(target_oids=[chain[candidate]],
+                    enforce_limit=False, limit_bytes=STAGE_PACK_LIMIT)
+                if measurement["bytes"] < STAGE_PACK_LIMIT:
+                    break
+                # Pack sizes need not be monotone. Halving proposes another
+                # candidate; only its own actual measurement can allow a push.
+                require(candidate > cursor + 1, "stage_minimum_pack_exceeds_limit")
+                candidate = (cursor + 1 + candidate) // 2
+            self.stage_checkpoint(ref, chain[candidate], measurement)
+            cursor = candidate
+
+    def stage_large_publication(self):
+        require(self.mode == "apply", "stage_write_requires_apply")
+        require(all(r.startswith("refs/heads/") for r in owned_refs(self.after)),
+                "staging_requires_branch_targets")
+        targets = owned_refs(self.after)
+        ordered = sorted(targets, key=lambda r: (r != "refs/heads/main", r))
+        for index, branch in enumerate(ordered):
+            self.stage_branch_history(branch, targets[branch], index)
+            measurement = self.measure_push_pack(enforce_limit=False, limit_bytes=STAGE_PACK_LIMIT)
+            if measurement["bytes"] < STAGE_PACK_LIMIT:
+                return measurement
+        raise Halt("final_pack_exceeds_staging_limit")
 
     def publish(self):
-        self.phase("prepush_checks")
-        self.verify_paused()
-        require(not self.pending_runs(), "new_run_appeared")
-        require(self.remote_refs() == self.before, "remote_refs_changed_before_push")
-        self.measure_push_pack()
+        self.publication_guards()
+        measurement = self.measure_push_pack(enforce_limit=False, limit_bytes=STAGE_PACK_LIMIT)
         # Packing may take time. Recheck every production guard before publishing.
-        self.phase("prepush_checks")
-        self.verify_paused()
-        require(not self.pending_runs(), "new_run_appeared")
-        require(self.remote_refs() == self.before, "remote_refs_changed_before_push")
+        self.publication_guards()
         if self.mode == "preflight":
             self.phase("preflight_verified_writers_remain_paused")
             return
+        if measurement["bytes"] >= STAGE_PACK_LIMIT:
+            measurement = self.stage_large_publication()
+            self.publication_guards()
+        require(measurement["complete"] and measurement["bytes"] < STAGE_PACK_LIMIT,
+                "estimated_push_pack_exceeds_limit")
+        require(measurement["target_oids"] == sorted(set(owned_refs(self.after).values())) and
+                measurement["expected_remote_refs_sha256"] == refs_digest(self.expected_staged_snapshot()),
+                "final_measurement_target_or_snapshot_mismatch")
+        entry = {"kind": "final", "measured_pack_bytes": measurement["bytes"],
+                 "owned_ref_count": len(owned_refs(self.before)),
+                 "deleted_stage_ref_count": len(self.stages), "outcome": "planned"}
+        self.state["publication_journal"].append(entry)
+        self.save()
         self.phase("atomic_leased_push")
+        failed = False
         try:
-            self.git(push_arguments(self.before, self.after), timeout=3600)
+            self.git(final_push_arguments(self.before, self.after, self.stages), timeout=3600)
         except Halt:
             # A transport error after server acceptance is possible. Never guess its outcome.
+            failed = True
+        try:
             observed = self.remote_refs()
-            require(owned_refs(observed) == owned_refs(self.after), "push_failed_or_remote_outcome_unverified")
+        except Halt:
+            entry["outcome"] = "unreadable"
+            self.save()
+            raise Halt("final_remote_outcome_unknown") from None
+        if owned_refs(observed) != owned_refs(self.after):
+            entry["outcome"] = "unchanged" if observed == self.expected_staged_snapshot() else "divergent"
+            self.save()
+            raise Halt("push_failed_or_remote_outcome_unverified")
+        entry["outcome"] = "accepted_after_transport_error" if failed else "accepted"
+        if failed:
             self.state["push_transport_error_but_remote_verified"] = True
-        observed = self.remote_refs()
-        require(owned_refs(observed) == owned_refs(self.after), "remote_refs_postpush_mismatch")
+        self.stages = {}
+        self.state["stage_refs"] = {}
         self.state["push_verified"] = True
         (self.evidence / "refs-remote-verified.tsv").write_bytes(canonical_refs(observed))
         self.save()

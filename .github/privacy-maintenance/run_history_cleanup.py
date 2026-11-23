@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 import re
+import selectors
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,7 @@ SHA1 = re.compile(r"^[0-9a-f]{40}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 ZERO = "0" * 40
 DIAGNOSTIC_SCAN_LIMIT = 65536
+PUSH_PACK_LIMIT = 2 * 1024 ** 3
 
 
 def push_diagnostics(returncode, stdout=b"", stderr=b"", *, timed_out=False):
@@ -48,15 +50,28 @@ def push_diagnostics(returncode, stdout=b"", stderr=b"", *, timed_out=False):
         "authentication_failed": (b"fatal: authentication failed", b"invalid username or token"),
         "repository_write_denied": (b"write access to repository not granted",),
         "transport_failed": (b"rpc failed;", b"the remote end hung up unexpectedly", b"fatal: unable to access"),
+        "http2_transport_failed": (b"http/2 stream", b"http2 framing layer", b"http/2 framing layer"),
+        "sideband_disconnected": (b"unexpected disconnect while reading sideband packet",),
+        "connection_reset": (b"connection reset by peer",),
         "local_disk_full": (b"no space left on device",),
         "mirror_refspec_conflict": (b"--mirror can't be combined with refspecs",),
     }
     signals = sorted(code for code, needles in patterns.items() if any(n in sample for n in needles))
     if timed_out:
         signals.append("process_timeout")
+    # Extract only bounded integers from recognized transport error lines.
+    # No matching line, URL or substring is retained in evidence.
+    error_lines = [line for line in sample.splitlines() if line.startswith(
+        (b"error: rpc failed;", b"fatal: unable to access", b"remote: error:", b"remote: fatal:"))]
+    http_statuses, curl_codes = set(), set()
+    for line in error_lines:
+        http_statuses.update(int(value) for value in re.findall(rb"\bhttp(?:/[0-9.]+)?[ :]+([1-5][0-9]{2})\b", line))
+        http_statuses.update(int(value) for value in re.findall(rb"the requested url returned error: ([1-5][0-9]{2})\b", line))
+        curl_codes.update(int(value) for value in re.findall(rb"\bcurl ([1-9][0-9]?)\b", line))
     return {"returncode": returncode, "timed_out": bool(timed_out),
             "stdout_bytes": len(stdout), "stderr_bytes": len(stderr),
             "scan_limit_per_stream": DIAGNOSTIC_SCAN_LIMIT,
+            "http_statuses": sorted(http_statuses), "curl_codes": sorted(curl_codes),
             "observed_signals": signals or ["unclassified"]}
 
 
@@ -102,6 +117,16 @@ def push_arguments(before, after):
     return ["push", "--atomic", "--porcelain"] + [
         f"--force-with-lease={r}:{old[r]}" for r in sorted(old)
     ] + [REMOTE] + [f"{new[r]}:{r}" for r in sorted(new)]
+
+
+def pack_revisions(before, after):
+    """Estimate new owned history against all reviewed old advertised refs."""
+    require(owned_refs(before).keys() == owned_refs(after).keys(), "owned_ref_set_changed")
+    positive, negative = set(owned_refs(after).values()), set(before.values())
+    require(positive and negative, "empty_pack_revision_set")
+    require(all(SHA1.fullmatch(s) and s != ZERO for s in positive | negative), "invalid_pack_revision")
+    return ("".join(s + "\n" for s in sorted(positive)) +
+            "".join("^" + s + "\n" for s in sorted(negative))).encode("ascii")
 
 
 def auth_environment(token):
@@ -426,7 +451,68 @@ class Maintenance:
         (self.evidence / "orphaned-lfs-objects.txt").write_text("".join(oid + "\n" for oid in lfs_ids))
         self.save()
 
+    def measure_push_pack(self, timeout=3600):
+        self.phase("measure_offline_push_pack")
+        revisions = pack_revisions(self.before, self.after)
+        record = {"version": 1, "is_offline_estimate": True,
+                  "excludes_all_old_advertised_refs": True,
+                  "receive_pack_advertisement_unverified": True,
+                  "limit_bytes": PUSH_PACK_LIMIT, "bytes": 0,
+                  "complete": False, "returncode": None}
+        self.state["push_pack_measurement"] = record
+        self.save()
+        deadline = time.monotonic() + timeout
+        process = None
+        header = b""
+        try:
+            # Only count the stream. Never create a pack file or retain its contents.
+            # stderr is discarded; fixed errors below cannot expose source paths.
+            process = subprocess.Popen(
+                ["git", "pack-objects", "--revs", "--stdout", "--thin", "--delta-base-offset", "--quiet"],
+                cwd=self.repo, env=self.env, stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+            with process.stdin:
+                process.stdin.write(revisions)
+            with selectors.DefaultSelector() as selector:
+                selector.register(process.stdout, selectors.EVENT_READ)
+                while True:
+                    remaining = deadline - time.monotonic()
+                    require(remaining > 0 and selector.select(remaining), "push_pack_measurement_timeout")
+                    block = os.read(process.stdout.fileno(), 1024 * 1024)
+                    if not block:
+                        break
+                    if len(header) < 12:
+                        header += block[:12 - len(header)]
+                    record["bytes"] += len(block)
+            record["returncode"] = process.wait(timeout=max(0.001, deadline - time.monotonic()))
+            require(record["returncode"] == 0, "push_pack_measurement_failed")
+            require(len(header) == 12 and header[:4] == b"PACK" and
+                    int.from_bytes(header[4:8], "big") in (2, 3), "invalid_push_pack_header")
+            record["object_count"] = int.from_bytes(header[8:12], "big")
+            record["complete"] = True
+        except subprocess.TimeoutExpired:
+            raise Halt("push_pack_measurement_timeout") from None
+        except OSError:
+            raise Halt("push_pack_measurement_io_failure") from None
+        finally:
+            if process is not None:
+                if process.poll() is None:
+                    process.kill()
+                record["returncode"] = process.wait()
+                if process.stdout is not None:
+                    process.stdout.close()
+                if process.stdin is not None:
+                    process.stdin.close()
+            self.save()
+        require(record["bytes"] <= PUSH_PACK_LIMIT, "estimated_push_pack_exceeds_limit")
+
     def publish(self):
+        self.phase("prepush_checks")
+        self.verify_paused()
+        require(not self.pending_runs(), "new_run_appeared")
+        require(self.remote_refs() == self.before, "remote_refs_changed_before_push")
+        self.measure_push_pack()
+        # Packing may take time. Recheck every production guard before publishing.
         self.phase("prepush_checks")
         self.verify_paused()
         require(not self.pending_runs(), "new_run_appeared")

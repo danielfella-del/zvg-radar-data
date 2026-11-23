@@ -161,7 +161,9 @@ def auth_environment(token):
         "GIT_CONFIG_KEY_5": "pack.useSparse", "GIT_CONFIG_VALUE_5": "false",
     })
     for key in list(env):
-        if key.startswith("GIT_TRACE") or key in {"GIT_CURL_VERBOSE", "GIT_CONFIG_PARAMETERS"}:
+        if key.startswith("GIT_TRACE") or key in {
+            "GIT_CURL_VERBOSE", "GIT_CONFIG_PARAMETERS", "PRIVACY_MAINTENANCE_PUSH_TOKEN"
+        }:
             del env[key]
     return env
 
@@ -201,11 +203,14 @@ class API:
 
 
 class Maintenance:
-    def __init__(self, code, work, token, run_id, sha, mode, refs_hash, manifest_hash, api=None):
+    def __init__(self, code, work, token, run_id, sha, mode, refs_hash, manifest_hash, api=None, *, push_token=None):
         self.code, self.work = Path(code), Path(work)
         self.repo = self.work / "source.git"
         self.evidence = self.work / "evidence"
         self.env = auth_environment(token)
+        # A repository-scoped owner credential authenticates Git pushes only.
+        # API requests, clone, ref reads and pack measurement keep the job token.
+        self.push_env = auth_environment(push_token) if push_token else None
         self.api = api or API(token)
         self.run_id, self.sha, self.mode = int(run_id), sha, mode
         self.refs_hash, self.manifest_hash = refs_hash, manifest_hash
@@ -213,6 +218,7 @@ class Maintenance:
         self.verified_commit_ids = set()
         self.state = {"version": 1, "repository": REPOSITORY, "run_id": self.run_id,
                       "operation": mode, "phase": "starting", "push_verified": False,
+                      "dedicated_push_token_present": bool(push_token),
                       "restore_complete": False, "workflow_states_before": {},
                       "resume_after_success": [], "paused_workflow_ids": [],
                       "resumed_workflow_ids": [], "cancel_requested_run_ids": [],
@@ -234,9 +240,14 @@ class Maintenance:
         print("Maintenance phase:", name, flush=True)
 
     def git(self, args, *, cwd=None, input=None, timeout=3600):
+        is_push = bool(args and args[0] == "push")
+        if is_push:
+            require(self.mode == "apply", "push_requires_apply")
+            require(self.push_env is not None, "dedicated_push_token_required")
         try:
             result = subprocess.run(["git", *args], cwd=cwd or self.repo,
-                                    env=self.env, input=input, capture_output=True,
+                                    env=self.push_env if is_push else self.env,
+                                    input=input, capture_output=True,
                                     timeout=timeout, check=False)
         except subprocess.TimeoutExpired as exc:
             if args and args[0] == "push":
@@ -314,6 +325,13 @@ class Maintenance:
         require(not any(r.startswith(STAGE_REF_PREFIX) for r in observed), "staging_recovery_required")
         require(refs_digest(observed) == self.refs_hash, "approved_refs_mismatch")
         require(observed["refs/heads/main"] == self.sha, "workflow_sha_is_not_approved_main")
+
+    def check_push_authorization(self):
+        self.phase("check_push_credential_presence")
+        # Presence is not proof of scope or permission. A rejected push still
+        # follows the exact existing remote-outcome and paused-writer rules.
+        require(self.mode != "apply" or self.push_env is not None,
+                "dedicated_push_token_required")
 
     def verify_paused(self):
         for wid in self.state["paused_workflow_ids"]:
@@ -696,6 +714,7 @@ class Maintenance:
     def execute(self):
         try:
             self.load_manifest()
+            self.check_push_authorization()
             self.precheck_approved_refs()
             self.pause_workflows()
             self.drain_runs()
@@ -719,13 +738,14 @@ def main():
     require(os.environ.get("GITHUB_REF") == "refs/heads/main", "main_dispatch_required")
     token = os.environ["GITHUB_TOKEN"]
     require(bool(token), "token_required")
+    push_token = os.environ.pop("PRIVACY_MAINTENANCE_PUSH_TOKEN", "")
     code = Path(__file__).resolve().parent
     # Add the installed tool's bin directory, without credential-bearing command arguments.
     os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
     job = Maintenance(code, Path(os.environ["RUNNER_TEMP"]) / "privacy-maintenance", token,
                       os.environ["GITHUB_RUN_ID"], os.environ["GITHUB_SHA"],
                       os.environ["MAINTENANCE_OPERATION"], os.environ["APPROVED_REFS_SHA256"],
-                      os.environ["APPROVED_MANIFEST_SHA256"])
+                      os.environ["APPROVED_MANIFEST_SHA256"], push_token=push_token)
     return job.execute()
 
 

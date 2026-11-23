@@ -51,6 +51,7 @@ jobs:
       - name: Validate, rewrite and verify approved refs
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          PRIVACY_MAINTENANCE_PUSH_TOKEN: ${{ secrets.PRIVACY_MAINTENANCE_PUSH_TOKEN }}
           APPROVED_REFS_SHA256: ${{ inputs.approved_refs_sha256 }}
           APPROVED_MANIFEST_SHA256: ${{ inputs.approved_manifest_sha256 }}
           MAINTENANCE_OPERATION: ${{ inputs.operation }}

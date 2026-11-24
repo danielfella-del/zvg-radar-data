@@ -1,0 +1,93 @@
+name: ZVG privaten Laufzeitbestand umstellen
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'bootstrap: privaten Bestand vorbereiten; activate: geprüft synchronisieren und aktivieren'
+        required: true
+        default: bootstrap
+        type: choice
+        options: [bootstrap, activate]
+      source_sha:
+        description: 'Nur bootstrap: frisch geprüfter vollständiger Commit-SHA des bisherigen Datenstands'
+        required: false
+        type: string
+      generation:
+        description: 'Nur activate: durch bootstrap bestätigte private Generation'
+        required: false
+        type: string
+      sha256:
+        description: 'Nur activate: SHA256 des bestätigten privaten JSON-Snapshots'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+# Readers, writers, diagnostics and migration share one lock. The storage API
+# additionally enforces snapshot generations for writers outside Actions.
+concurrency:
+  group: zvg-data-writer
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    if: ${{ github.repository == 'danielfella-del/zvg-radar-data' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Nur Pipeline-Code laden
+        uses: actions/checkout@v4
+        with:
+          # Resolve the reviewed main code only after the shared writer lock.
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+            /collector/
+            /scripts/
+            /tests/
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Abhängigkeiten installieren
+        run: pip install --disable-pip-version-check -r collector/requirements.txt
+      - name: Offline-Verträge prüfen
+        run: bash scripts/test-offline.sh
+
+      - name: Privaten Bestand aus geprüftem Quellcommit vorbereiten
+        if: inputs.operation == 'bootstrap'
+        env:
+          PRIVATE_RUNTIME_ROOT: ${{ runner.temp }}/zvg-private-runtime
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PRIVATE_RUNTIME_SOURCE_SHA: ${{ inputs.source_sha }}
+        run: python .github/scripts/private-pipeline.py bootstrap
+
+      - name: Privaten Bestand vollständig synchronisieren und aktivieren
+        if: inputs.operation == 'activate'
+        env:
+          PRIVATE_RUNTIME_ROOT: ${{ runner.temp }}/zvg-private-runtime
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+          PRIVATE_RUNTIME_GENERATION: ${{ inputs.generation }}
+          PRIVATE_RUNTIME_SHA256: ${{ inputs.sha256 }}
+        run: python .github/scripts/private-pipeline.py activate
+
+      - name: Temporäre Laufzeitdaten entfernen
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'zvg-private-runtime'
+          if path.is_symlink():
+              path.unlink()
+          elif path.exists():
+              shutil.rmtree(path)
+          PY

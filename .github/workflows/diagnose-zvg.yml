@@ -2,49 +2,58 @@ name: ZVG Dossier Diagnose
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/diagnose-zvg.yml'
 
 permissions:
-  contents: write
+  contents: read
+
+# Readers, writers, diagnostics and migration share one lock. The storage API
+# additionally enforces snapshot generations for writers outside Actions.
+concurrency:
+  group: zvg-data-writer
+  cancel-in-progress: false
 
 jobs:
   diagnose:
+    if: ${{ github.repository == 'danielfella-del/zvg-radar-data' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Nur Pipeline-Code laden
+        uses: actions/checkout@v4
+        with:
+          # Resolve the reviewed main code only after the shared writer lock.
+          ref: main
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+            /collector/
+            /scripts/
+            /tests/
 
-      - uses: actions/setup-python@v5
+      - name: Python einrichten
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Abhängigkeiten
-        run: pip install -r collector/requirements.txt
+      - name: Abhängigkeiten installieren
+        run: pip install --disable-pip-version-check -r collector/requirements.txt
+      - name: Private Speicherung prüfen; nur technische Metadaten
+        env:
+          PRIVATE_RUNTIME_ROOT: ${{ runner.temp }}/zvg-private-runtime
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+        run: python .github/scripts/private-pipeline.py diagnose-zvg
 
-      - name: Diagnoseordner
-        run: mkdir -p diagnostics
-
-      - name: Ein Dossier testen
-        continue-on-error: true
-        shell: bash
-        run: |
-          python collector/enrich_details.py --data data/auctions.json --limit 1 > diagnostics/enrich.log 2>&1
-          cp data/auctions.json diagnostics/auctions-after-enrich.json
-
-      - name: Diagnose speichern
+      - name: Temporäre Laufzeitdaten entfernen
         if: always()
         shell: bash
         run: |
-          git config user.name "zvg-radar-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add diagnostics
-          if git diff --cached --quiet; then
-            echo "Keine Diagnoseänderung."
-            exit 0
-          fi
-          git commit -m "ZVG-Dossier Diagnose"
-          git pull --rebase
-          git push
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'zvg-private-runtime'
+          if path.is_symlink():
+              path.unlink()
+          elif path.exists():
+              shutil.rmtree(path)
+          PY

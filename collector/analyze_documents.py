@@ -5,6 +5,7 @@ import argparse, json, re
 from datetime import datetime, timezone
 from pathlib import Path
 import fitz
+from private_runtime import hydrate_attachment, file_digest
 
 SIGNALS=[
  ('moisture','Feuchtigkeit / Schimmel',r'feucht|schimmel|nässe|naesse|durchfeucht|kondensat'),
@@ -41,6 +42,7 @@ def summary(text):
     return ' '.join(good)[:700]
 
 def resolve_pdf(root:Path,a:dict):
+    hydrate_attachment(a)
     for key in ('cached_path','local_path'):
         v=a.get(key)
         if v:
@@ -61,10 +63,10 @@ def main():
         if done>=a.limit: break
         atts=[x for x in (r.get('attachments') or []) if isinstance(x,dict) and x.get('type')=='gutachten']
         if not atts: continue
-        pdf=next((resolve_pdf(root,x) for x in atts if resolve_pdf(root,x)),None)
+        pdf=next((resolved for x in atts if (resolved:=resolve_pdf(root,x))),None)
         if not pdf: continue
         prev=r.get('smart_analysis') or {}
-        sig=f"v2:{pdf.stat().st_size}:{int(pdf.stat().st_mtime)}"
+        sig='v3:'+file_digest(pdf)
         if prev.get('source_signature')==sig: continue
         try:
             text,pages=read_text(pdf)

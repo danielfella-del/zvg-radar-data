@@ -18,7 +18,7 @@ import requests
 
 from photo_quality import analyze_pixmap, photo_score, looks_like_document_scan, quality_payload
 
-RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
+from private_runtime import media_url, file_digest, hydrate_attachment
 BASE = "https://www.zvg-portal.de/"
 SEARCH_URL = BASE + "index.php?button=Suchen&all=1"
 PORTAL_REFERER = BASE + "index.php?button=Suchen"
@@ -99,7 +99,7 @@ def local_cached_pdf(att: dict) -> Path | None:
     p = att.get("cached_path")
     if not p:
         return None
-    path = Path(str(p))
+    path = hydrate_attachment(att) or Path(str(p))
     if path.is_file() and path.suffix.lower() == ".pdf":
         return path
     return None
@@ -220,9 +220,9 @@ def save_photos(pdf: Path, record: dict, att: dict, media_root: Path, max_photos
                     "file_id": f"report-photo-{att.get('file_id') or 'gutachten'}-{idx}",
                     "name": f"Objektfoto aus Gutachten {idx}",
                     "cached_path": rel,
-                    "cached_url": RAW_BASE + rel,
+                    "cached_url": media_url(f'media/{target.parent.name}/{target.name}', file_digest(target)),
                     "preview_path": rel,
-                    "preview_url": RAW_BASE + rel,
+                    "preview_url": media_url(f'media/{target.parent.name}/{target.name}', file_digest(target)),
                     "cached_bytes": len(data),
                     "content_type": "image/jpeg",
                     "preview_content_type": "image/jpeg",
@@ -367,9 +367,11 @@ def main() -> int:
                 new = save_photos(pdf, record, report, media_root, args.max_photos)
                 # A completed scan replaces only photos derived from this PDF.
                 # On download/parse failure no existing photos are removed.
-                if source_changed and local_cached_pdf(report):
-                    shutil.copyfile(pdf, local_cached_pdf(report))
+                cached_report = local_cached_pdf(report) if source_changed else None
+                if cached_report:
+                    shutil.copyfile(pdf, cached_report)
                     report["cached_bytes"] = size
+                    report["cached_url"] = media_url(f'media/{cached_report.parent.name}/{cached_report.name}', file_digest(cached_report))
                     report["cached_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
                 replace_report_photos(record, report, new)
                 mark_report(report, "photos" if new else "no_photos", datetime.now(timezone.utc))

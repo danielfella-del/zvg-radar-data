@@ -8,7 +8,7 @@ elif [[ -x .venv/bin/python ]]; then
 else
   zvg_python="python3"
 fi
-"$zvg_python" -m compileall -q collector tests .github/scripts/sync-zvgpro-db.py
+"$zvg_python" -m compileall -q collector tests .github/scripts
 for zvg_test in \
   tests/test_publication_policy.py \
   tests/test_parser.py \
@@ -21,7 +21,8 @@ for zvg_test in \
   tests/test_sh_merge.py \
   tests/test_official_notice_parsers.py \
   tests/test_report_photo_queue.py \
-  tests/test_sync_client.py
+  tests/test_sync_client.py \
+  tests/test_private_runtime.py
 do
   "$zvg_python" "$zvg_test"
 done

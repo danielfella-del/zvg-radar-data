@@ -19,7 +19,7 @@ import fitz
 
 from photo_quality import analyze_pixmap, photo_score, looks_like_document_scan, quality_payload, VALIDATION_VERSION
 
-RAW_BASE = "https://raw.githubusercontent.com/danielfella-del/zvg-radar-data/main/"
+from private_runtime import media_url, file_digest, hydrate_attachment
 BASE = "https://www.zvg-portal.de/"
 PORTAL_REFERER = BASE + "index.php?button=Suchen"
 SEARCH_URL = BASE + "index.php?button=Suchen&all=1"
@@ -196,7 +196,7 @@ def ensure_photo_preview(a: dict, folder: Path, target: Path, fid: str) -> bool:
 
         preview_rel = preview.as_posix()
         a["preview_path"] = preview_rel
-        a["preview_url"] = RAW_BASE + preview_rel
+        a["preview_url"] = media_url(f'media/{preview.parent.name}/{preview.name}', file_digest(preview))
         a["preview_content_type"] = "image/jpeg"
         a["preview_bytes"] = len(data)
         a.update(quality_payload(metrics, score, mode=mode, page=page_no + 1))
@@ -324,6 +324,7 @@ def main():
                         or int(a.get("photo_validation_version") or 0) < VALIDATION_VERSION
                     )
                     if needs_validation and str(target).lower().endswith(".pdf"):
+                        hydrate_attachment(a)
                         folder = target.parent
                         fid = safe_part(a.get("file_id") or target.stem)
                         if ensure_photo_preview(a, folder, target, fid):
@@ -377,7 +378,7 @@ def main():
                 cached_total+=1
                 rel=target.as_posix()
                 a["cached_path"]=rel
-                a["cached_url"]=RAW_BASE+rel
+                a["cached_url"]=media_url(f'media/{target.parent.name}/{target.name}', file_digest(target))
                 a["cached_bytes"]=size
                 a["content_type"]=ctype.split(";",1)[0] or None
                 a["cached_at"]=datetime.now(timezone.utc).isoformat(timespec="seconds")

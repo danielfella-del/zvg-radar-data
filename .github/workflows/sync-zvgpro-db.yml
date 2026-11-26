@@ -2,11 +2,11 @@ name: ZVGPro MariaDB synchronisieren
 
 on:
   workflow_dispatch:
-  # New source snapshots must not wait for another scheduled Actions run.
   workflow_run:
     workflows:
       - ZVG Daten stündlich aktualisieren
       - ZVG Dossiers und Medien anreichern
+      - ZVG Dokumente gezielt nachpflegen
     types: [completed]
     branches: [main]
   schedule:
@@ -15,15 +15,16 @@ on:
 permissions:
   contents: read
 
+# Readers, writers, diagnostics and migration share one lock. The storage API
+# additionally enforces snapshot generations for writers outside Actions.
 concurrency:
-  group: zvgpro-mariadb-sync
+  group: zvg-data-writer
   cancel-in-progress: false
 
 jobs:
   sync:
-    # workflow_run has access to secrets: accept only successful, trusted writers.
     if: >-
-      ${{
+      ${{ github.repository == 'danielfella-del/zvg-radar-data' &&
         github.ref == 'refs/heads/main' &&
         (
           github.event_name == 'schedule' ||
@@ -38,35 +39,46 @@ jobs:
               github.event.workflow_run.event == 'workflow_dispatch'
             )
           )
-        )
-      }}
+        ) }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Datensatz und Sync-Client aus demselben Commit laden
+      - name: Nur Pipeline-Code laden
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          # Resolve the reviewed main code only after the shared writer lock.
+          ref: main
           fetch-depth: 1
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /data/auctions.json
-            /.github/scripts/sync-zvgpro-db.py
-            /collector/publication_policy.py
+            /.github/scripts/
+            /collector/
+            /scripts/
+            /tests/
 
-      - name: Unveränderlichen Snapshot prüfen und bereitstellen
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Abhängigkeiten installieren
+        run: pip install --disable-pip-version-check -r collector/requirements.txt
+      - name: Unveränderlichen privaten Snapshot vollständig synchronisieren
+        env:
+          PRIVATE_RUNTIME_ROOT: ${{ runner.temp }}/zvg-private-runtime
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+        run: python .github/scripts/private-pipeline.py sync
+
+      - name: Temporäre Laufzeitdaten entfernen
+        if: always()
         shell: bash
         run: |
-          python3 collector/publication_policy.py --check
-          cp data/auctions.json auctions.json
-          cp .github/scripts/sync-zvgpro-db.py sync-zvgpro-db.py
-          test -s auctions.json
-          test -s sync-zvgpro-db.py
-
-      - name: PHP-Protokoll prüfen und MariaDB vollständig synchronisieren
-        env:
-          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
-        shell: bash
-        run: python sync-zvgpro-db.py
-
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'zvg-private-runtime'
+          if path.is_symlink():
+              path.unlink()
+          elif path.exists():
+              shutil.rmtree(path)
+          PY

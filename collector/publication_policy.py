@@ -9,21 +9,41 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 from pathlib import Path
+from functools import lru_cache
 from urllib.parse import unquote, urlparse, parse_qs
 
 WITHDRAWN_ID_HASHES = frozenset({
     "547eb4d9fcc509af49e742dbcefb0a51590f2609c08fc82f78c47582f205f097",
 })
-ID_TOKEN = re.compile(r"(?<![a-z0-9_-])[a-z]{2}-[0-9]+(?![a-z0-9_-])", re.I)
+
+
+@lru_cache(maxsize=4)
+def _read_private_hashes(path):
+    values = json.loads(Path(path).read_text(encoding='utf-8'))
+    if not isinstance(values, list) or any(not isinstance(v, str) or not re.fullmatch(r'[0-9a-f]{64}', v) for v in values):
+        raise ValueError('Private Veröffentlichungsrichtlinie ungültig')
+    return frozenset(values)
+
+
+def private_withdrawal_hashes():
+    """The authenticated runtime runner supplies a private policy file per run."""
+    path = os.environ.get('ZVGPRO_WITHDRAWAL_HASHES_FILE')
+    if not path:
+        if os.environ.get('ZVGPRO_PRIVATE_RUNTIME'):
+            raise ValueError('Private Veröffentlichungsrichtlinie fehlt')
+        return frozenset()
+    return _read_private_hashes(path)
+ID_TOKEN = re.compile(r"(?<![a-z0-9_-])[a-z][a-z0-9]*(?:[-_][a-z0-9]+)+(?![a-z0-9_-])", re.I)
 _DROP = object()
 
 
 def withdrawn_id(value) -> bool:
     normalized = str(value or "").strip().lower()
-    return hashlib.sha256(normalized.encode("utf-8")).hexdigest() in WITHDRAWN_ID_HASHES
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest() in (WITHDRAWN_ID_HASHES | private_withdrawal_hashes())
 
 
 def withdrawn_record(record) -> bool:

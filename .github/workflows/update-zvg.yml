@@ -6,119 +6,49 @@ on:
     - cron: '17 * * * *'
 
 permissions:
-  contents: write
+  contents: read
 
+# Readers, writers, diagnostics and migration share one lock. The storage API
+# additionally enforces snapshot generations for writers outside Actions.
 concurrency:
   group: zvg-data-writer
   cancel-in-progress: false
 
 jobs:
   update:
+    if: ${{ github.repository == 'danielfella-del/zvg-radar-data' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
-      - name: Repository laden
+      - name: Nur Pipeline-Code laden
         uses: actions/checkout@v4
         with:
-          # Resolve main when this serialized job starts, not when it was queued.
+          # Resolve the reviewed main code only after the shared writer lock.
           ref: main
-
-      - name: Veröffentlichungsrücknahmen vor der Verarbeitung anwenden
-        run: python3 collector/publication_policy.py --media-dir media
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/scripts/
+            /collector/
+            /scripts/
+            /tests/
 
       - name: Python einrichten
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
-          cache-dependency-path: collector/requirements.txt
 
       - name: Abhängigkeiten installieren
-        run: pip install -r collector/requirements.txt
+        run: pip install --disable-pip-version-check -r collector/requirements.txt
+      - name: Offline-Verträge prüfen
+        run: bash scripts/test-offline.sh
 
-      - name: Parser testen
-        run: |
-          python tests/test_parser.py
-          python tests/test_detail_parser.py
-          python tests/test_detail_queue.py
-          python tests/test_state_coverage.py
-          python tests/test_bw_structured.py
-          python tests/test_sh_official.py
-          python tests/test_sh_merge.py
-          python tests/test_official_notice_parsers.py
-
-      - name: Alten Stand für Historie sichern
-        run: cp data/auctions.json /tmp/auctions-before.json
-
-      - name: ZVG-Daten sammeln
-        run: python collector/collect.py --output data/auctions.json
-
-      - name: Baden-Württemberg aus amtlichen Gerichtsseiten ergänzen
-        continue-on-error: true
-        run: timeout 3m python collector/collect_bw_official.py --output data/supplemental_bw.json --previous /tmp/auctions-before.json
-
-      - name: Hamburg aus Amtlichem Anzeiger ergänzen
-        continue-on-error: true
-        run: timeout 3m python collector/collect_hh_official.py --output data/supplemental_hh.json
-
-      - name: Mecklenburg-Vorpommern aus Amtlichem Anzeiger ergänzen
-        continue-on-error: true
-        run: timeout 3m python collector/collect_mv_official.py --output data/supplemental_mv.json
-
-      - name: Schleswig-Holstein aus amtlichen Anzeigen ergänzen
-        continue-on-error: true
-        run: timeout 3m python collector/collect_sh_official.py --output data/supplemental_sh.json --previous /tmp/auctions-before.json
-
-      - name: Zusatzquellen dedupliziert zusammenführen
-        run: |
-          python collector/merge_supplemental.py             --data data/auctions.json             --supplement data/supplemental_bw.json             --supplement data/supplemental_hh.json             --supplement data/supplemental_mv.json             --supplement data/supplemental_sh.json
-
-      - name: Objekthistorie fortschreiben
-        run: python collector/merge_history.py --before /tmp/auctions-before.json --data data/auctions.json
-
-      - name: Länderabdeckung prüfen
-        run: python collector/coverage_audit.py --data data/auctions.json
-
-      - name: Detailseiten schrittweise anreichern
-        run: python collector/enrich_details.py --data data/auctions.json --limit 20
-
-      - name: Kleine amtliche Dokumente sofort cachen
-        continue-on-error: true
-        run: timeout 6m python collector/cache_media.py --data data/auctions.json --media-dir media --quick-only --max-files 180 --max-run-mb 120 --max-file-mb 12
-
-      - name: Veröffentlichungsrücknahmen vor dem Speichern anwenden
-        run: python collector/publication_policy.py --media-dir media
-
-      - name: Änderungen speichern
-        shell: bash
-        run: |
-          if git diff --quiet -- data/auctions.json media; then
-            echo "Keine Änderungen."
-          else
-            git config user.name "zvg-radar-bot"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/auctions.json media
-            git commit -m "ZVG-Daten, Historie und Dossiers stündlich aktualisiert"
-            pushed=false
-            for attempt in 1 2 3; do
-              if ! git pull --rebase origin main; then
-                git rebase --abort || true
-                echo "::error::Inhaltlicher Git-Konflikt; keine Daten werden überschrieben."
-                exit 1
-              fi
-              python collector/publication_policy.py --media-dir media --check
-              if git push origin HEAD:main; then
-                pushed=true
-                break
-              fi
-              echo "Upload abgewiesen (Versuch $attempt/3); neuesten Stand erneut übernehmen."
-              sleep 2
-            done
-            if [ "$pushed" != true ]; then
-              echo "::error::Upload nach drei Versuchen fehlgeschlagen."
-              exit 1
-            fi
-          fi
+      - name: Privaten Laufzeitbestand verarbeiten
+        env:
+          PRIVATE_RUNTIME_ROOT: ${{ runner.temp }}/zvg-private-runtime
+          ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
+        run: python .github/scripts/private-pipeline.py update
 
       - name: ZVGPro E-Mail-Alerts anstoßen
         continue-on-error: true
@@ -127,7 +57,25 @@ jobs:
         shell: bash
         run: |
           if [ -z "$ZVGPRO_ALERT_CRON_TOKEN" ]; then
-            echo "GitHub-Secret ZVGPRO_ALERT_CRON_TOKEN fehlt - E-Mail-Alerts werden übersprungen."
+            echo "Alert-Token fehlt; E-Mail-Alerts übersprungen."
             exit 0
           fi
-          curl -fsS -X POST             -H "Authorization: Bearer $ZVGPRO_ALERT_CRON_TOKEN"             https://zvgpro.de/api/alerts-run.php
+          if ! curl --fail --silent --max-time 90 --output /dev/null -X POST \
+            -H "Authorization: Bearer $ZVGPRO_ALERT_CRON_TOKEN" \
+            https://zvgpro.de/api/alerts-run.php; then
+            echo "::warning::Alert-Anfrage fehlgeschlagen; keine Antwortdaten protokolliert."
+            exit 1
+          fi
+
+      - name: Temporäre Laufzeitdaten entfernen
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          path = pathlib.Path(os.environ['RUNNER_TEMP']) / 'zvg-private-runtime'
+          if path.is_symlink():
+              path.unlink()
+          elif path.exists():
+              shutil.rmtree(path)
+          PY

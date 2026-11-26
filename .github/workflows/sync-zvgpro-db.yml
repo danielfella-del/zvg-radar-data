@@ -2,51 +2,52 @@ name: ZVGPro MariaDB synchronisieren
 
 on:
   workflow_dispatch:
-  # New source snapshots must not wait for another scheduled Actions run.
-  workflow_run:
-    workflows:
-      - ZVG Daten stündlich aktualisieren
-      - ZVG Dossiers und Medien anreichern
-    types: [completed]
-    branches: [main]
+  workflow_call:
+    inputs:
+      published_sha:
+        description: Commit successfully published by the trusted producer.
+        required: true
+        type: string
+    secrets:
+      ZVGPRO_DB_SYNC_TOKEN:
+        required: true
   schedule:
     - cron: '7,22,37,52 * * * *'
 
 permissions:
   contents: read
 
-concurrency:
-  group: zvgpro-mariadb-sync
-  cancel-in-progress: false
-
 jobs:
   sync:
-    # workflow_run has access to secrets: accept only successful, trusted writers.
+    # A reusable workflow inherits its caller's event and ref.
     if: >-
       ${{
+        github.repository == 'danielfella-del/zvg-radar-data' &&
         github.ref == 'refs/heads/main' &&
-        (
-          github.event_name == 'schedule' ||
-          github.event_name == 'workflow_dispatch' ||
-          (
-            github.event_name == 'workflow_run' &&
-            github.event.workflow_run.conclusion == 'success' &&
-            github.event.workflow_run.head_branch == 'main' &&
-            github.event.workflow_run.head_repository.full_name == github.repository &&
-            (
-              github.event.workflow_run.event == 'schedule' ||
-              github.event.workflow_run.event == 'workflow_dispatch'
-            )
-          )
-        )
+        (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
       }}
+    concurrency:
+      group: zvgpro-mariadb-sync
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - name: Datensatz und Sync-Client aus demselben Commit laden
+      - name: Aufrufer-Snapshot prüfen
+        env:
+          PUBLISHED_SHA: ${{ inputs.published_sha }}
+        shell: bash
+        run: |
+          if [[ -n "$PUBLISHED_SHA" && ! "$PUBLISHED_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Ungültiger Aufrufer-Commit; kein DB-Sync."
+            exit 1
+          fi
+
+      - name: Aktuellen Main-Snapshot nach Erwerb der Sync-Sperre laden
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          # Resolve main only now: a queued caller must never roll back newer data.
+          # Data, publication policy and sync client all come from this one checkout.
+          ref: main
           fetch-depth: 1
           persist-credentials: false
           sparse-checkout-cone-mode: false
@@ -56,8 +57,19 @@ jobs:
             /collector/publication_policy.py
 
       - name: Unveränderlichen Snapshot prüfen und bereitstellen
+        env:
+          PUBLISHED_SHA: ${{ inputs.published_sha }}
         shell: bash
         run: |
+          snapshot_sha="$(git rev-parse HEAD)"
+          if [[ ! "$snapshot_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Ungültiger Main-Snapshot; kein DB-Sync."
+            exit 1
+          fi
+          printf 'DB-Sync Snapshot: %s\n' "$snapshot_sha"
+          if [[ -n "$PUBLISHED_SHA" && "$PUBLISHED_SHA" != "$snapshot_sha" ]]; then
+            printf 'Aufrufer-Snapshot %s wurde durch aktuellen Main %s überholt.\n' "$PUBLISHED_SHA" "$snapshot_sha"
+          fi
           python3 collector/publication_policy.py --check
           cp data/auctions.json auctions.json
           cp .github/scripts/sync-zvgpro-db.py sync-zvgpro-db.py
@@ -69,4 +81,3 @@ jobs:
           ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
         shell: bash
         run: python sync-zvgpro-db.py
-

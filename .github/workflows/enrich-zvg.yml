@@ -8,12 +8,20 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: zvg-data-writer
-  cancel-in-progress: false
-
 jobs:
   enrich:
+    if: >-
+      ${{
+        github.repository == 'danielfella-del/zvg-radar-data' &&
+        github.ref == 'refs/heads/main' &&
+        (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+      }}
+    # Release the writer lock before the separate sync job waits for its own lock.
+    concurrency:
+      group: zvg-data-writer
+      cancel-in-progress: false
+    outputs:
+      published_sha: ${{ steps.published_snapshot.outputs.published_sha }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -90,3 +98,31 @@ jobs:
             echo "::error::Upload nach drei Versuchen fehlgeschlagen."
             exit 1
           fi
+
+      - name: Veröffentlichten Snapshot für den DB-Sync bestätigen
+        id: published_snapshot
+        shell: bash
+        run: |
+          snapshot_sha="$(git rev-parse HEAD)"
+          if [[ ! "$snapshot_sha" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Ungültiger veröffentlichter Commit; kein DB-Sync."
+            exit 1
+          fi
+          printf 'published_sha=%s\n' "$snapshot_sha" >> "$GITHUB_OUTPUT"
+
+  sync:
+    name: Veröffentlichten Datenstand mit ZVGPro synchronisieren
+    needs: enrich
+    if: >-
+      ${{
+        github.repository == 'danielfella-del/zvg-radar-data' &&
+        github.ref == 'refs/heads/main' &&
+        (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+      }}
+    permissions:
+      contents: read
+    uses: ./.github/workflows/sync-zvgpro-db.yml
+    with:
+      published_sha: ${{ needs.enrich.outputs.published_sha }}
+    secrets:
+      ZVGPRO_DB_SYNC_TOKEN: ${{ secrets.ZVGPRO_DB_SYNC_TOKEN }}
